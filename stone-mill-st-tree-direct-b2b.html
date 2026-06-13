@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Stone Mill — S&T Tree: Direct B2B Model</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --black: #0F0E0C;
+  --stone-dark: #1A1815;
+  --stone-mid: #2E2B26;
+  --stone-warm: #4A4440;
+  --stone-tan: #8C7B6E;
+  --stone-sand: #C4B4A0;
+  --stone-light: #EDE4D8;
+  --chisel: #C87820;
+  --chisel-dim: #6A4010;
+  --white: #F8F4EE;
+  --danger: #C84040;
+  --danger-dim: #4A1010;
+  --go: #4A8A50;
+  --go-dim: #1A3A1E;
+  --blue: #3A6A9A;
+  --blue-dim: #12263A;
+  --purple: #6A3A8A;
+  --purple-dim: #28103A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* MASTHEAD */
+.masthead {
+  background: var(--stone-dark);
+  border-bottom: 1px solid var(--stone-warm);
+  padding: 40px 40px 30px;
+  position: relative;
+}
+.masthead::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--chisel), transparent);
+}
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--chisel);
+  margin-bottom: 12px;
+}
+.masthead h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+.masthead h1 em { font-style: italic; color: var(--stone-sand); }
+.masthead-sub {
+  font-size: 13px;
+  color: var(--stone-tan);
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+/* NAV */
+nav {
+  background: var(--stone-dark);
+  border-bottom: 1px solid var(--stone-warm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  overflow-x: auto;
+}
+.nav-inner {
+  display: flex;
+  padding: 0 40px;
+  white-space: nowrap;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--stone-tan);
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 14px 18px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-btn:hover { color: var(--white); }
+.nav-btn.active { color: var(--chisel); border-bottom-color: var(--chisel); }
+
+/* PAGES */
+.page { display: none; }
+.page.active { display: block; }
+
+/* WRAP */
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 40px;
+}
+@media(max-width:600px){ .wrap { padding: 32px 20px; } }
+
+/* SECTION HEAD */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--stone-warm);
+}
+.section-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--chisel);
+  border: 1px solid var(--chisel-dim);
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
+/* CARD */
+.card {
+  background: var(--stone-dark);
+  border: 1px solid var(--stone-warm);
+  border-radius: 4px;
+  padding: 24px 28px;
+  margin-bottom: 16px;
+}
+.card-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--chisel);
+  margin-bottom: 12px;
+}
+.card p {
+  font-size: 14px;
+  color: var(--stone-sand);
+  line-height: 1.75;
+  margin-bottom: 10px;
+}
+.card p:last-child { margin-bottom: 0; }
+.card strong { color: var(--white); }
+
+/* PULLQUOTE */
+.pullquote {
+  border-left: 3px solid var(--chisel);
+  padding: 12px 20px;
+  margin: 18px 0;
+  background: var(--stone-mid);
+  font-size: 14px;
+  color: var(--stone-light);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+/* ── S&T TREE ── */
+.tree-container {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+/* GOAL NODE */
+.goal-node {
+  background: linear-gradient(135deg, #1A1008, #2A1A08);
+  border: 2px solid var(--chisel);
+  border-radius: 6px;
+  padding: 24px 28px;
+  margin-bottom: 0;
+  position: relative;
+  text-align: center;
+}
+.goal-node::after {
+  content: '';
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 24px;
+  background: var(--chisel);
+}
+.goal-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--chisel);
+  margin-bottom: 8px;
+}
+.goal-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.3;
+}
+
+/* STRATEGY LEVEL */
+.strategy-level {
+  margin-top: 24px;
+  position: relative;
+}
+.strategy-level::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 24px;
+  background: var(--chisel);
+}
+
+.level-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 2px;
+  display: inline-block;
+  margin-bottom: 16px;
+  margin-top: 24px;
+}
+.label-strategy { background: var(--blue-dim); color: #80B0E0; border: 1px solid var(--blue); }
+.label-necessary { background: var(--go-dim); color: #80C880; border: 1px solid var(--go); }
+.label-tactic { background: var(--purple-dim); color: #C080E0; border: 1px solid var(--purple); }
+.label-assumption { background: var(--danger-dim); color: #E08080; border: 1px solid var(--danger); }
+
+/* NODE GRID */
+.node-grid {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.node-grid-2 { grid-template-columns: 1fr 1fr; }
+.node-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+.node-grid-1 { grid-template-columns: 1fr; }
+@media(max-width:640px){
+  .node-grid-2, .node-grid-3 { grid-template-columns: 1fr; }
+}
+
+/* NODES */
+.node {
+  border-radius: 4px;
+  padding: 16px 18px;
+  position: relative;
+}
+.node-strategy {
+  background: var(--blue-dim);
+  border: 1px solid var(--blue);
+}
+.node-necessary {
+  background: var(--go-dim);
+  border: 1px solid var(--go);
+}
+.node-tactic {
+  background: var(--purple-dim);
+  border: 1px solid var(--purple);
+}
+.node-assumption {
+  background: var(--danger-dim);
+  border: 1px solid var(--danger);
+}
+.node-id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  margin-bottom: 6px;
+}
+.node-strategy .node-id { color: #80B0E0; }
+.node-necessary .node-id { color: #80C880; }
+.node-tactic .node-id { color: #C080E0; }
+.node-assumption .node-id { color: #E08080; }
+
+.node-text {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--white);
+  font-weight: 500;
+}
+.node-sub {
+  font-size: 11px;
+  color: var(--stone-sand);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* CONNECTOR */
+.connector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 0;
+  color: var(--stone-tan);
+  font-size: 18px;
+  line-height: 1;
+}
+.connector-h {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 6px 0;
+}
+.h-line {
+  flex: 1;
+  height: 1px;
+  background: var(--stone-warm);
+}
+.h-arrow {
+  color: var(--stone-tan);
+  font-size: 14px;
+  padding: 0 8px;
+}
+
+/* ASSUMPTION BOX */
+.assumption-box {
+  background: var(--danger-dim);
+  border: 1px solid var(--danger);
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin-top: 8px;
+}
+.assumption-box .node-id { color: #E08080; font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing:0.15em; margin-bottom:4px; }
+.assumption-box p { font-size: 12px; color: #F0C0C0; line-height: 1.55; }
+.assumption-box strong { color: var(--white); }
+
+/* LOGIC TEST */
+.logic-row {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--stone-warm);
+  align-items: stretch;
+}
+.logic-row:last-child { border-bottom: none; }
+.logic-if {
+  background: var(--blue-dim);
+  padding: 14px 16px;
+  min-width: 80px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #80B0E0;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid var(--stone-warm);
+}
+.logic-then {
+  background: var(--go-dim);
+  padding: 14px 16px;
+  min-width: 80px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #80C880;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid var(--stone-warm);
+}
+.logic-because {
+  background: var(--stone-mid);
+  padding: 14px 16px;
+  min-width: 90px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stone-tan);
+  display: flex;
+  align-items: center;
+  border-right: 1px solid var(--stone-warm);
+}
+.logic-content {
+  padding: 14px 16px;
+  flex: 1;
+  font-size: 13px;
+  color: var(--stone-sand);
+  line-height: 1.55;
+}
+.logic-content strong { color: var(--white); }
+
+/* BREAK TEST */
+.break-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--stone-warm);
+}
+.break-row:last-child { border-bottom: none; }
+.break-icon { font-size: 16px; min-width: 24px; margin-top: 2px; }
+.break-text { font-size: 13px; color: var(--stone-sand); line-height: 1.6; flex: 1; }
+.break-text strong { color: var(--white); }
+.break-verdict {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  padding: 2px 8px;
+  border-radius: 2px;
+  min-width: 60px;
+  text-align: center;
+  margin-top: 2px;
+}
+.verdict-hold { background: var(--go-dim); color: #80C880; border: 1px solid var(--go); }
+.verdict-watch { background: #3A2A00; color: #E8C870; border: 1px solid #C49730; }
+.verdict-fix { background: var(--danger-dim); color: #E08080; border: 1px solid var(--danger); }
+
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="eyebrow">The Stone Mill, Inc. — S&T Tree #1</div>
+  <h1>The <em>Direct B2B</em> Model</h1>
+  <p class="masthead-sub">Strategy & Tactics Tree: Why contractors buy direct from the quarry — and what must be true for that to hold at $35M.</p>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="show('what')">What Is This</button>
+    <button class="nav-btn" onclick="show('tree')">The Tree</button>
+    <button class="nav-btn" onclick="show('logic')">Logic Test</button>
+    <button class="nav-btn" onclick="show('breaks')">Where It Breaks</button>
+    <button class="nav-btn" onclick="show('actions')">Tactical Actions</button>
+  </div>
+</nav>
+
+<!-- PAGE: WHAT IS THIS -->
+<div id="what" class="page active">
+<div class="wrap">
+  <div class="section-head">
+    <h2>What This Tree Is For</h2>
+    <span class="tag">S&T Tree Primer</span>
+  </div>
+
+  <div class="card">
+    <div class="card-head">The Purpose of a Strategy & Tactics Tree</div>
+    <p>An S&T Tree answers one question that most business plans skip entirely: <strong>why does this strategy actually work?</strong> Not what you're going to do — why the logic of it holds. It maps the chain from Goal → Strategy → Necessary Conditions → Tactics, and at every link it asks: "If we do this, does that actually follow? And what has to be true for it to follow?"</p>
+    <p>If any link in the chain doesn't hold, the strategy fails — even if every tactic is executed perfectly. The tree finds the weak links before you spend two years finding out the hard way.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">What We Now Know About Stone Mill's Model</div>
+    <p>After the board questions, here is the accurate picture the tree is built from:</p>
+    <ul style="margin-top:12px; padding:0; list-style:none;">
+      <li style="padding:8px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">~$1.4M is B2B at $8.50/sq ft</strong> — contractors buying direct from Stone Mill. You ARE the distributor in these transactions.</li>
+      <li style="padding:8px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">~$300K is B2C at $13–15/sq ft</strong> — homeowners buying direct, bypassing contractors entirely.</li>
+      <li style="padding:8px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Distributors who carry similar stone mark it up above $13</strong> — meaning Stone Mill at $13 direct to contractors is still below what they'd pay a distributor for comparable stone.</li>
+      <li style="padding:8px 0; font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">The constraint is awareness, not price</strong> — contractors who know Stone Mill exists and understand the direct model have a clear financial reason to buy here.</li>
+    </ul>
+    <div class="pullquote">The strategic question is not "why would they pay more." It's "why don't they already know we exist — and what happens when they do?"</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">The Central Strategic Insight</div>
+    <p>Stone Mill sits in a position most businesses never achieve: <strong>you can give B2B contractors a better price than a distributor AND make more margin than your current wholesale rate simultaneously.</strong></p>
+    <p>At $8.50 to contractors now → move to $11–12 direct (below distributor, above your current rate) → contractor saves money, Stone Mill earns more. That is a Mafia Offer. Nobody loses except the distributor who isn't in the room.</p>
+    <p>The S&T Tree maps why that logic holds, what has to be in place for it to work, and where it could break down at scale.</p>
+  </div>
+</div>
+</div>
+
+<!-- PAGE: THE TREE -->
+<div id="tree" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>The Strategy & Tactics Tree</h2>
+    <span class="tag">Direct B2B Model</span>
+  </div>
+
+  <!-- GOAL -->
+  <div class="goal-node">
+    <div class="goal-label">The Goal</div>
+    <div class="goal-text">Grow Stone Mill to $35M revenue / $7M EBITDA<br>by selling Michigan natural stone direct to B2B contractors<br>at prices that beat distributors — creating a platform-exit-ready business.</div>
+  </div>
+
+  <!-- STRATEGY LEVEL 1 -->
+  <div class="strategy-level">
+    <div class="level-label label-strategy">Strategy Layer</div>
+    <div class="node-grid node-grid-2">
+      <div class="node node-strategy">
+        <div class="node-id">S-1</div>
+        <div class="node-text">Own the direct channel from quarry to contractor — eliminate the distributor margin layer entirely</div>
+        <div class="node-sub">Stone Mill is the source AND the seller. No middleman captures the $4–5/sq ft spread.</div>
+      </div>
+      <div class="node node-strategy">
+        <div class="node-id">S-2</div>
+        <div class="node-text">Price at $11–13 direct to B2B — below distributor retail, above current $8.50 wholesale</div>
+        <div class="node-sub">Contractor saves vs. distributor. Stone Mill earns more than current rate. Both win. Distributor loses.</div>
+      </div>
+    </div>
+
+    <div class="connector">↓</div>
+
+    <!-- NECESSARY CONDITIONS -->
+    <div class="level-label label-necessary">Necessary Conditions — What Must Be True</div>
+    <div class="node-grid node-grid-3">
+      <div class="node node-necessary">
+        <div class="node-id">NC-1</div>
+        <div class="node-text">Contractors must know Stone Mill exists and sells direct</div>
+        <div class="node-sub">Currently the primary gap. Most contractors don't know they can bypass the distributor and buy from a Michigan quarry owner directly.</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-2</div>
+        <div class="node-text">Stone Mill must be able to deliver consistent quality and supply at scale</div>
+        <div class="node-sub">A contractor won't switch suppliers if they fear running out of matching stone mid-project. Consistency is the non-negotiable.</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-3</div>
+        <div class="node-text">The price advantage must be real and demonstrable — not theoretical</div>
+        <div class="node-sub">Contractors need to see the math: "You pay X at your distributor. You pay Y here. Same stone. Here's the difference per project."</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-4</div>
+        <div class="node-text">Stone Mill must have a sales system that reaches contractors at scale</div>
+        <div class="node-sub">Awareness alone doesn't close deals. There must be a process: outreach → sample → conversation → order. Currently running at ~10% capacity.</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-5</div>
+        <div class="node-text">Quarry capacity must grow with revenue — production can't become the ceiling</div>
+        <div class="node-sub">Current quarries support ~$1.7M. The $35M model requires roughly 20x volume. Capital investment or sourcing expansion is required.</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-6</div>
+        <div class="node-text">No single customer can represent more than 25% of revenue</div>
+        <div class="node-sub">Platform exit requires diversification. Current 70% concentration is the most urgent structural risk in the entire model.</div>
+      </div>
+    </div>
+
+    <div class="connector">↓</div>
+
+    <!-- TACTICS -->
+    <div class="level-label label-tactic">Tactics — The Specific Actions</div>
+    <div class="node-grid node-grid-2">
+      <div class="node node-tactic">
+        <div class="node-id">T-1 → NC-1 + NC-4</div>
+        <div class="node-text">Execute the cold call playbook at 20+ touches/week targeting masons, contractors, and custom builders in Michigan first, then adjacent markets</div>
+        <div class="node-sub">This is the primary lever right now. Everything else is downstream of this.</div>
+      </div>
+      <div class="node node-tactic">
+        <div class="node-id">T-2 → NC-1 + NC-3</div>
+        <div class="node-text">Build a one-page "Direct from Quarry" comparison showing the math — what a 2,000 sq ft project costs through a distributor vs. Stone Mill direct</div>
+        <div class="node-sub">Make the price advantage tangible and immediate. Leave it with every prospect.</div>
+      </div>
+      <div class="node node-tactic">
+        <div class="node-id">T-3 → NC-2</div>
+        <div class="node-text">Implement lot-matching guarantee and documented quality control process — publish it. Make it a named Stone Mill standard.</div>
+        <div class="node-sub">Consistency fear is the top objection. Remove it structurally, not verbally.</div>
+      </div>
+      <div class="node node-tactic">
+        <div class="node-id">T-4 → NC-4</div>
+        <div class="node-text">Hire Sales Process Coordinator Q3 Year 1 — transfer all outbound, scheduling, and HubSpot admin so Steve focuses exclusively on qualified conversations</div>
+        <div class="node-sub">Steve is currently the bottleneck in the sales system. This hire removes that constraint.</div>
+      </div>
+      <div class="node node-tactic">
+        <div class="node-id">T-5 → NC-5</div>
+        <div class="node-text">Get a hard production ceiling number from quarry operations this quarter — then map the capital investment required to reach $7M, $14M, and $35M revenue levels</div>
+        <div class="node-sub">You cannot commit to revenue targets without knowing where production breaks.</div>
+      </div>
+      <div class="node node-tactic">
+        <div class="node-id">T-6 → NC-6</div>
+        <div class="node-text">Set a formal rule: no new deal structure that would push any single customer above 20% of trailing 12-month revenue. Track this monthly in HubSpot.</div>
+        <div class="node-sub">Diversification doesn't happen accidentally. It requires a deliberate constraint on how you sell.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- PAGE: LOGIC TEST -->
+<div id="logic" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>Logic Test</h2>
+    <span class="tag">If → Then → Because</span>
+  </div>
+
+  <div class="card" style="margin-bottom:24px;">
+    <div class="card-head">How to Read This</div>
+    <p>An S&T Tree is only as good as the logic connecting each layer. This page tests every major "if → then" claim in the tree. If the "because" doesn't hold, the link breaks and the strategy fails at that point. Read each one critically — not as a cheerleader but as a skeptic.</p>
+  </div>
+
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div class="logic-row">
+      <div class="logic-if">If</div>
+      <div class="logic-content">Stone Mill sells direct to contractors at $11–13/sq ft</div>
+      <div class="logic-then">Then</div>
+      <div class="logic-content">Contractors save money vs. buying from a distributor who marks up above $13</div>
+      <div class="logic-because">Because</div>
+      <div class="logic-content"><strong>Distributors mark up stone above $13 retail.</strong> Stone Mill at $11–13 direct is below that ceiling. The savings are real. ✓ This link holds — confirmed by Steve's own pricing context.</div>
+    </div>
+    <div class="logic-row">
+      <div class="logic-if">If</div>
+      <div class="logic-content">Contractors save money AND get real Michigan quarry stone</div>
+      <div class="logic-then">Then</div>
+      <div class="logic-content">They have a clear reason to switch from their distributor to Stone Mill</div>
+      <div class="logic-because">Because</div>
+      <div class="logic-content"><strong>Price + provenance + relationship beats distributor convenience</strong> — IF the switching cost is low. ⚠ This link is conditional. Switching costs (new account setup, sample approval, habit) are real. The Mafia Offer must make switching easier than staying.</div>
+    </div>
+    <div class="logic-row">
+      <div class="logic-if">If</div>
+      <div class="logic-content">Stone Mill runs 20+ outbound prospecting touches per week</div>
+      <div class="logic-then">Then</div>
+      <div class="logic-content">Enough contractors learn Stone Mill exists to build a diversified pipeline</div>
+      <div class="logic-because">Because</div>
+      <div class="logic-content"><strong>Volume of outreach produces awareness at scale.</strong> At typical B2B conversion rates (2–5%), 20 touches/week → ~1 new account per month → 12/year. To hit $3.5M Year 1, you need roughly 20+ active accounts. The math works if the system runs. ✓</div>
+    </div>
+    <div class="logic-row">
+      <div class="logic-if">If</div>
+      <div class="logic-content">Stone Mill demonstrates lot-to-lot consistency and guarantees it</div>
+      <div class="logic-then">Then</div>
+      <div class="logic-content">The primary technical objection to switching ("what if the next order doesn't match?") is removed</div>
+      <div class="logic-because">Because</div>
+      <div class="logic-content"><strong>Quarrying from owned sources gives Stone Mill more control over consistency than a distributor who aggregates from multiple sources.</strong> This is a genuine competitive advantage. ✓ But it must be documented and named — not just claimed verbally.</div>
+    </div>
+    <div class="logic-row">
+      <div class="logic-if">If</div>
+      <div class="logic-content">Current quarries support ~$1.7M revenue</div>
+      <div class="logic-then">Then</div>
+      <div class="logic-content">Significant capital investment is required before $7M is achievable</div>
+      <div class="logic-because">Because</div>
+      <div class="logic-content"><strong>4x revenue = roughly 4x volume from same quarry footprint.</strong> Equipment, labor, and possibly quarry expansion are required. ⚠ This link is UNKNOWN until Steve gets the production ceiling number from operations. This is a gap in the current plan.</div>
+    </div>
+    <div class="logic-row">
+      <div class="logic-if">If</div>
+      <div class="logic-content">Customer concentration drops below 25%</div>
+      <div class="logic-then">Then</div>
+      <div class="logic-content">The business qualifies for platform-level acquisition multiples at exit</div>
+      <div class="logic-because">Because</div>
+      <div class="logic-content"><strong>PE and strategic buyers require no single customer above 20–25% to avoid concentration risk discounts of 1–2x EBITDA.</strong> ✓ This link holds — confirmed by M&A research. The 70% current concentration is the single biggest destroyer of exit value.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- PAGE: WHERE IT BREAKS -->
+<div id="breaks" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>Where the Strategy Breaks</h2>
+    <span class="tag">Assumption Audit</span>
+  </div>
+
+  <div class="card" style="margin-bottom:24px;">
+    <div class="card-head">The Board's Job</div>
+    <p>Every strategy rests on assumptions. Most business plans hide them. This page names them explicitly and rates each one — hold, watch, or fix. A strategy with unexamined assumptions is a plan waiting to fail silently.</p>
+  </div>
+
+  <div class="card" style="padding:20px 24px;">
+    <div class="break-row">
+      <div class="break-icon">⚠️</div>
+      <div class="break-text"><strong>Assumption: Contractors will pay $11–13 direct when they currently pay $8.50.</strong> The logic holds because distributors charge more — but this assumes contractors KNOW that, and currently trust Stone Mill enough to change their ordering behavior. Neither is guaranteed without a strong sales process and proof.</div>
+      <div class="break-verdict verdict-watch">WATCH</div>
+    </div>
+    <div class="break-row">
+      <div class="break-icon">🔴</div>
+      <div class="break-text"><strong>Assumption: Current quarry capacity can scale to meet $7M+ revenue.</strong> This is currently unknown. Steve said quarries are "about right for where we are now" — meaning $1.7M. The $35M model requires 20x volume. This assumption is unvalidated and could be the hardest constraint in the entire plan.</div>
+      <div class="break-verdict verdict-fix">FIX NOW</div>
+    </div>
+    <div class="break-row">
+      <div class="break-icon">🔴</div>
+      <div class="break-text"><strong>Assumption: The 70% customer stays while you diversify.</strong> The entire Year 1 plan assumes that customer remains stable while you build around them. If they reduce orders by 30% during your growth phase, the revenue math for Year 1 breaks entirely.</div>
+      <div class="break-verdict verdict-fix">FIX NOW</div>
+    </div>
+    <div class="break-row">
+      <div class="break-icon">⚠️</div>
+      <div class="break-text"><strong>Assumption: The Michigan provenance story is a differentiator at scale.</strong> In Michigan, this is clearly true. In Ohio, Indiana, Illinois — does a contractor in Chicago care that stone came from a Michigan quarry? Or does "local" stop mattering when you cross state lines?</div>
+      <div class="break-verdict verdict-watch">WATCH</div>
+    </div>
+    <div class="break-row">
+      <div class="break-icon">✅</div>
+      <div class="break-text"><strong>Assumption: Stone Mill's $13 direct price beats distributor pricing.</strong> Confirmed — distributors mark up above $13 retail. Stone Mill at $13 direct is competitive or below market. This assumption holds.</div>
+      <div class="break-verdict verdict-hold">HOLDS</div>
+    </div>
+    <div class="break-row">
+      <div class="break-icon">✅</div>
+      <div class="break-text"><strong>Assumption: Custom builders pass stone cost through to homeowners.</strong> Confirmed by Steve — builders pass it straight through. Price sensitivity in the B2B custom builder segment is low. This assumption holds.</div>
+      <div class="break-verdict verdict-hold">HOLDS</div>
+    </div>
+    <div class="break-row">
+      <div class="break-icon">⚠️</div>
+      <div class="break-text"><strong>Assumption: One Sales Process Coordinator unlocks Steve's capacity enough to drive Year 1 growth.</strong> If Steve is still spending significant time on production, operations, or admin after the hire, the capacity gain may not be enough. The hire only works if Steve's time actually shifts to prospecting and qualified conversations.</div>
+      <div class="break-verdict verdict-watch">WATCH</div>
+    </div>
+    <div class="break-row">
+      <div class="break-icon">⚠️</div>
+      <div class="break-text"><strong>Assumption: Getting to $35M is achievable organically.</strong> The math suggests it likely requires at least one acquisition in Years 3–4. Purely organic growth from $1.7M to $35M in five years would require sustained 83% annual growth — exceptional by any standard.</div>
+      <div class="break-verdict verdict-watch">WATCH</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- PAGE: TACTICAL ACTIONS -->
+<div id="actions" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>Tactical Actions</h2>
+    <span class="tag">From Tree to This Week</span>
+  </div>
+
+  <div class="card">
+    <div class="card-head">This Week — Non-Negotiable</div>
+    <ul style="list-style:none; padding:0;">
+      <li style="padding:12px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Get the production ceiling number.</strong> Ask your quarry operation: at current equipment and labor, what is the maximum revenue we can support without additional investment? This number changes everything downstream.</li>
+      <li style="padding:12px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Build the one-page price comparison.</strong> A 2,000 sq ft project through a distributor vs. direct from Stone Mill. Hard numbers. Leave it with every prospect. This is Tactic T-2 and it costs nothing to build.</li>
+      <li style="padding:12px 0; font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Make 5 prospecting calls.</strong> Not to prove the strategy. To get real objections from real contractors so the next version of this tree is built on live data, not assumptions.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-head">This Month</div>
+    <ul style="list-style:none; padding:0;">
+      <li style="padding:12px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Define the contractor pricing tier.</strong> If $8.50 is current wholesale and $13 is B2C, what is the direct B2B rate for contractors who commit to volume? $10.50? $11? This needs to be a real number, not a range.</li>
+      <li style="padding:12px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Document the lot-matching process.</strong> Whatever quality control currently exists — write it down, name it, and make it a Stone Mill standard. This is your consistency guarantee and it costs nothing to formalize.</li>
+      <li style="padding:12px 0; font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Have an honest conversation with the 70% customer.</strong> Not about losing them — about understanding their trajectory. Are they growing? Stable? At risk? Their answer shapes how aggressively you need to diversify in Year 1.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-head">This Quarter</div>
+    <ul style="list-style:none; padding:0;">
+      <li style="padding:12px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Test the out-of-state story.</strong> Make 10 calls to contractors in one adjacent market — Detroit metro, Grand Rapids, or northwest Ohio. Track the objections. Does the Michigan provenance story travel? This is a $0 market test.</li>
+      <li style="padding:12px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Run the S&T Tree on Customer Concentration next.</strong> That's Tree #2 and it's the most urgent strategic problem in the business right now.</li>
+      <li style="padding:12px 0; font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Begin Sales Coordinator candidate search.</strong> Don't wait until Q3 to start looking. The right hire takes 60–90 days to find, onboard, and make effective. Start the search now.</li>
+    </ul>
+  </div>
+
+</div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
