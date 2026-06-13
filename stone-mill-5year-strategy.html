@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Stone Mill — 5-Year Growth Strategy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --black: #0F0E0C;
+  --stone-dark: #1A1815;
+  --stone-mid: #2E2B26;
+  --stone-warm: #4A4440;
+  --stone-tan: #8C7B6E;
+  --stone-sand: #C4B4A0;
+  --stone-light: #EDE4D8;
+  --chisel: #C87820;
+  --chisel-dim: #8A5414;
+  --white: #F8F4EE;
+  --danger: #C84040;
+  --danger-dim: #6A1818;
+  --go: #4A8A50;
+  --go-dim: #1E4422;
+  --y1: #C87820;
+  --y2: #7A5C3A;
+  --y3: #3A5A7A;
+  --y4: #4A6741;
+  --y5: #6A3A7A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── MASTHEAD ── */
+.masthead {
+  background: var(--stone-dark);
+  border-bottom: 1px solid var(--stone-warm);
+  padding: 48px 40px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.masthead::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--chisel) 0%, var(--chisel-dim) 60%, transparent 100%);
+}
+.masthead-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--chisel);
+  margin-bottom: 16px;
+}
+.masthead-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 900;
+  line-height: 1.05;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.masthead-title em {
+  font-style: italic;
+  color: var(--stone-sand);
+}
+.masthead-sub {
+  font-size: 14px;
+  color: var(--stone-tan);
+  max-width: 600px;
+  margin-bottom: 32px;
+  line-height: 1.7;
+}
+.masthead-stats {
+  display: flex;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.stat-block {
+  padding: 16px 28px 16px 0;
+  margin-right: 28px;
+  border-right: 1px solid var(--stone-warm);
+}
+.stat-block:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--chisel);
+  line-height: 1;
+}
+.stat-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stone-tan);
+  margin-top: 4px;
+}
+
+/* ── ALERT BANNER ── */
+.alert {
+  background: var(--danger-dim);
+  border-left: 4px solid var(--danger);
+  margin: 0;
+  padding: 20px 40px;
+}
+.alert-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--danger);
+  margin-bottom: 6px;
+}
+.alert p {
+  font-size: 14px;
+  color: #F0C0C0;
+  line-height: 1.6;
+}
+.alert strong { color: var(--white); }
+
+/* ── NAV ── */
+nav {
+  background: var(--stone-dark);
+  border-bottom: 1px solid var(--stone-warm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  overflow-x: auto;
+}
+.nav-inner {
+  display: flex;
+  gap: 0;
+  padding: 0 40px;
+  white-space: nowrap;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--stone-tan);
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 14px 18px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-btn:hover { color: var(--white); }
+.nav-btn.active { color: var(--chisel); border-bottom-color: var(--chisel); }
+
+/* ── PAGES ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── LAYOUT ── */
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 48px 40px;
+}
+
+/* ── SECTION HEADS ── */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--stone-warm);
+}
+.section-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--white);
+}
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--chisel);
+  border: 1px solid var(--chisel-dim);
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--stone-dark);
+  border: 1px solid var(--stone-warm);
+  border-radius: 4px;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+.card-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--chisel);
+  margin-bottom: 16px;
+}
+.card p {
+  color: var(--stone-sand);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.card p:last-child { margin-bottom: 0; }
+.card strong { color: var(--white); }
+
+/* ── PULLQUOTE ── */
+.pullquote {
+  border-left: 3px solid var(--chisel);
+  padding: 12px 20px;
+  margin: 20px 0;
+  background: var(--stone-mid);
+  font-size: 14px;
+  color: var(--stone-light);
+  line-height: 1.7;
+  font-style: italic;
+}
+
+/* ── YEAR BLOCKS ── */
+.year-block {
+  margin-bottom: 48px;
+}
+.year-label {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.year-pill {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 3px;
+}
+.year-target {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--stone-tan);
+  letter-spacing: 0.1em;
+}
+.year-theme {
+  font-size: 20px;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.y1-color { background: var(--y1); color: var(--black); }
+.y2-color { background: var(--y2); color: var(--white); }
+.y3-color { background: var(--y3); color: var(--white); }
+.y4-color { background: var(--y4); color: var(--white); }
+.y5-color { background: var(--y5); color: var(--white); }
+
+/* ── QUARTERS ── */
+.quarters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+@media (max-width: 640px) { .quarters { grid-template-columns: 1fr; } }
+
+.quarter-card {
+  background: var(--stone-mid);
+  border: 1px solid var(--stone-warm);
+  border-radius: 4px;
+  padding: 20px;
+}
+.q-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--stone-tan);
+  margin-bottom: 10px;
+}
+.q-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.q-items {
+  list-style: none;
+}
+.q-items li {
+  font-size: 12px;
+  color: var(--stone-sand);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--stone-warm);
+  line-height: 1.5;
+}
+.q-items li:last-child { border-bottom: none; }
+.q-items li::before {
+  content: '→ ';
+  color: var(--chisel);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ── OKR TABLE ── */
+.okr-block {
+  background: var(--stone-dark);
+  border: 1px solid var(--stone-warm);
+  border-radius: 4px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+.okr-objective {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--stone-warm);
+}
+.okr-objective span {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--chisel);
+  text-transform: uppercase;
+  margin-right: 10px;
+}
+.kr-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--stone-mid);
+}
+.kr-row:last-child { border-bottom: none; }
+.kr-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--chisel);
+  min-width: 24px;
+  margin-top: 2px;
+}
+.kr-text {
+  font-size: 13px;
+  color: var(--stone-sand);
+  line-height: 1.5;
+}
+.kr-text strong { color: var(--white); }
+
+/* ── TEAM TABLE ── */
+.team-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+.team-table th {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--chisel);
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--stone-warm);
+  background: var(--stone-dark);
+}
+.team-table td {
+  font-size: 13px;
+  color: var(--stone-sand);
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--stone-mid);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.team-table td strong { color: var(--white); font-size: 13px; }
+.team-table tr:last-child td { border-bottom: none; }
+.role-phase {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  padding: 2px 6px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.phase-now { background: var(--go-dim); color: #90D090; }
+.phase-pt { background: var(--chisel-dim); color: var(--chisel); }
+.phase-ft { background: var(--stone-warm); color: var(--stone-light); }
+.claude-tag { background: #1A2A4A; color: #80A8D0; }
+
+/* ── MAFIA OFFER ── */
+.offer-box {
+  background: linear-gradient(135deg, #1A1410, #2A2018);
+  border: 2px solid var(--chisel);
+  border-radius: 4px;
+  padding: 32px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.offer-box::before {
+  content: 'THE MAFIA OFFER';
+  position: absolute;
+  top: -10px;
+  left: 24px;
+  background: var(--chisel);
+  color: var(--black);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  padding: 2px 10px;
+  font-weight: 500;
+}
+.offer-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.3;
+  margin-bottom: 16px;
+}
+.offer-body {
+  font-size: 14px;
+  color: var(--stone-sand);
+  line-height: 1.7;
+}
+
+/* ── TOC CONSTRAINT MAP ── */
+.constraint-map {
+  background: var(--stone-dark);
+  border: 1px solid var(--stone-warm);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.constraint-row {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--stone-warm);
+}
+.constraint-row:last-child { border-bottom: none; }
+.constraint-step {
+  background: var(--stone-mid);
+  padding: 16px 20px;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid var(--stone-warm);
+}
+.cs-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--chisel);
+  letter-spacing: 0.2em;
+  margin-bottom: 4px;
+}
+.cs-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--white);
+}
+.constraint-content {
+  padding: 16px 20px;
+  flex: 1;
+}
+.constraint-content p {
+  font-size: 13px;
+  color: var(--stone-sand);
+  line-height: 1.6;
+}
+.constraint-content strong { color: var(--white); }
+
+/* ── HONEST SECTION ── */
+.honest-box {
+  background: var(--stone-mid);
+  border-left: 4px solid var(--stone-tan);
+  padding: 24px 28px;
+  margin-bottom: 20px;
+}
+.honest-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stone-tan);
+  margin-bottom: 12px;
+}
+.honest-box p {
+  font-size: 14px;
+  color: var(--stone-sand);
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+.honest-box p:last-child { margin-bottom: 0; }
+.honest-box strong { color: var(--white); }
+
+/* ── REVENUE LADDER ── */
+.revenue-ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 24px;
+}
+.ladder-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid var(--stone-warm);
+}
+.ladder-row:last-child { border-bottom: none; }
+.ladder-year {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--stone-tan);
+  min-width: 60px;
+  padding: 14px 16px;
+  border-right: 1px solid var(--stone-warm);
+  background: var(--stone-dark);
+}
+.ladder-rev {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  min-width: 120px;
+  padding: 14px 16px;
+  border-right: 1px solid var(--stone-warm);
+}
+.ladder-ebitda {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  min-width: 120px;
+  padding: 14px 16px;
+  border-right: 1px solid var(--stone-warm);
+  color: var(--go);
+}
+.ladder-theme {
+  font-size: 12px;
+  color: var(--stone-sand);
+  padding: 14px 16px;
+  flex: 1;
+}
+.ladder-bar {
+  height: 4px;
+  border-radius: 0;
+  margin: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-eyebrow">The Stone Mill, Inc. — Strategic Plan 2026–2030</div>
+  <h1 class="masthead-title">From <em>$1.7M</em> to $35M<br>and a clean exit.</h1>
+  <p class="masthead-sub">A five-year board-level strategy built on Theory of Constraints, direct B2B sales, and the honest truth about what has to happen first.</p>
+  <div class="masthead-stats">
+    <div class="stat-block">
+      <div class="stat-num">$1.7M</div>
+      <div class="stat-label">Current Revenue</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">$35M</div>
+      <div class="stat-label">Year 5 Target</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">$5–7M</div>
+      <div class="stat-label">Target EBITDA</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">$13–15</div>
+      <div class="stat-label">Direct Price / Sq Ft</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">5 Yrs</div>
+      <div class="stat-label">To Platform Exit</div>
+    </div>
+  </div>
+</div>
+
+<!-- ALERT -->
+<div class="alert">
+  <div class="alert-head">⚠ Board Priority #1 — Before Anything Else</div>
+  <p><strong>One customer represents ~70% of your $1.7M revenue.</strong> That is approximately $1.19M walking out the door if that relationship changes. No buyer — strategic or financial — will pay a platform multiple for this business until that number is below 25%. This is not a Year 2 problem. It starts this quarter. Every other element of this strategy is secondary to customer diversification.</p>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="show('overview')">Overview</button>
+    <button class="nav-btn" onclick="show('toc')">TOC Framework</button>
+    <button class="nav-btn" onclick="show('offer')">Mafia Offer</button>
+    <button class="nav-btn" onclick="show('roadmap')">5-Year Roadmap</button>
+    <button class="nav-btn" onclick="show('okrs')">OKRs by Year</button>
+    <button class="nav-btn" onclick="show('team')">Leadership Team</button>
+    <button class="nav-btn" onclick="show('honest')">Honest Board Talk</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PAGE: OVERVIEW -->
+<!-- ═══════════════════════════════════ -->
+<div id="overview" class="page active">
+<div class="wrap">
+
+  <div class="section-head">
+    <h2>Strategic Overview</h2>
+    <span class="tag">The Big Picture</span>
+  </div>
+
+  <div class="card">
+    <div class="card-head">The Thesis</div>
+    <p>The Stone Mill owns two quarries, produces real Michigan stone, and sells it at $13–15/sq ft direct — bypassing the wholesale distributor layer that captures $4–5/sq ft of margin that belongs to you. That pricing advantage, combined with a vertically integrated supply chain, is the foundation of a defensible B2B platform.</p>
+    <p>The path to $35M is not one giant leap. It is five sequential moves, each one unlocking the next. <strong>You cannot skip steps.</strong> The constraint at each stage must be identified, exploited, and elevated before the next constraint is addressed — this is TOC applied to company growth.</p>
+  </div>
+
+  <div class="revenue-ladder">
+    <div class="ladder-row">
+      <div class="ladder-year">NOW</div>
+      <div class="ladder-rev" style="color:var(--stone-tan)">$1.7M</div>
+      <div class="ladder-ebitda">~$600K</div>
+      <div class="ladder-theme">Single market. One dominant customer. You are the constraint.</div>
+    </div>
+    <div class="ladder-row">
+      <div class="ladder-year">YR 1</div>
+      <div class="ladder-rev" style="color:var(--y1)">$3.5M</div>
+      <div class="ladder-ebitda">~$900K</div>
+      <div class="ladder-theme">Diversify customer base. Build the sales system. Reduce top customer to &lt;40%.</div>
+    </div>
+    <div class="ladder-row">
+      <div class="ladder-year">YR 2</div>
+      <div class="ladder-rev" style="color:var(--y2)">$7M</div>
+      <div class="ladder-ebitda">~$1.7M</div>
+      <div class="ladder-theme">Expand geographically. Hire Sales Coordinator. Top customer &lt;25%.</div>
+    </div>
+    <div class="ladder-row">
+      <div class="ladder-year">YR 3</div>
+      <div class="ladder-rev" style="color:var(--y3)">$14M</div>
+      <div class="ladder-ebitda">~$3M</div>
+      <div class="ladder-theme">Regional platform. Second quarry investment or acquisition. Leadership team in place.</div>
+    </div>
+    <div class="ladder-row">
+      <div class="ladder-year">YR 4</div>
+      <div class="ladder-rev" style="color:var(--y4)">$24M</div>
+      <div class="ladder-ebitda">~$5M</div>
+      <div class="ladder-theme">Multi-state. Acquisition of complementary business. Exit prep begins.</div>
+    </div>
+    <div class="ladder-row">
+      <div class="ladder-year">YR 5</div>
+      <div class="ladder-rev" style="color:var(--y5)">$35M</div>
+      <div class="ladder-ebitda">~$7M</div>
+      <div class="ladder-theme">Platform company. Clean management team. Exit-ready. Multiple: 7–10x EBITDA.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">The Direct B2B Model — Why It Wins</div>
+    <p>Wholesale distributors exist to solve a logistics and relationship problem — they aggregate product and manage contractor accounts so manufacturers don't have to. <strong>You already have a direct relationship with masons and contractors. You have a quarry. You have no reason to give away $4–5/sq ft.</strong></p>
+    <p>At $35M revenue and $13/sq ft average, you're moving roughly 2.7 million square feet per year. At $8.50 wholesale that same volume is $22.9M. The direct model is worth an additional $12M+ in revenue at scale — and because it's margin, not cost, it drops almost entirely to EBITDA. This is the strategic moat.</p>
+    <p>The constraint: direct B2B at scale requires a sales infrastructure that wholesale distribution replaces. That's exactly what the Roff-Marsh machine is designed to build.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PAGE: TOC FRAMEWORK -->
+<!-- ═══════════════════════════════════ -->
+<div id="toc" class="page">
+<div class="wrap">
+
+  <div class="section-head">
+    <h2>TOC Applied to Stone Mill</h2>
+    <span class="tag">Theory of Constraints</span>
+  </div>
+
+  <div class="card">
+    <div class="card-head">The Five Focusing Steps — Applied Now</div>
+    <p>Goldratt's Five Focusing Steps are not a philosophy. They are a diagnostic. Run them on Stone Mill today and the answer is unambiguous.</p>
+  </div>
+
+  <div class="constraint-map">
+    <div class="constraint-row">
+      <div class="constraint-step">
+        <div class="cs-num">STEP 1</div>
+        <div class="cs-name">Identify the Constraint</div>
+      </div>
+      <div class="constraint-content">
+        <p><strong>Market awareness is the constraint.</strong> You have quarries with capacity. You have a product priced correctly. You have a team. The system is not producing more revenue because not enough of the right contractors, masons, and builders in the right geographies know Stone Mill exists. This is a pure market constraint — and TOC says a market constraint means you are not exploiting your current capacity.</p>
+      </div>
+    </div>
+    <div class="constraint-row">
+      <div class="constraint-step">
+        <div class="cs-num">STEP 2</div>
+        <div class="cs-name">Exploit the Constraint</div>
+      </div>
+      <div class="constraint-content">
+        <p><strong>Get maximum output from what you already have before adding anything.</strong> You have a contact list. You have HubSpot live. You have a cold call playbook. You have a Mafia Offer to build (see next tab). The immediate goal: activate the existing system at full throttle — 20+ prospecting touches per week — before hiring, before expansion, before anything else. You are currently operating the sales machine at roughly 10% capacity.</p>
+      </div>
+    </div>
+    <div class="constraint-row">
+      <div class="constraint-step">
+        <div class="cs-num">STEP 3</div>
+        <div class="cs-name">Subordinate Everything Else</div>
+      </div>
+      <div class="constraint-content">
+        <p><strong>Every other function supports the constraint.</strong> Production schedules, quarry output planning, order fulfillment — all of it should be paced to what sales can generate, not the other way around. Right now your ops likely have spare capacity. Don't optimize ops. Don't build a better quarry process. Sell. Everything subordinates to filling the pipeline.</p>
+      </div>
+    </div>
+    <div class="constraint-row">
+      <div class="constraint-step">
+        <div class="cs-num">STEP 4</div>
+        <div class="cs-name">Elevate the Constraint</div>
+      </div>
+      <div class="constraint-content">
+        <p><strong>When you've maxed out what one person can do, add capacity to the constraint.</strong> This is the Sales Process Coordinator hire (Q3 Year 1), geographic expansion (Year 2), and eventually a dedicated sales rep for new markets (Year 3). You only elevate after exploiting — hiring before the system is running full throttle wastes money and creates confusion.</p>
+      </div>
+    </div>
+    <div class="constraint-row">
+      <div class="constraint-step">
+        <div class="cs-num">STEP 5</div>
+        <div class="cs-name">Repeat</div>
+      </div>
+      <div class="constraint-content">
+        <p><strong>Once market awareness is no longer the constraint, find the new one.</strong> At $7M it will likely be production capacity or geographic reach. At $14M it may be management depth. At $24M it may be capital for acquisition. Each stage of this roadmap begins by identifying the new constraint before assuming what the next investment should be.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">Layers of Resistance — Your Sales Psychology Map</div>
+    <p>Every contractor or builder you call moves through predictable resistance layers before saying yes. TOC named them. Here's how they apply to selling real stone direct:</p>
+    <div style="margin-top:16px;">
+      <div class="okr-block" style="margin-bottom:10px;">
+        <div class="okr-objective"><span>Layer 1</span> "I don't agree this is a problem"</div>
+        <div class="kr-row"><div class="kr-num">→</div><div class="kr-text">The contractor is happy with his current stone supplier or doesn't think about stone sourcing as a problem. <strong>Your job: surface the pain.</strong> "What happens on your timeline when your stone supplier runs out of the material you spec'd mid-project?"</div></div>
+      </div>
+      <div class="okr-block" style="margin-bottom:10px;">
+        <div class="okr-objective"><span>Layer 2</span> "I don't agree that's the direction to go"</div>
+        <div class="kr-row"><div class="kr-num">→</div><div class="kr-text">They agree there's an issue but aren't sure direct from quarry is the answer. <strong>Your job: the Mafia Offer.</strong> Show them the math — $4–5/sq ft savings, guaranteed consistency, one call to the quarry owner.</div></div>
+      </div>
+      <div class="okr-block" style="margin-bottom:10px;">
+        <div class="okr-objective"><span>Layer 3</span> "I don't believe it will work"</div>
+        <div class="kr-row"><div class="kr-num">→</div><div class="kr-text">They like the idea but doubt you can deliver. <strong>Your job: proof.</strong> Case studies, photos, referrals from contractors they respect. The fourth-generation story is credibility, not just brand.</div></div>
+      </div>
+      <div class="okr-block" style="margin-bottom:10px;">
+        <div class="okr-objective"><span>Layer 4</span> "I see negative side effects"</div>
+        <div class="kr-row"><div class="kr-num">→</div><div class="kr-text">They worry about switching friction — what if you run out of stock, what about lead times, what about quality consistency? <strong>Your job: answer before they ask.</strong> Build those answers into the offer structure.</div></div>
+      </div>
+      <div class="okr-block">
+        <div class="okr-objective"><span>Layer 5</span> "I don't know how to implement"</div>
+        <div class="kr-row"><div class="kr-num">→</div><div class="kr-text">They're interested but the change feels like work. <strong>Your job: remove the friction completely.</strong> Sample delivery, spec sheet, one-page ordering process. Make saying yes easier than staying with the distributor.</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PAGE: MAFIA OFFER -->
+<!-- ═══════════════════════════════════ -->
+<div id="offer" class="page">
+<div class="wrap">
+
+  <div class="section-head">
+    <h2>The Mafia Offer</h2>
+    <span class="tag">TOC — Market Constraint</span>
+  </div>
+
+  <div class="card">
+    <div class="card-head">What a Mafia Offer Actually Is</div>
+    <p>Goldratt's definition: an offer so good, so clearly in the customer's interest, that they would feel foolish refusing it. It is not a discount. It is not a promotion. It is a restructured offer that removes the customer's biggest fear and replaces it with a compelling reason to act now.</p>
+    <p><strong>The question to answer:</strong> What does a mason, contractor, or custom builder fear most in the stone procurement process? That is where your Mafia Offer begins.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">What Contractors Actually Fear</div>
+    <p>Based on the direct B2B selling context, the real fears are:</p>
+    <ul style="margin-top:12px; padding-left:0; list-style:none;">
+      <li style="padding:8px 0; border-bottom:1px solid var(--stone-warm); color:var(--stone-sand); font-size:14px;">→ <strong style="color:var(--white)">Material inconsistency mid-project</strong> — ordering stone and getting a different lot that doesn't match what's already on the wall</li>
+      <li style="padding:8px 0; border-bottom:1px solid var(--stone-warm); color:var(--stone-sand); font-size:14px;">→ <strong style="color:var(--white)">Supply gaps that stop a job</strong> — the distributor runs out, the timeline blows up, the homeowner is angry</li>
+      <li style="padding:8px 0; border-bottom:1px solid var(--stone-warm); color:var(--stone-sand); font-size:14px;">→ <strong style="color:var(--white)">Paying for fake stone</strong> — getting upsold cultured stone by a distributor who makes more margin on it, then having a homeowner complain years later</li>
+      <li style="padding:8px 0; color:var(--stone-sand); font-size:14px;">→ <strong style="color:var(--white)">Margin squeeze</strong> — stone is a significant line item; every dollar saved is a dollar of profit or competitive pricing room</li>
+    </ul>
+  </div>
+
+  <div class="offer-box">
+    <div class="offer-headline">"Real Michigan stone, from our quarry to your job site — guaranteed lot-matched, guaranteed available, at $4–5 less per square foot than your distributor. If the stone doesn't match your spec exactly, we replace it. No questions."</div>
+    <div class="offer-body">
+      <p style="margin-bottom:12px;">This offer works because it attacks all four fears simultaneously: consistency (lot-matched guarantee), supply (guaranteed available), authenticity (from our quarry — not concrete with paint on it), and margin (the $4–5/sq ft savings is real money on a 2,000 sq ft project).</p>
+      <p style="margin-bottom:12px;"><strong style="color:var(--white)">The math for a contractor:</strong> A 2,000 sq ft project at $8.50 wholesale = $17,000 material cost. At $13 direct from Stone Mill = $26,000. That's not savings for them — that's a price increase. <strong style="color:var(--white)">This means the Mafia Offer works differently by segment.</strong></p>
+      <p>For <strong style="color:var(--white)">masons and contractors</strong> who currently buy at wholesale and mark up: you're competing against their distributor relationship, not the price. The offer has to be about reliability, consistency, and the story they get to tell their client — real Michigan stone from a fourth-generation quarry. For <strong style="color:var(--white)">custom builders who spec the stone</strong>: they pass cost to the homeowner, so your $13–15 is fine — they want the brand story and the guarantee. That's where your volume lives.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">Segment Clarity — This Is Critical</div>
+    <p><strong>Masons/contractors buying for their own margin:</strong> Hard sell at retail pricing. They're buying at $8.50 and marking up. You can't ask them to pay $13 unless the story is strong enough to justify it to their client. Target these with a contractor pricing tier at $10–11 with volume commitment.</p>
+    <p><strong>Custom builders speccing for a client:</strong> They pass cost through. Your $13–15 is fine. They want the design story, the Michigan provenance, the real stone guarantee. This is your primary B2B target — high margin, right buyer, aligns with premium positioning.</p>
+    <p><strong>Architects and designers:</strong> They specify stone without paying for it. Getting specified by one architect can mean 10 years of repeat projects. The offer here is education and relationship — get on their approved vendor list and the orders follow automatically.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PAGE: 5-YEAR ROADMAP -->
+<!-- ═══════════════════════════════════ -->
+<div id="roadmap" class="page">
+<div class="wrap">
+
+  <div class="section-head">
+    <h2>5-Year Roadmap</h2>
+    <span class="tag">2026–2030</span>
+  </div>
+
+  <!-- YEAR 1 -->
+  <div class="year-block">
+    <div class="year-label">
+      <div class="year-pill y1-color">Year 1 — 2026</div>
+      <div class="year-target">$1.7M → $3.5M</div>
+    </div>
+    <div class="year-theme">Survive the Concentration. Build the Machine.</div>
+    <div class="card" style="margin-bottom:16px; border-color:var(--y1);">
+      <div class="card-head" style="color:var(--y1);">The Mission This Year</div>
+      <p>Reduce the 70% customer to under 40% of revenue by adding new customers — not by losing the big one. Build the sales system to the point where it can run without your daily heroics. Hire one part-time person before year end. Hit $3.5M revenue.</p>
+    </div>
+    <div class="quarters">
+      <div class="quarter-card">
+        <div class="q-label">Q1 2026 — Jan–Mar</div>
+        <div class="q-title">Fire the Starting Gun</div>
+        <ul class="q-items">
+          <li>Map every current customer: revenue, margin, concentration %</li>
+          <li>Get exact EBITDA figure from accountant</li>
+          <li>Finalize the Mafia Offer for custom builders segment</li>
+          <li>20 cold calls/week minimum — activate the playbook</li>
+          <li>HubSpot fully populated with 150+ target contacts</li>
+          <li>Launch content: 2 posts/month showing real quarry process</li>
+        </ul>
+      </div>
+      <div class="quarter-card">
+        <div class="q-label">Q2 2026 — Apr–Jun</div>
+        <div class="q-title">Build Pipeline Velocity</div>
+        <ul class="q-items">
+          <li>5 new B2B accounts added</li>
+          <li>First email sequence running in HubSpot</li>
+          <li>Define architect/designer outreach track</li>
+          <li>Attend 1 regional builder or trade event</li>
+          <li>Track: calls made, connects, demos, closes weekly</li>
+          <li>Identify Sales Coordinator candidate profile</li>
+        </ul>
+      </div>
+      <div class="quarter-card">
+        <div class="q-label">Q3 2026 — Jul–Sep</div>
+        <div class="q-title">First Hire. Geographic Test.</div>
+        <ul class="q-items">
+          <li>Hire part-time Sales Process Coordinator</li>
+          <li>Hand off all outbound scheduling and CRM admin</li>
+          <li>Test 1 adjacent market (Grand Rapids, Detroit, or Ohio)</li>
+          <li>10 new B2B accounts cumulative</li>
+          <li>Top customer revenue concentration below 50%</li>
+          <li>Review capital account — is 7% set-aside on track?</li>
+        </ul>
+      </div>
+      <div class="quarter-card">
+        <div class="q-label">Q4 2026 — Oct–Dec</div>
+        <div class="q-title">Lock In Year 1. Plan Year 2.</div>
+        <ul class="q-items">
+          <li>$3.5M revenue run rate confirmed</li>
+          <li>Top customer below 40% of revenue</li>
+          <li>Sales Coordinator fully onboarded</li>
+          <li>20+ active B2B accounts in HubSpot</li>
+          <li>Map Year 2 geographic expansion targets</li>
+          <li>Quarry capacity assessment: where is the ceiling?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- YEAR 2 -->
+  <div class="year-block">
+    <div class="year-label">
+      <div class="year-pill y2-color">Year 2 — 2027</div>
+      <div class="year-target">$3.5M → $7M</div>
+    </div>
+    <div class="year-theme">Geographic Expansion. Diversification Complete.</div>
+    <div class="quarters">
+      <div class="quarter-card">
+        <div class="q-label">Q1 2027</div>
+        <div class="q-title">Enter Second Market</div>
+        <ul class="q-items">
+          <li>Active prospecting in 1 new metro (Detroit or Chicago suburbs)</li>
+          <li>Sales Coordinator goes full-time</li>
+          <li>Top customer below 30% of total revenue</li>
+          <li>Architect/designer vertical fully launched</li>
+        </ul>
+      </div>
+      <div class="quarter-card">
+        <div class="q-label">Q2 2027</div>
+        <div class="q-title">Operations Investment</div>
+        <ul class="q-items">
+          <li>Assess quarry capacity vs. $7M demand</li>
+          <li>Capital investment decision: equipment or sourcing contract</li>
+          <li>First operations hire if production is constraining growth</li>
+          <li>Refine pricing tiers by segment and volume</li>
+        </ul>
+      </div>
+      <div class="quarter-card">
+        <div class="q-label">Q3 2027</div>
+        <div class="q-title">Sales Team Expansion</div>
+        <ul class="q-items">
+          <li>Evaluate hiring first outside sales rep for new market</li>
+          <li>Steve moves fully to Stage 4 qualified conversations only</li>
+          <li>Marketing content producing inbound leads</li>
+          <li>50+ active B2B accounts</li>
+        </ul>
+      </div>
+      <div class="quarter-card">
+        <div class="q-label">Q4 2027</div>
+        <div class="q-title">Year 2 Close</div>
+        <ul class="q-items">
+          <li>$7M revenue confirmed</li>
+          <li>Top customer below 25% — platform-exit threshold crossed</li>
+          <li>$1.7M EBITDA target</li>
+          <li>Begin conversations with M&A advisor for Year 4 prep</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- YEAR 3 -->
+  <div class="year-block">
+    <div class="year-label">
+      <div class="year-pill y3-color">Year 3 — 2028</div>
+      <div class="year-target">$7M → $14M</div>
+    </div>
+    <div class="year-theme">Regional Platform. Leadership Team. Acquisition Target.</div>
+    <div class="quarters">
+      <div class="quarter-card">
+        <div class="q-label">Q1 2028</div>
+        <div class="q-title">Third Market + Acquisition Scout</div>
+        <ul class="q-items">
+          <li>Enter third geographic market</li>
+          <li>Identify acquisition targets: small quarry or stone distributor</li>
+          <li>Operations Manager hire (full-time)</li>
+          <li>Financial reporting upgraded — CFO-level part-time or fractional</li>
+        </ul>
+      </div>
+      <div class="quarter-card">
+        <div class="q-label">Q2–Q3 2028</div>
+        <div class="q-title">Acquisition or Major Investment</div>
+        <ul class="q-items">
+          <li>Close acquisition if target identified — funded by EBITDA + LOC</li>
+          <li>OR: major quarry capacity investment to support $14M demand</li>
+          <li>Second sales rep hired for new territory</li>
+          <li>Steve role: CEO/relationship — not sales executor</li>
+        </ul>
+      </div>
+      <div class="quarter-card">
+        <div class="q-label">Q4 2028</div>
+        <div class="q-title">Year 3 Close</div>
+        <ul class="q-items">
+          <li>$14M revenue confirmed</li>
+          <li>$3M EBITDA</li>
+          <li>Leadership team: Ops Manager, Sales Coordinator, Fractional CFO</li>
+          <li>Begin formal exit prep process with M&A advisor</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- YEAR 4 -->
+  <div class="year-block">
+    <div class="year-label">
+      <div class="year-pill y4-color">Year 4 — 2029</div>
+      <div class="year-target">$14M → $24M</div>
+    </div>
+    <div class="year-theme">Exit Preparation. Clean the Books. Build the Story.</div>
+    <div class="quarters">
+      <div class="quarter-card">
+        <div class="q-label">Q1–Q2 2029</div>
+        <div class="q-title">Platform Grooming</div>
+        <ul class="q-items">
+          <li>Sell-side Quality of Earnings (QoE) completed</li>
+          <li>Remove all owner-dependent processes</li>
+          <li>Document everything: processes, contracts, supplier agreements</li>
+          <li>Ensure no single customer over 15% of revenue</li>
+        </ul>
+      </div>
+      <div class="quarter-card">
+        <div class="q-label">Q3–Q4 2029</div>
+        <div class="q-title">Go to Market or Hold</div>
+        <ul class="q-items">
+          <li>$24M revenue / $5M EBITDA confirmed</li>
+          <li>Decision: run a competitive sale process or hold for Year 5</li>
+          <li>If holding: identify strategic acquirer or PE platform to approach</li>
+          <li>Management team capable of running without Steve</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- YEAR 5 -->
+  <div class="year-block">
+    <div class="year-label">
+      <div class="year-pill y5-color">Year 5 — 2030</div>
+      <div class="year-target">$24M → $35M</div>
+    </div>
+    <div class="year-theme">Exit or Scale. Either Way, You Win.</div>
+    <div class="card" style="border-color:var(--y5);">
+      <div class="card-head" style="color:var(--y5);">The End State</div>
+      <p>At $35M revenue and $7M EBITDA, with no single customer over 15%, a management team in place, two-plus owned quarries, documented processes, and clean financials: Stone Mill is a platform company. At 7–10x EBITDA, the exit value is <strong>$49M–$70M</strong>. That is the number the strategy is building toward.</p>
+      <p>If the market is not right in 2030, you run a profitable, growing, management-run business and wait. You are not forced to sell. That is what a clean platform gives you — options.</p>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PAGE: OKRs -->
+<!-- ═══════════════════════════════════ -->
+<div id="okrs" class="page">
+<div class="wrap">
+
+  <div class="section-head">
+    <h2>OKRs by Year</h2>
+    <span class="tag">Objectives & Key Results</span>
+  </div>
+
+  <div class="card" style="margin-bottom:28px;">
+    <div class="card-head">How to Use These OKRs</div>
+    <p>Each Objective is the one thing that matters most that year. Key Results are measurable — if you can't put a number on it, it's not a KR, it's a wish. Review quarterly. If you're off track, the TOC question is always: <strong>what is the constraint preventing this result?</strong></p>
+  </div>
+
+  <!-- Y1 OKRs -->
+  <div class="year-label" style="margin-bottom:16px;">
+    <div class="year-pill y1-color">Year 1</div>
+    <div class="year-target">Diversify. Activate. Hire.</div>
+  </div>
+  <div class="okr-block"><div class="okr-objective"><span>O1</span>Reduce existential customer concentration risk</div><div class="kr-row"><div class="kr-num">KR1</div><div class="kr-text">Top customer revenue share reduced from <strong>70% → below 40%</strong> by Q4</div></div><div class="kr-row"><div class="kr-num">KR2</div><div class="kr-text">Minimum <strong>20 new B2B accounts</strong> with at least one order by year end</div></div><div class="kr-row"><div class="kr-num">KR3</div><div class="kr-text">No single new customer exceeds <strong>15%</strong> of new revenue added</div></div></div>
+  <div class="okr-block"><div class="okr-objective"><span>O2</span>Build and activate the direct sales machine</div><div class="kr-row"><div class="kr-num">KR1</div><div class="kr-text">Minimum <strong>20 outbound prospecting touches per week</strong> average across Year 1</div></div><div class="kr-row"><div class="kr-num">KR2</div><div class="kr-text">HubSpot pipeline populated with <strong>150+ qualified contacts</strong> by Q2</div></div><div class="kr-row"><div class="kr-num">KR3</div><div class="kr-text">Sales Coordinator hired and onboarded by <strong>Q3</strong></div></div></div>
+  <div class="okr-block"><div class="okr-objective"><span>O3</span>Hit $3.5M revenue at maintained margins</div><div class="kr-row"><div class="kr-num">KR1</div><div class="kr-text">Revenue reaches <strong>$3.5M</strong> by December 2026</div></div><div class="kr-row"><div class="kr-num">KR2</div><div class="kr-text">Average selling price maintained at <strong>$13/sq ft or above</strong></div></div><div class="kr-row"><div class="kr-num">KR3</div><div class="kr-text">EBITDA margin <strong>at or above 25%</strong></div></div></div>
+
+  <div style="height:32px;"></div>
+
+  <!-- Y2 OKRs -->
+  <div class="year-label" style="margin-bottom:16px;">
+    <div class="year-pill y2-color">Year 2</div>
+    <div class="year-target">Expand. Institutionalize. $7M.</div>
+  </div>
+  <div class="okr-block"><div class="okr-objective"><span>O1</span>Establish Stone Mill as a recognized brand in 2+ markets</div><div class="kr-row"><div class="kr-num">KR1</div><div class="kr-text">Active B2B customers in <strong>at least 2 geographic markets</strong> outside current base</div></div><div class="kr-row"><div class="kr-num">KR2</div><div class="kr-text"><strong>50+ active accounts</strong> in HubSpot with repeat orders</div></div><div class="kr-row"><div class="kr-num">KR3</div><div class="kr-text">Specified by <strong>10+ architects or designers</strong> as preferred stone vendor</div></div></div>
+  <div class="okr-block"><div class="okr-objective"><span>O2</span>Cross the platform EBITDA threshold</div><div class="kr-row"><div class="kr-num">KR1</div><div class="kr-text">Revenue reaches <strong>$7M</strong></div></div><div class="kr-row"><div class="kr-num">KR2</div><div class="kr-text">EBITDA reaches <strong>$1.7M+</strong></div></div><div class="kr-row"><div class="kr-num">KR3</div><div class="kr-text">Top customer below <strong>25%</strong> of revenue — platform floor crossed</div></div></div>
+
+  <div style="height:32px;"></div>
+
+  <!-- Y3 OKRs -->
+  <div class="year-label" style="margin-bottom:16px;">
+    <div class="year-pill y3-color">Year 3</div>
+    <div class="year-target">Leadership. Acquisition. $14M.</div>
+  </div>
+  <div class="okr-block"><div class="okr-objective"><span>O1</span>Build a management team that doesn't require Steve daily</div><div class="kr-row"><div class="kr-num">KR1</div><div class="kr-text">Operations Manager hired and independently running production by <strong>Q2</strong></div></div><div class="kr-row"><div class="kr-num">KR2</div><div class="kr-text">Fractional CFO producing monthly financial reports</div></div><div class="kr-row"><div class="kr-num">KR3</div><div class="kr-text">Steve can take <strong>2 weeks off</strong> without revenue impact — test it</div></div></div>
+  <div class="okr-block"><div class="okr-objective"><span>O2</span>Complete first acquisition or major capacity investment</div><div class="kr-row"><div class="kr-num">KR1</div><div class="kr-text"><strong>3+ acquisition targets</strong> identified and evaluated by Q1</div></div><div class="kr-row"><div class="kr-num">KR2</div><div class="kr-text">Deal closed or capital investment deployed by <strong>Q3</strong></div></div><div class="kr-row"><div class="kr-num">KR3</div><div class="kr-text">Revenue reaches <strong>$14M</strong>, EBITDA <strong>$3M+</strong></div></div></div>
+
+  <div style="height:32px;"></div>
+
+  <!-- Y4-5 OKRs -->
+  <div class="year-label" style="margin-bottom:16px;">
+    <div class="year-pill y4-color">Years 4–5</div>
+    <div class="year-target">Exit-Ready. $35M. Clean.</div>
+  </div>
+  <div class="okr-block"><div class="okr-objective"><span>O1</span>Build a business a buyer would pay 8–10x EBITDA for</div><div class="kr-row"><div class="kr-num">KR1</div><div class="kr-text">Revenue <strong>$35M</strong>, EBITDA <strong>$7M+</strong>, margin <strong>above 20%</strong></div></div><div class="kr-row"><div class="kr-num">KR2</div><div class="kr-text">No single customer above <strong>15%</strong> of revenue</div></div><div class="kr-row"><div class="kr-num">KR3</div><div class="kr-text">Management team runs the business — Steve is <strong>not required</strong> for operations</div></div><div class="kr-row"><div class="kr-num">KR4</div><div class="kr-text">Sell-side QoE completed, clean 3-year financials, documented processes</div></div></div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PAGE: LEADERSHIP TEAM -->
+<!-- ═══════════════════════════════════ -->
+<div id="team" class="page">
+<div class="wrap">
+
+  <div class="section-head">
+    <h2>Leadership Team Build</h2>
+    <span class="tag">Who, When, and What Claude Can Cover</span>
+  </div>
+
+  <div class="card" style="margin-bottom:24px;">
+    <div class="card-head">The Honest Starting Point</div>
+    <p>You currently have 5–9 people, but no leadership team — you have a workforce. A leadership team means people who own outcomes, not just tasks. The build below is sequenced by constraint: you only hire a leader when that function becomes the bottleneck.</p>
+    <p><strong>Claude's role is real but bounded.</strong> Claude can be a thought partner, strategist, copywriter, analyst, and system builder. Claude cannot make calls, build relationships, manage people, or own accountability. Be honest about that line.</p>
+  </div>
+
+  <table class="team-table">
+    <thead>
+      <tr>
+        <th>Role</th>
+        <th>When</th>
+        <th>PT or FT</th>
+        <th>What They Own</th>
+        <th>Claude Coverage Until Hired</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Sales Process Coordinator</strong></td>
+        <td>Q3 Year 1</td>
+        <td><span class="role-phase phase-pt">Part-Time → FT Y2</span></td>
+        <td>Outbound prospecting, HubSpot management, scheduling, follow-up sequences</td>
+        <td><span class="role-phase claude-tag">Claude: scripts, sequences, templates, call guides, HubSpot logic</span></td>
+      </tr>
+      <tr>
+        <td><strong>Operations Manager</strong></td>
+        <td>Q1 Year 3</td>
+        <td><span class="role-phase phase-ft">Full-Time</span></td>
+        <td>Quarry production, fulfillment, quality control, supplier relationships</td>
+        <td><span class="role-phase claude-tag">Claude: SOPs, process docs, checklists, vendor comms</span></td>
+      </tr>
+      <tr>
+        <td><strong>Fractional CFO</strong></td>
+        <td>Q4 Year 2</td>
+        <td><span class="role-phase phase-pt">Fractional (2 days/mo)</span></td>
+        <td>Monthly financials, EBITDA tracking, exit prep, capital allocation</td>
+        <td><span class="role-phase claude-tag">Claude: financial modeling, benchmarking, metric dashboards</span></td>
+      </tr>
+      <tr>
+        <td><strong>Outside Sales Rep</strong></td>
+        <td>Q3 Year 2</td>
+        <td><span class="role-phase phase-ft">Full-Time</span></td>
+        <td>New market territory — qualified conversations in expansion geo</td>
+        <td><span class="role-phase claude-tag">Claude: territory plans, pitch decks, objection guides</span></td>
+      </tr>
+      <tr>
+        <td><strong>Marketing / Content Lead</strong></td>
+        <td>Year 3</td>
+        <td><span class="role-phase phase-pt">PT or Contractor</span></td>
+        <td>Content engine, brand, inbound leads, architect/designer relationships</td>
+        <td><span class="role-phase claude-tag">Claude: all content drafts, strategy, copy, email sequences</span></td>
+      </tr>
+      <tr>
+        <td><strong>CEO (Steve)</strong></td>
+        <td>Now — evolving</td>
+        <td><span class="role-phase phase-now">Owner → CEO</span></td>
+        <td>Year 1: everything. Year 3: qualified conversations + strategy. Year 5: exit execution</td>
+        <td><span class="role-phase claude-tag">Claude: board-level thought partner, strategy, analysis throughout</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="card">
+    <div class="card-head">What Claude Can Genuinely Do For You — Honestly</div>
+    <p><strong>Claude can:</strong> Build every sales tool, script, playbook, and sequence. Draft all outbound emails, follow-ups, and proposals. Research target markets, competitors, and acquisition targets. Build financial models and track metrics. Write all marketing content — posts, case studies, web copy. Act as strategic thought partner and pressure-tester. Build HubSpot workflows and documentation. Help you prepare for and debrief every major sales conversation.</p>
+    <p><strong>Claude cannot:</strong> Make a phone call. Build a relationship. Show up at a job site. Manage an employee. Be accountable for a result. Replace a human who owns a function and loses sleep over it. Claude is leverage — not a substitute for people who own outcomes.</p>
+    <p><strong>The risk to watch:</strong> Using Claude as a reason not to hire when hiring is the right answer. When a function is the constraint — when revenue growth is literally being limited by the absence of that role — no amount of AI assistance fixes it. Hire.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PAGE: HONEST BOARD TALK -->
+<!-- ═══════════════════════════════════ -->
+<div id="honest" class="page">
+<div class="wrap">
+
+  <div class="section-head">
+    <h2>What a Real Board Would Tell You</h2>
+    <span class="tag">No Filter</span>
+  </div>
+
+  <div class="honest-box">
+    <div class="honest-head">Truth #1 — The Math Is Aggressive</div>
+    <p>$1.7M to $35M in five years is a <strong>20x revenue increase</strong>. That is not impossible — but it requires either consistent 83% year-over-year growth, or organic growth plus at least one acquisition. Organic alone likely tops out at $15–20M in five years if everything goes right. Getting to $35M almost certainly requires buying something — a competitor, a quarry, a distributor — in Years 3 or 4. Plan for it now. That is not failure; that is how platforms are built.</p>
+  </div>
+
+  <div class="honest-box">
+    <div class="honest-head">Truth #2 — The 70% Customer Is the Only Emergency</div>
+    <p>Everything in this strategy assumes the large customer stays. If they leave or cut orders in half tomorrow, the business goes from $1.7M to $510K revenue. That is not a recoverable position without the reserve you have. <strong>Do not let a single week go by without actively adding new customers.</strong> This is not optional. It is the primary job until that number is below 25%.</p>
+  </div>
+
+  <div class="honest-box">
+    <div class="honest-head">Truth #3 — Your Quarry Capacity Is the Unknown Variable</div>
+    <p>You said the quarries are "about right for where we are now." That means they support $1.7M. Getting to $7M means roughly 4x the volume. That either requires significant equipment investment, expanding the quarries, signing sourcing agreements with the two quarries you don't own, or all three. <strong>You need a hard production ceiling number before you can commit to any revenue target.</strong> Get that from your operations team this quarter.</p>
+  </div>
+
+  <div class="honest-box">
+    <div class="honest-head">Truth #4 — Pricing Is Your Biggest Lever and Your Biggest Risk</div>
+    <p>You're at $13–15/sq ft in a market where wholesale is $8.50. That spread is where your margin lives. The risk: if a large distributor decides to compete on quality and story — or a regional competitor emerges — that spread compresses. <strong>The defense is brand depth, contractor relationships, and the Michigan quarry story being impossible to replicate.</strong> Start building that brand infrastructure now while no one is chasing you.</p>
+  </div>
+
+  <div class="honest-box">
+    <div class="honest-head">Truth #5 — You Are the Bottleneck Right Now</div>
+    <p>Not your quarries. Not your team. Not your capital. <strong>You.</strong> Every hour you spend doing things that aren't prospecting, qualified conversations, or strategic decisions is an hour the business doesn't grow. The Coordinator hire in Q3 Year 1 is not a convenience — it is the single most important operational decision of Year 1. Until someone else owns outbound and admin, you will remain the constraint no matter how good the system looks on paper.</p>
+  </div>
+
+  <div class="honest-box">
+    <div class="honest-head">Truth #6 — The Exit Number Depends on Things You Control</div>
+    <p>At $7M EBITDA and 8x, that's a $56M exit. At 6x (because margins slipped or customer concentration crept back up or the management team isn't there), it's $42M. At 10x (because you ran a competitive process, had clean books, and a proven team), it's $70M. <strong>The multiple is not luck — it is the product of decisions you make between now and Year 4.</strong> Customer concentration, management depth, clean financials, documented processes, and no owner dependency are all worth 1–3 turns on the multiple. Build them deliberately.</p>
+  </div>
+
+  <div class="pullquote">
+    "Every company has a constraint. The ones that grow fast are the ones where the owner can honestly name it, admit they're part of it, and do something about it this week — not next quarter." — TOC applied.
+  </div>
+
+  <div class="card">
+    <div class="card-head">Your First Three Actions — This Week</div>
+    <ul class="q-items" style="list-style:none; padding:0;">
+      <li style="padding:10px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Call your accountant.</strong> Get the exact EBITDA figure for last year. You cannot manage what you don't measure.</li>
+      <li style="padding:10px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Make 5 prospecting calls.</strong> Not 20. Not next week. Five calls today or tomorrow to prove the system works and the fear is smaller than the story you've been telling yourself.</li>
+      <li style="padding:10px 0; font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Get a production ceiling number.</strong> Ask your quarry operation: at what revenue level do we run out of capacity with current equipment and labor? That number sets the boundary of what's possible without capital investment.</li>
+    </ul>
+  </div>
+
+</div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>
