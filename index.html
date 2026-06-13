@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dream Catcher — The Stone Mill</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --ink: #1C1714;
+  --stone: #7C6E60;
+  --stone-lt: #B5A898;
+  --stone-dk: #3D322A;
+  --cream: #F5F0E8;
+  --paper: #FDFAF5;
+  --gold: #C4973A;
+  --gold-lt: #E8C870;
+  --rule: rgba(124,110,96,0.18);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* HEADER */
+.header {
+  background: var(--stone-dk);
+  border-bottom: 3px solid var(--gold);
+  padding: 36px 24px 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg, transparent, transparent 28px,
+    rgba(255,255,255,0.015) 28px, rgba(255,255,255,0.015) 29px
+  );
+}
+
+.header-inner { position: relative; }
+
+.header-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 8vw, 56px);
+  font-weight: 900;
+  color: #FDFAF5;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.header h1 span { color: var(--gold); }
+
+.header-sub {
+  font-size: 12px;
+  color: var(--stone-lt);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+/* MAIN */
+.main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+/* SECTION */
+.section {
+  margin-bottom: 32px;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.section-label h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--stone-dk);
+}
+
+.section-label .line {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.section-tag {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(196,151,58,0.1);
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+
+/* TOOL CARDS */
+.tool-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 18px 20px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.18s;
+  box-shadow: 0 1px 8px rgba(28,23,20,0.05);
+  cursor: pointer;
+}
+
+.tool-card:hover, .tool-card:active {
+  background: #F0EBE2;
+  border-color: var(--gold);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(28,23,20,0.1);
+}
+
+.tool-icon {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.icon-gold { background: rgba(196,151,58,0.12); }
+.icon-stone { background: rgba(61,50,42,0.08); }
+.icon-rust { background: rgba(155,72,32,0.1); }
+.icon-pine { background: rgba(58,107,74,0.1); }
+
+.tool-text { flex: 1; }
+
+.tool-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--stone-dk);
+  margin-bottom: 2px;
+}
+
+.tool-desc {
+  font-size: 11px;
+  color: var(--stone);
+  line-height: 1.4;
+}
+
+.tool-arrow {
+  color: var(--gold);
+  font-size: 18px;
+  font-weight: 300;
+}
+
+/* DIVIDER */
+.divider {
+  height: 1px;
+  background: var(--rule);
+  margin: 28px 0;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stone-lt);
+  border-top: 1px solid var(--rule);
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-eyebrow">The Stone Mill, Inc.</div>
+    <h1>Dream<span>Catcher</span></h1>
+    <div class="header-sub">Tools Built for the Stone Mill Sales Machine</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- SALES -->
+  <div class="section">
+    <div class="section-label">
+      <h2>Sales</h2>
+      <div class="line"></div>
+      <span class="section-tag">Outbound</span>
+    </div>
+
+    <a class="tool-card" href="https://rockstar62.github.io/cold-calls-/" target="_blank">
+      <div class="tool-icon icon-gold">📞</div>
+      <div class="tool-text">
+        <div class="tool-name">Cold Call Playbook</div>
+        <div class="tool-desc">Cardone + Blount system. Script, gatekeeper strategy, objections, call log.</div>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+    <a class="tool-card" href="https://thesalesmachine.netlify.app/" target="_blank">
+      <div class="tool-icon icon-stone">⚙️</div>
+      <div class="tool-text">
+        <div class="tool-name">Sales Machine</div>
+        <div class="tool-desc">Roff-Marsh pipeline. 5 stages, HubSpot setup, content engine, road to November.</div>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- BUSINESS ADMINISTRATION -->
+  <div class="section">
+    <div class="section-label">
+      <h2>Business Administration</h2>
+      <div class="line"></div>
+      <span class="section-tag">Operations</span>
+    </div>
+
+    <a class="tool-card" href="https://stonemillcomandcenter.netlify.app/" target="_blank">
+      <div class="tool-icon icon-rust">🏛️</div>
+      <div class="tool-text">
+        <div class="tool-name">Command Center</div>
+        <div class="tool-desc">Stone Mill operations hub. Business overview, contacts, and key resources.</div>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+    <a class="tool-card" href="https://stonemillcomandcenterfivemonth.netlify.app/" target="_blank">
+      <div class="tool-icon icon-rust">📅</div>
+      <div class="tool-text">
+        <div class="tool-name">5-Month Command Center</div>
+        <div class="tool-desc">June → November roadmap. Monthly milestones and build targets.</div>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+    <a class="tool-card" href="https://goalsfivesteploop.netlify.app/" target="_blank">
+      <div class="tool-icon icon-pine">🔄</div>
+      <div class="tool-text">
+        <div class="tool-name">Dalio's 5-Step Loop</div>
+        <div class="tool-desc">Goals → Problems → Diagnosis → Design → Tasks. The decision framework.</div>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+  </div>
+
+</div>
+
+<div class="footer">
+  The Stone Mill, Inc. — Michigan Natural Stone · Dream Catcher v1.0
+</div>
+
+</body>
+</html>
