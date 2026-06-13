@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Stone Mill — S&T Tree #3: The Mafia Offer</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --black: #0F0E0C;
+  --stone-dark: #1A1815;
+  --stone-mid: #2E2B26;
+  --stone-warm: #4A4440;
+  --stone-tan: #8C7B6E;
+  --stone-sand: #C4B4A0;
+  --stone-light: #EDE4D8;
+  --chisel: #C87820;
+  --chisel-dim: #6A4010;
+  --white: #F8F4EE;
+  --danger: #C84040;
+  --danger-dim: #4A1010;
+  --go: #4A8A50;
+  --go-dim: #1A3A1E;
+  --blue: #3A6A9A;
+  --blue-dim: #12263A;
+  --purple: #6A3A8A;
+  --purple-dim: #28103A;
+  --amber: #C49730;
+  --amber-dim: #3A2A00;
+  --gold: #C87820;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.masthead {
+  background: var(--stone-dark);
+  border-bottom: 1px solid var(--stone-warm);
+  padding: 40px 40px 30px;
+  position: relative;
+}
+.masthead::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.masthead h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+.masthead h1 em { font-style: italic; color: var(--stone-sand); }
+.masthead-sub {
+  font-size: 13px;
+  color: var(--stone-tan);
+  max-width: 620px;
+  line-height: 1.7;
+}
+
+nav {
+  background: var(--stone-dark);
+  border-bottom: 1px solid var(--stone-warm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  overflow-x: auto;
+}
+.nav-inner { display: flex; padding: 0 40px; white-space: nowrap; }
+.nav-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--stone-tan);
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 14px 18px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-btn:hover { color: var(--white); }
+.nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+.page { display: none; }
+.page.active { display: block; }
+
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 40px;
+}
+@media(max-width:600px){ .wrap { padding: 32px 20px; } }
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--stone-warm);
+}
+.section-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--chisel-dim);
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
+.card {
+  background: var(--stone-dark);
+  border: 1px solid var(--stone-warm);
+  border-radius: 4px;
+  padding: 24px 28px;
+  margin-bottom: 16px;
+}
+.card-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--chisel);
+  margin-bottom: 12px;
+}
+.card p {
+  font-size: 14px;
+  color: var(--stone-sand);
+  line-height: 1.75;
+  margin-bottom: 10px;
+}
+.card p:last-child { margin-bottom: 0; }
+.card strong { color: var(--white); }
+
+.pullquote {
+  border-left: 3px solid var(--gold);
+  padding: 14px 20px;
+  margin: 18px 0;
+  background: var(--stone-mid);
+  font-size: 15px;
+  color: var(--stone-light);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+/* OFFER BOX */
+.offer-box {
+  background: linear-gradient(135deg, #1A1408, #2A1E08);
+  border: 2px solid var(--gold);
+  border-radius: 6px;
+  padding: 32px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.offer-box::before {
+  content: 'HYPOTHESIS OFFER — VERSION 1.0';
+  position: absolute;
+  top: -11px;
+  left: 24px;
+  background: var(--gold);
+  color: var(--black);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  padding: 2px 10px;
+  font-weight: 500;
+}
+.offer-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(18px, 3vw, 26px);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.3;
+  margin-bottom: 20px;
+}
+.offer-headline em { font-style: italic; color: var(--stone-sand); }
+.offer-body {
+  font-size: 14px;
+  color: var(--stone-sand);
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+.offer-mechanics {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
+}
+.offer-mechanics li {
+  font-size: 13px;
+  color: var(--stone-sand);
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(200,120,32,0.2);
+  line-height: 1.55;
+}
+.offer-mechanics li:last-child { border-bottom: none; }
+.offer-mechanics li::before { content: '✓ '; color: var(--gold); font-weight: 600; }
+.offer-mechanics li strong { color: var(--white); }
+
+/* SEGMENT CARDS */
+.seg-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+@media(max-width:600px){ .seg-grid { grid-template-columns: 1fr; } }
+
+.seg-card {
+  border-radius: 4px;
+  padding: 20px;
+}
+.seg-builder { background: var(--blue-dim); border: 1px solid var(--blue); }
+.seg-architect { background: var(--purple-dim); border: 1px solid var(--purple); }
+.seg-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.seg-builder .seg-head { color: #80B0E0; }
+.seg-architect .seg-head { color: #C080E0; }
+.seg-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 10px; line-height: 1.3; }
+.seg-fear { font-size: 12px; color: var(--stone-sand); margin-bottom: 8px; line-height: 1.5; }
+.seg-offer { font-size: 12px; color: var(--stone-light); line-height: 1.5; font-style: italic; border-left: 2px solid var(--gold); padding-left: 10px; margin-top: 10px; }
+
+/* GOAL NODE */
+.goal-node {
+  background: linear-gradient(135deg, #1A1408, #2A1E08);
+  border: 2px solid var(--gold);
+  border-radius: 6px;
+  padding: 24px 28px;
+  text-align: center;
+  position: relative;
+}
+.goal-node::after {
+  content: '';
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 24px;
+  background: var(--gold);
+}
+.goal-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.goal-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.3;
+}
+
+.connector { display: flex; justify-content: center; padding: 6px 0; color: var(--stone-tan); font-size: 20px; }
+
+.level-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 2px;
+  display: inline-block;
+  margin-bottom: 14px;
+  margin-top: 20px;
+}
+.label-strategy { background: var(--blue-dim); color: #80B0E0; border: 1px solid var(--blue); }
+.label-necessary { background: var(--go-dim); color: #80C880; border: 1px solid var(--go); }
+.label-tactic { background: var(--purple-dim); color: #C080E0; border: 1px solid var(--purple); }
+
+.node-grid { display: grid; gap: 12px; margin-bottom: 8px; }
+.node-grid-2 { grid-template-columns: 1fr 1fr; }
+.node-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+@media(max-width:640px){ .node-grid-2,.node-grid-3 { grid-template-columns: 1fr; } }
+
+.node { border-radius: 4px; padding: 16px 18px; }
+.node-strategy { background: var(--blue-dim); border: 1px solid var(--blue); }
+.node-necessary { background: var(--go-dim); border: 1px solid var(--go); }
+.node-tactic { background: var(--purple-dim); border: 1px solid var(--purple); }
+.node-gold { background: linear-gradient(135deg, #1A1008, #2A1A08); border: 1px solid var(--gold); }
+
+.node-id { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.15em; margin-bottom: 6px; }
+.node-strategy .node-id { color: #80B0E0; }
+.node-necessary .node-id { color: #80C880; }
+.node-tactic .node-id { color: #C080E0; }
+.node-gold .node-id { color: var(--gold); }
+.node-text { font-size: 13px; line-height: 1.55; color: var(--white); font-weight: 500; }
+.node-sub { font-size: 11px; color: var(--stone-sand); margin-top: 6px; line-height: 1.5; }
+
+/* VALIDATION PROTOCOL */
+.question-block {
+  background: var(--stone-mid);
+  border: 1px solid var(--stone-warm);
+  border-radius: 4px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+.q-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.q-text {
+  font-size: 15px;
+  color: var(--white);
+  font-style: italic;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.q-listen {
+  font-size: 12px;
+  color: var(--stone-tan);
+  line-height: 1.6;
+}
+.q-listen strong { color: var(--stone-sand); }
+
+/* RESISTANCE MAP */
+.resist-row {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--stone-warm);
+}
+.resist-row:last-child { border-bottom: none; }
+.resist-layer {
+  background: var(--stone-mid);
+  padding: 14px 16px;
+  min-width: 130px;
+  border-right: 1px solid var(--stone-warm);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.resist-num { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--gold); letter-spacing: 0.15em; margin-bottom: 4px; }
+.resist-name { font-size: 12px; font-weight: 600; color: var(--white); }
+.resist-what { padding: 14px 16px; flex: 1; border-right: 1px solid var(--stone-warm); }
+.resist-what p { font-size: 13px; color: var(--stone-sand); line-height: 1.6; font-style: italic; }
+.resist-answer { padding: 14px 16px; flex: 1; }
+.resist-answer p { font-size: 13px; color: var(--stone-light); line-height: 1.6; }
+.resist-answer strong { color: var(--white); }
+
+/* BREAK ROWS */
+.break-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--stone-warm);
+}
+.break-row:last-child { border-bottom: none; }
+.break-icon { font-size: 16px; min-width: 24px; margin-top: 2px; }
+.break-text { font-size: 13px; color: var(--stone-sand); line-height: 1.6; flex: 1; }
+.break-text strong { color: var(--white); }
+.break-verdict {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 2px;
+  min-width: 70px;
+  text-align: center;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+.verdict-hold { background: var(--go-dim); color: #80C880; border: 1px solid var(--go); }
+.verdict-watch { background: var(--amber-dim); color: #E8C870; border: 1px solid var(--amber); }
+.verdict-test { background: var(--blue-dim); color: #80B0E0; border: 1px solid var(--blue); }
+.verdict-fix { background: var(--danger-dim); color: #E08080; border: 1px solid var(--danger); }
+
+/* VERSION TRACKER */
+.version-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--stone-warm);
+}
+.version-row:last-child { border-bottom: none; }
+.v-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--gold);
+  min-width: 36px;
+  margin-top: 2px;
+}
+.v-trigger { font-size: 13px; color: var(--stone-sand); flex: 1; line-height: 1.6; }
+.v-trigger strong { color: var(--white); }
+.v-status {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.v-current { background: var(--gold); color: var(--black); }
+.v-next { background: var(--stone-warm); color: var(--stone-sand); }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="eyebrow">The Stone Mill, Inc. — S&T Tree #3</div>
+  <h1>The <em>Mafia Offer</em></h1>
+  <p class="masthead-sub">An offer so clearly in the customer's interest they'd feel foolish refusing it. Built for custom home builders and architects. Version 1.0 — hypothesis only until validated by real conversations.</p>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="show('what')">What & Why</button>
+    <button class="nav-btn" onclick="show('offer')">The Offer</button>
+    <button class="nav-btn" onclick="show('segments')">By Segment</button>
+    <button class="nav-btn" onclick="show('tree')">The Tree</button>
+    <button class="nav-btn" onclick="show('resistance')">Resistance Map</button>
+    <button class="nav-btn" onclick="show('validate')">Validation Protocol</button>
+    <button class="nav-btn" onclick="show('versions')">Versions</button>
+  </div>
+</nav>
+
+<!-- PAGE: WHAT & WHY -->
+<div id="what" class="page active">
+<div class="wrap">
+  <div class="section-head">
+    <h2>What a Mafia Offer Is — And Isn't</h2>
+    <span class="tag">Foundation</span>
+  </div>
+
+  <div class="card">
+    <div class="card-head">Goldratt's Definition</div>
+    <p>A Mafia Offer is not a discount. It is not a promotion. It is not a better price on the same thing everyone else sells. It is a <strong>restructured offer that removes the customer's biggest fear and replaces it with a result they cannot get anywhere else</strong> — offered so clearly that saying no feels irrational.</p>
+    <p>The test: if a competitor could make the same offer tomorrow, it's not a Mafia Offer. It's just a sales pitch. A real Mafia Offer is built on something only YOU can deliver.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">What Only Stone Mill Can Deliver</div>
+    <p>This is the foundation everything else is built on. Stone Mill has things no distributor and no cultured stone company can replicate:</p>
+    <ul style="list-style:none; padding:0; margin-top:12px;">
+      <li style="padding:10px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Owned Michigan quarries.</strong> The stone comes from the ground Steve's family has worked for four generations. That is not a marketing claim. It is a physical fact no competitor can copy without buying a quarry.</li>
+      <li style="padding:10px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Direct from source — no middleman markup.</strong> A builder or architect who buys from Stone Mill is buying from the quarry owner. That story is true, verifiable, and transferable to their client.</li>
+      <li style="padding:10px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Lot control.</strong> Because Stone Mill owns the quarry and controls production, consistency across a project is achievable in a way distributors who aggregate from multiple sources cannot guarantee.</li>
+      <li style="padding:10px 0; font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">The fourth-generation story.</strong> Steve is not a salesman who learned about stone. He is a mason's mason. That credibility transfers to every builder and architect who uses Stone Mill — they're specifying stone chosen by someone who has been in the craft for a lifetime.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-head">The Honest Starting Point</div>
+    <p>The premium B2B direct model is <strong>a new move for Stone Mill</strong>. Most premium pricing has been B2C. This offer is a hypothesis — the best version we can build from what we know — but it must be tested against real builders and architects before it's treated as proven.</p>
+    <p>That's why this tree has a Validation Protocol tab. The offer doesn't become a Mafia Offer until a builder or architect says "I can't get that anywhere else" — in their own words, unprompted.</p>
+    <div class="pullquote">"You don't know what your Mafia Offer is until a customer tells you. You can only build the hypothesis and go find out."</div>
+  </div>
+</div>
+</div>
+
+<!-- PAGE: THE OFFER -->
+<div id="offer" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>The Hypothesis Offer</h2>
+    <span class="tag">Version 1.0 — To Be Validated</span>
+  </div>
+
+  <div class="offer-box">
+    <div class="offer-headline">
+      "We'll spec your next project with <em>real Michigan quarry stone</em> — lot-matched, guaranteed available start to finish — and give your clients a story no cultured stone or distribution-chain product can tell. If the stone doesn't match your spec exactly, we replace it. No questions, no delays."
+    </div>
+    <div class="offer-body">
+      This offer works on three levels simultaneously for a custom builder or architect:
+    </div>
+    <ul class="offer-mechanics">
+      <li><strong>The story they sell to their client:</strong> "The stone on your home was quarried in Michigan by a fourth-generation mason and delivered direct from the quarry." That's a $0 upgrade to their pitch that costs the builder nothing extra and justifies the premium to the homeowner.</li>
+      <li><strong>The risk they eliminate:</strong> Lot-matching guarantee removes the single biggest technical fear in stone specification — getting a second shipment that doesn't match the first. No distributor can guarantee this. Stone Mill can, because they control the source.</li>
+      <li><strong>The supply certainty they get:</strong> A builder who specs Stone Mill knows the stone will be there when they need it — from the same quarry, the same lot, the same person who took the order. No distributor intermediary to run out of stock or substitute product.</li>
+      <li><strong>The price point that passes through:</strong> Custom builders pass stone cost to the homeowner. At $13–15 direct from Stone Mill, they're paying a fair market rate for a premium product with a better story. They don't absorb the cost — they sell it.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-head">What Makes This Refusable — Honest Assessment</div>
+    <p>A real board looks at every offer and asks: why would they still say no? Here are the real objections this offer faces:</p>
+    <ul style="list-style:none; padding:0; margin-top:12px;">
+      <li style="padding:10px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Inertia.</strong> They have a current supplier. Switching takes effort. The offer has to make switching feel easier than staying — not just better.</li>
+      <li style="padding:10px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Proof.</strong> "Guaranteed lot-matched" is a claim, not yet a documented standard. Until Stone Mill has a named, written quality process, this is a verbal promise. Verbal promises don't win spec decisions from architects.</li>
+      <li style="padding:10px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Unknown.</strong> Stone Mill is not yet a recognized name in the premium B2B segment. A builder who has never heard of you can't be confident specifying you to a $2M homeowner client. The first sale in this segment is always the hardest.</li>
+      <li style="padding:10px 0; font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">The story has to survive the homeowner conversation.</strong> "Michigan quarry stone, fourth-generation mason" has to land with a homeowner spending $800K on a custom home. We believe it does — but that belief needs validation.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-head">The Switching Mechanism — Making Yes Easier Than No</div>
+    <p>Every Mafia Offer needs a low-friction entry point. The offer above is the destination. This is the door:</p>
+    <div class="pullquote">"Let us spec one project. We'll deliver samples matched to your design, provide the provenance documentation your client can hold in their hands, and guarantee the stone through completion. If it doesn't work, you've lost nothing but an afternoon."</div>
+    <p>One project. No commitment. Full experience of what Stone Mill delivers. This is how the first sale in a new segment gets made — by making the first step feel like zero risk.</p>
+  </div>
+</div>
+</div>
+
+<!-- PAGE: BY SEGMENT -->
+<div id="segments" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>The Offer by Segment</h2>
+    <span class="tag">Builder vs. Architect</span>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-head">Why Segments Matter</div>
+    <p>Custom builders and architects both specify stone. But they have different fears, different buying triggers, and different relationships with the homeowner. The same offer, delivered the same way to both, underperforms. The core offer is the same — the language and the emphasis change.</p>
+  </div>
+
+  <div class="seg-grid">
+    <div class="seg-card seg-builder">
+      <div class="seg-head">Segment A — Custom Home Builder</div>
+      <div class="seg-title">They spec and manage. The homeowner trusts their judgment.</div>
+      <div class="seg-fear"><strong style="color:#80B0E0;">Their fear:</strong> Specifying something that lets their client down — stone that doesn't match, stone that runs out, stone that looks cheap in five years. Their reputation is on every material choice.</div>
+      <div class="seg-fear"><strong style="color:#80B0E0;">Their buying trigger:</strong> Pre-project, when they're assembling the spec package. This is the window — once they've spec'd stone from someone else, switching is friction.</div>
+      <div class="seg-offer">"Stone your client can brag about for 30 years — from the quarry, not a warehouse. We guarantee it matches start to finish."</div>
+    </div>
+    <div class="seg-card seg-architect">
+      <div class="seg-head">Segment B — Architect / Designer</div>
+      <div class="seg-title">They specify. The builder buys. The homeowner pays.</div>
+      <div class="seg-fear"><strong style="color:#C080E0;">Their fear:</strong> Specifying a material their client can't get or that looks different from the sample. Architects live and die by the integrity of their specifications. A material that performs differently than spec'd damages their relationship with the client.</div>
+      <div class="seg-fear"><strong style="color:#C080E0;">Their buying trigger:</strong> Getting on the approved vendor list. One architect who specs Stone Mill generates repeat orders across every project they touch for years.</div>
+      <div class="seg-offer">"One source, one quarry, one person who stands behind every piece. We'll provide the provenance documentation your clients expect from a premium specification."</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">The Architect Opportunity — Why It's Worth the Longer Sales Cycle</div>
+    <p>Architects are a slower sell. They're careful, thorough, and specification-driven. But the math on getting specified by one architect is exceptional:</p>
+    <p>One architect doing 10 custom homes per year, each with 500 sq ft of stone at $13 = <strong>$65,000 per architect per year in recurring revenue.</strong> Get specified by 10 architects and that's $650,000 in annual revenue from relationships, not cold calls. They re-specify without you having to re-sell.</p>
+    <p>The entry point with architects is education, not selling. Lunch-and-learns, material samples with documentation, site visits to the quarry. <strong>The quarry visit is the close.</strong> No architect who has stood at the Stone Mill quarry with Steve and heard the fourth-generation story walks away and specs cultured stone.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">The Quarry Visit as a Sales Tool</div>
+    <p>This is underused and possibly the most powerful tool in the Stone Mill arsenal. <strong>Bring prospects to the quarry.</strong> Custom builders and architects who experience the source — see the stone being extracted, meet the people who process it, hear Steve's story in person — are not just buyers. They become advocates.</p>
+    <p>An architect who visited your quarry tells every client the story. A builder who walked your operation specs you on every eligible project. No competitor can replicate this experience. It is the physical proof of everything the Mafia Offer claims.</p>
+  </div>
+</div>
+</div>
+
+<!-- PAGE: THE TREE -->
+<div id="tree" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>The Strategy & Tactics Tree</h2>
+    <span class="tag">Mafia Offer Build</span>
+  </div>
+
+  <div class="goal-node">
+    <div class="goal-label">The Goal</div>
+    <div class="goal-text">Build an offer for custom builders and architects so clearly in their interest that saying no feels irrational — creating a repeatable entry point into the premium B2B direct segment.</div>
+  </div>
+
+  <div style="margin-top:24px;">
+    <div class="level-label label-strategy">Strategy Layer</div>
+    <div class="node-grid node-grid-2">
+      <div class="node node-strategy">
+        <div class="node-id">S-1</div>
+        <div class="node-text">Lead with the story only Stone Mill can tell — quarry-direct, Michigan-sourced, fourth-generation provenance</div>
+        <div class="node-sub">This is the moat. No distributor, no cultured stone company, no competitor can truthfully make this claim. Build the entire offer around what is exclusively true about Stone Mill.</div>
+      </div>
+      <div class="node node-strategy">
+        <div class="node-id">S-2</div>
+        <div class="node-text">Remove every switching friction point before the prospect has to ask about it</div>
+        <div class="node-sub">Samples delivered. Lot-matching documented. One-project trial with no commitment. Supply guaranteed. Make saying yes require less effort than saying no.</div>
+      </div>
+    </div>
+
+    <div class="connector">↓</div>
+
+    <div class="level-label label-necessary">Necessary Conditions</div>
+    <div class="node-grid node-grid-3">
+      <div class="node node-necessary">
+        <div class="node-id">NC-1</div>
+        <div class="node-text">The lot-matching guarantee must be real — documented and deliverable, not just claimed</div>
+        <div class="node-sub">A written quality standard must exist before this is offered. "We guarantee it" is a verbal claim. "Here is our lot-matching protocol" is a document. Architects need the document.</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-2</div>
+        <div class="node-text">Provenance documentation must exist — something physical a builder or architect hands to their client</div>
+        <div class="node-sub">A one-page certificate of origin: quarry name, location, extraction date, stone type. This is what makes the story tangible. It costs almost nothing to produce.</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-3</div>
+        <div class="node-text">The offer must be validated by real builder and architect conversations before scaling outreach</div>
+        <div class="node-sub">Version 1.0 is a hypothesis. It becomes a Mafia Offer when a real prospect says — unprompted — "I can't get that anywhere else." Until then it's theory.</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-4</div>
+        <div class="node-text">A sample kit must exist that can be sent or delivered within 48 hours of a request</div>
+        <div class="node-sub">The offer creates interest. The sample kit closes the first step. If samples take two weeks, the window closes. Speed of response is part of the offer.</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-5</div>
+        <div class="node-text">Steve must be the face of the offer — not a sales rep, not a brochure</div>
+        <div class="node-sub">The fourth-generation story only works when Steve tells it. The quarry visit only works when Steve leads it. In this segment, Steve IS the Mafia Offer. That has implications for how his time is allocated.</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-6</div>
+        <div class="node-text">The offer must be segment-specific — builder language for builders, architect language for architects</div>
+        <div class="node-sub">Same core offer, different emphasis. Builders care about client satisfaction and project completion. Architects care about specification integrity and client trust. Same stone, different story.</div>
+      </div>
+    </div>
+
+    <div class="connector">↓</div>
+
+    <div class="level-label label-tactic">Tactics</div>
+    <div class="node-grid node-grid-2">
+      <div class="node node-tactic">
+        <div class="node-id">T-1 → NC-1</div>
+        <div class="node-text">Write the Stone Mill Lot-Matching Standard — one page, named, dated, signed by Steve</div>
+        <div class="node-sub">What you measure, how you ensure consistency, what happens if it fails. This document turns a verbal promise into a written guarantee. I can draft this with you.</div>
+      </div>
+      <div class="node node-tactic">
+        <div class="node-id">T-2 → NC-2</div>
+        <div class="node-text">Create the Stone Mill Certificate of Origin — one page, quarry name, extraction location, stone type, date</div>
+        <div class="node-sub">Something a homeowner holds in their hand at closing. Something an architect includes in their project documentation. This is the physical proof of provenance.</div>
+      </div>
+      <div class="node node-gold">
+        <div class="node-id">T-3 → NC-3 — MOST URGENT</div>
+        <div class="node-text">Call the 2–3 warm contacts this week. Run the Validation Protocol. Come back with what you heard.</div>
+        <div class="node-sub">This is the only tactic that cannot be delegated or postponed. The offer doesn't get refined until real prospects react to it. Everything else waits for this data.</div>
+      </div>
+      <div class="node node-tactic">
+        <div class="node-id">T-4 → NC-4</div>
+        <div class="node-text">Build a standard sample kit — 3–5 stone samples, one-page spec sheet, Certificate of Origin, Stone Mill story card</div>
+        <div class="node-sub">Deliverable within 48 hours of any request. Physical box, professionally presented. The kit is the offer made tangible.</div>
+      </div>
+      <div class="node node-tactic">
+        <div class="node-id">T-5 → NC-5</div>
+        <div class="node-text">Schedule the first quarry visit for a warm prospect in Q1</div>
+        <div class="node-sub">One architect or builder who visits the quarry and hears the story in person is worth 20 cold calls. This is the highest-conversion sales activity in the entire playbook.</div>
+      </div>
+      <div class="node node-tactic">
+        <div class="node-id">T-6 → NC-6</div>
+        <div class="node-text">Write two versions of the offer one-pager — one for builders, one for architects — with segment-specific language</div>
+        <div class="node-sub">Same stone. Same quarry. Same guarantee. Different headline, different fear addressed, different call to action. I can draft both once the validation calls are done.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PAGE: RESISTANCE MAP -->
+<div id="resistance" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>Layers of Resistance Map</h2>
+    <span class="tag">TOC Sales Psychology</span>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-head">How a Builder or Architect Moves From No to Yes</div>
+    <p>TOC's Layers of Resistance describes the predictable sequence every buyer moves through. Your job is not to overcome objections — it's to move them through each layer with the right answer at the right moment. Skipping a layer always backfires.</p>
+  </div>
+
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div class="resist-row">
+      <div class="resist-layer">
+        <div class="resist-num">LAYER 1</div>
+        <div class="resist-name">"I don't agree there's a problem"</div>
+      </div>
+      <div class="resist-what">
+        <p>"My current stone supplier is fine. I don't have a problem."</p>
+      </div>
+      <div class="resist-answer">
+        <p><strong>Your move:</strong> Surface the latent pain without attacking their current supplier. "What happens on a project if your stone order doesn't match the sample your client approved?" Let them answer. The problem exists — they just haven't had it recently enough to feel it.</p>
+      </div>
+    </div>
+    <div class="resist-row">
+      <div class="resist-layer">
+        <div class="resist-num">LAYER 2</div>
+        <div class="resist-name">"I don't agree that's the direction"</div>
+      </div>
+      <div class="resist-what">
+        <p>"Even if there's a problem, buying direct from a quarry isn't the answer."</p>
+      </div>
+      <div class="resist-answer">
+        <p><strong>Your move:</strong> The Mafia Offer. "We're the quarry. Same stone, lot-matched, with a story your client can hold in their hand. Your current supplier gets their stone from somewhere — we're that somewhere, direct." The provenance document and lot-matching standard answer this layer.</p>
+      </div>
+    </div>
+    <div class="resist-row">
+      <div class="resist-layer">
+        <div class="resist-num">LAYER 3</div>
+        <div class="resist-name">"I don't believe it will work"</div>
+      </div>
+      <div class="resist-what">
+        <p>"Sounds good, but how do I know you can actually deliver consistently at scale?"</p>
+      </div>
+      <div class="resist-answer">
+        <p><strong>Your move:</strong> Proof. References from existing customers. Photos of completed projects. The quarry visit. The lot-matching standard document. Steve's 40 years in the craft. This layer requires evidence, not promises.</p>
+      </div>
+    </div>
+    <div class="resist-row">
+      <div class="resist-layer">
+        <div class="resist-num">LAYER 4</div>
+        <div class="resist-name">"I see negative side effects"</div>
+      </div>
+      <div class="resist-what">
+        <p>"What if you run out? What about lead times? What if my client doesn't love the stone?"</p>
+      </div>
+      <div class="resist-answer">
+        <p><strong>Your move:</strong> Address before they ask. "Here's our lead time standard. Here's how we handle lot reserves for ongoing projects. Here's our replacement policy if something isn't right." Build these answers into the sample kit so they're never asked as objections.</p>
+      </div>
+    </div>
+    <div class="resist-row">
+      <div class="resist-layer">
+        <div class="resist-num">LAYER 5</div>
+        <div class="resist-name">"I don't know how to make this happen"</div>
+      </div>
+      <div class="resist-what">
+        <p>"I'm interested but switching suppliers is a lot of work and I'm busy."</p>
+      </div>
+      <div class="resist-answer">
+        <p><strong>Your move:</strong> Remove every step. "Try us on one project. I'll send the samples this week. You tell me the spec, I'll match it. One call, one decision, see how it goes." The one-project trial with no commitment exists specifically to answer Layer 5.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PAGE: VALIDATION PROTOCOL -->
+<div id="validate" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>Validation Protocol</h2>
+    <span class="tag">The 3 Calls This Week</span>
+  </div>
+
+  <div class="card">
+    <div class="card-head">Why This Comes Before Everything Else</div>
+    <p>You have 2–3 warm contacts — builders or architects who already know Stone Mill — who aren't currently buying at the premium B2B rate. <strong>These are the most valuable people in your pipeline right now.</strong> Not because they'll definitely buy, but because they'll tell you the truth about whether this offer resonates.</p>
+    <p>The goal of these calls is not to sell. It is to listen. Ask these questions in this order and write down exactly what they say — not your interpretation of it. Bring that back and the offer gets sharpened into something real.</p>
+  </div>
+
+  <div class="question-block">
+    <div class="q-num">QUESTION 1 — Open with their world, not yours</div>
+    <div class="q-text">"Walk me through how you typically source stone for a project — from when you first spec it to when it's on the wall."</div>
+    <div class="q-listen">Listen for: <strong>where the friction is.</strong> Do they mention delays? Matching problems? Distributor issues? Client conversations about material quality? Every frustration they name is a potential Mafia Offer hook. Don't interrupt. Let them talk.</div>
+  </div>
+
+  <div class="question-block">
+    <div class="q-num">QUESTION 2 — Surface the pain</div>
+    <div class="q-text">"Has there ever been a moment on a stone project where something didn't go the way you planned — supply, consistency, client reaction?"</div>
+    <div class="q-listen">Listen for: <strong>the specific failure mode.</strong> If they say "the second shipment didn't match" — that's your lot-matching offer. If they say "we couldn't get more stone mid-project" — that's your supply guarantee. If they say "the client wanted something with more of a story" — that's your provenance offer. The answer to this question tells you which hook to lead with.</div>
+  </div>
+
+  <div class="question-block">
+    <div class="q-num">QUESTION 3 — Test the story</div>
+    <div class="q-text">"If you could tell a client their stone came directly from a Michigan quarry owned and operated by a fourth-generation mason — that it was quarried specifically for their project — how do you think they'd receive that?"</div>
+    <div class="q-listen">Listen for: <strong>genuine excitement or polite indifference.</strong> If they lean forward (metaphorically) and say "my clients would love that" — the story works. If they shrug and say "I'm not sure they'd care" — the story needs to be positioned differently, or this isn't the right segment. Either answer is valuable.</div>
+  </div>
+
+  <div class="question-block">
+    <div class="q-num">QUESTION 4 — The offer test</div>
+    <div class="q-text">"We're moving toward working directly with builders and architects on a project basis — samples delivered within 48 hours, lot-matched and guaranteed, with provenance documentation for the client. What would make that a no-brainer for you to try on a project?"</div>
+    <div class="q-listen">Listen for: <strong>what's missing from the offer.</strong> Whatever they say next — "if the price was right," "if I knew the lead times," "if I had a reference from someone I trust" — is the answer to what the offer still needs. Write it down word for word.</div>
+  </div>
+
+  <div class="question-block">
+    <div class="q-num">QUESTION 5 — The referral close (regardless of outcome)</div>
+    <div class="q-text">"Who else do you know in [city/market] who's doing the kind of custom work where the stone story would matter to their clients?"</div>
+    <div class="q-listen">Every call ends with this question whether they're interested or not. A warm referral from a builder to another builder is worth three months of cold calling. This is how the premium B2B segment gets built — not from lists, from networks.</div>
+  </div>
+
+  <div class="card" style="margin-top:20px;">
+    <div class="card-head">What to Bring Back</div>
+    <p>After these 3 calls, come back with the answers to: <strong>What specific pain came up most?</strong> What was their reaction to the provenance story? What did they say the offer was missing? Who did they refer you to?</p>
+    <p>Those four data points are what Version 2.0 of the Mafia Offer is built from. The tree gets updated. The offer gets sharpened. The outreach scripts get rewritten. <strong>This is how a hypothesis becomes a weapon.</strong></p>
+  </div>
+</div>
+</div>
+
+<!-- PAGE: VERSIONS -->
+<div id="versions" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>Offer Version Tracker</h2>
+    <span class="tag">Living Document</span>
+  </div>
+
+  <div class="card">
+    <div class="card-head">How This Works</div>
+    <p>The Mafia Offer is not a one-time creation. It evolves as you learn from real customer conversations. Each version is triggered by new information from the field. This tracker records what changed and why.</p>
+  </div>
+
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div class="version-row">
+      <div class="v-num">V1.0</div>
+      <div class="v-trigger"><strong>Hypothesis — June 2026.</strong> Built from strategic context, pricing analysis, and segment targeting. Core: quarry-direct provenance + lot-matching guarantee + one-project trial. Not yet validated by customer conversations.</div>
+      <div class="v-status v-current">CURRENT</div>
+    </div>
+    <div class="version-row">
+      <div class="v-num">V2.0</div>
+      <div class="v-trigger"><strong>Post-validation calls.</strong> Triggered by: completing the 3 warm contact calls in the Validation Protocol. Update the offer based on what the actual pain points are, which hook resonates, and what the offer is missing. Expected: Q1 2026.</div>
+      <div class="v-status v-next">PENDING</div>
+    </div>
+    <div class="version-row">
+      <div class="v-num">V3.0</div>
+      <div class="v-trigger"><strong>Post-first-close.</strong> Triggered by: closing the first premium B2B account. What did they say was the deciding factor? What almost stopped them? The first close tells you more than any amount of planning. Rewrite the offer around their actual decision.</div>
+      <div class="v-status v-next">PENDING</div>
+    </div>
+    <div class="version-row">
+      <div class="v-num">V4.0</div>
+      <div class="v-trigger"><strong>Architect-specific version.</strong> Triggered by: first architect conversation. The architect segment has different language, different fears, and different decision criteria. A dedicated version for this segment gets built once we have real data from the first architect conversation.</div>
+      <div class="v-status v-next">PENDING</div>
+    </div>
+    <div class="version-row">
+      <div class="v-num">V5.0</div>
+      <div class="v-trigger"><strong>Out-of-state version.</strong> Triggered by: first out-of-state prospect conversation. Does the Michigan provenance story travel? Does "quarried in Michigan" mean something to a builder in Ohio or Indiana? This version tests and adjusts the story for markets where Stone Mill is unknown.</div>
+      <div class="v-status v-next">PENDING</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px;">
+    <div class="card-head">The One Thing That Cannot Change Across All Versions</div>
+    <p>Whatever else changes as the offer evolves — the hook, the mechanics, the language, the segment emphasis — <strong>one thing stays constant: the offer must be built on something only Stone Mill can truthfully claim.</strong></p>
+    <p>If a competitor could make the same offer, it's not a Mafia Offer. The quarry ownership, the Michigan provenance, the fourth-generation craft story — these are the permanent foundation. Everything else is adjustable. These are not.</p>
+  </div>
+</div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
