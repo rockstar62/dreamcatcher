@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Stone Mill — S&T Tree #2: Customer Concentration</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --black: #0F0E0C;
+  --stone-dark: #1A1815;
+  --stone-mid: #2E2B26;
+  --stone-warm: #4A4440;
+  --stone-tan: #8C7B6E;
+  --stone-sand: #C4B4A0;
+  --stone-light: #EDE4D8;
+  --chisel: #C87820;
+  --chisel-dim: #6A4010;
+  --white: #F8F4EE;
+  --danger: #C84040;
+  --danger-dim: #4A1010;
+  --go: #4A8A50;
+  --go-dim: #1A3A1E;
+  --blue: #3A6A9A;
+  --blue-dim: #12263A;
+  --purple: #6A3A8A;
+  --purple-dim: #28103A;
+  --amber: #C49730;
+  --amber-dim: #3A2A00;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.masthead {
+  background: var(--stone-dark);
+  border-bottom: 1px solid var(--stone-warm);
+  padding: 40px 40px 30px;
+  position: relative;
+}
+.masthead::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--danger), transparent);
+}
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--danger);
+  margin-bottom: 12px;
+}
+.masthead h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+.masthead h1 em { font-style: italic; color: var(--stone-sand); }
+.masthead-sub {
+  font-size: 13px;
+  color: var(--stone-tan);
+  max-width: 580px;
+  line-height: 1.7;
+}
+
+nav {
+  background: var(--stone-dark);
+  border-bottom: 1px solid var(--stone-warm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  overflow-x: auto;
+}
+.nav-inner {
+  display: flex;
+  padding: 0 40px;
+  white-space: nowrap;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--stone-tan);
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 14px 18px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-btn:hover { color: var(--white); }
+.nav-btn.active { color: var(--danger); border-bottom-color: var(--danger); }
+
+.page { display: none; }
+.page.active { display: block; }
+
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 40px;
+}
+@media(max-width:600px){ .wrap { padding: 32px 20px; } }
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--stone-warm);
+}
+.section-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--danger);
+  border: 1px solid var(--danger-dim);
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
+.card {
+  background: var(--stone-dark);
+  border: 1px solid var(--stone-warm);
+  border-radius: 4px;
+  padding: 24px 28px;
+  margin-bottom: 16px;
+}
+.card-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--chisel);
+  margin-bottom: 12px;
+}
+.card p {
+  font-size: 14px;
+  color: var(--stone-sand);
+  line-height: 1.75;
+  margin-bottom: 10px;
+}
+.card p:last-child { margin-bottom: 0; }
+.card strong { color: var(--white); }
+
+.alert {
+  background: var(--danger-dim);
+  border: 1px solid var(--danger);
+  border-left: 4px solid var(--danger);
+  border-radius: 4px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.alert-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--danger);
+  margin-bottom: 8px;
+}
+.alert p { font-size: 14px; color: #F0C0C0; line-height: 1.7; margin-bottom: 8px; }
+.alert p:last-child { margin-bottom: 0; }
+.alert strong { color: var(--white); }
+
+.pullquote {
+  border-left: 3px solid var(--danger);
+  padding: 12px 20px;
+  margin: 18px 0;
+  background: var(--stone-mid);
+  font-size: 14px;
+  color: var(--stone-light);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+/* RISK METER */
+.risk-meter {
+  background: var(--stone-mid);
+  border: 1px solid var(--stone-warm);
+  border-radius: 4px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.risk-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--stone-tan);
+  margin-bottom: 12px;
+}
+.risk-bar-wrap {
+  height: 12px;
+  background: var(--stone-warm);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.risk-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--go), var(--amber), var(--danger));
+}
+.risk-markers {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--stone-tan);
+}
+
+/* TWO-TRACK */
+.two-track {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+@media(max-width:600px){ .two-track { grid-template-columns: 1fr; } }
+
+.track {
+  border-radius: 4px;
+  padding: 20px;
+}
+.track-anchor {
+  background: var(--blue-dim);
+  border: 1px solid var(--blue);
+}
+.track-diversify {
+  background: var(--go-dim);
+  border: 1px solid var(--go);
+}
+.track-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.track-anchor .track-head { color: #80B0E0; }
+.track-diversify .track-head { color: #80C880; }
+.track-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.track-items { list-style: none; padding: 0; }
+.track-items li {
+  font-size: 12px;
+  color: var(--stone-sand);
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  line-height: 1.5;
+}
+.track-items li:last-child { border-bottom: none; }
+.track-items li::before { content: '→ '; color: var(--chisel); font-family: 'IBM Plex Mono', monospace; }
+
+/* GOAL NODE */
+.goal-node {
+  background: linear-gradient(135deg, #2A0808, #3A1010);
+  border: 2px solid var(--danger);
+  border-radius: 6px;
+  padding: 24px 28px;
+  text-align: center;
+  position: relative;
+}
+.goal-node::after {
+  content: '';
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 24px;
+  background: var(--danger);
+}
+.goal-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--danger);
+  margin-bottom: 8px;
+}
+.goal-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.3;
+}
+
+.connector { display: flex; justify-content: center; padding: 6px 0; color: var(--stone-tan); font-size: 20px; }
+
+.level-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 2px;
+  display: inline-block;
+  margin-bottom: 14px;
+  margin-top: 20px;
+}
+.label-strategy { background: var(--blue-dim); color: #80B0E0; border: 1px solid var(--blue); }
+.label-necessary { background: var(--go-dim); color: #80C880; border: 1px solid var(--go); }
+.label-tactic { background: var(--purple-dim); color: #C080E0; border: 1px solid var(--purple); }
+
+.node-grid { display: grid; gap: 12px; margin-bottom: 8px; }
+.node-grid-2 { grid-template-columns: 1fr 1fr; }
+.node-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+@media(max-width:640px){ .node-grid-2,.node-grid-3 { grid-template-columns: 1fr; } }
+
+.node { border-radius: 4px; padding: 16px 18px; }
+.node-strategy { background: var(--blue-dim); border: 1px solid var(--blue); }
+.node-necessary { background: var(--go-dim); border: 1px solid var(--go); }
+.node-tactic { background: var(--purple-dim); border: 1px solid var(--purple); }
+.node-amber { background: var(--amber-dim); border: 1px solid var(--amber); }
+
+.node-id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  margin-bottom: 6px;
+}
+.node-strategy .node-id { color: #80B0E0; }
+.node-necessary .node-id { color: #80C880; }
+.node-tactic .node-id { color: #C080E0; }
+.node-amber .node-id { color: #E8C870; }
+
+.node-text { font-size: 13px; line-height: 1.55; color: var(--white); font-weight: 500; }
+.node-sub { font-size: 11px; color: var(--stone-sand); margin-top: 6px; line-height: 1.5; }
+
+/* TIMELINE */
+.timeline { margin-bottom: 20px; }
+.tl-row {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+  border-bottom: 1px solid var(--stone-warm);
+}
+.tl-row:last-child { border-bottom: none; }
+.tl-period {
+  background: var(--stone-dark);
+  padding: 14px 16px;
+  min-width: 120px;
+  border-right: 1px solid var(--stone-warm);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.tl-period-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--stone-tan);
+  margin-bottom: 4px;
+}
+.tl-period-target {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--chisel);
+}
+.tl-content {
+  padding: 14px 16px;
+  flex: 1;
+}
+.tl-content p { font-size: 13px; color: var(--stone-sand); line-height: 1.6; }
+.tl-content strong { color: var(--white); }
+
+/* MATH BOX */
+.math-box {
+  background: var(--stone-mid);
+  border: 1px solid var(--stone-warm);
+  border-radius: 4px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.math-head {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--chisel);
+  margin-bottom: 12px;
+}
+.math-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--stone-warm);
+  font-size: 12px;
+}
+.math-row:last-child { border-bottom: none; }
+.math-desc { color: var(--stone-sand); }
+.math-num { color: var(--white); font-weight: 500; }
+.math-num.danger { color: #E08080; }
+.math-num.go { color: #80C880; }
+.math-num.amber { color: #E8C870; }
+
+/* BREAK ROWS */
+.break-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--stone-warm);
+}
+.break-row:last-child { border-bottom: none; }
+.break-icon { font-size: 16px; min-width: 24px; margin-top: 2px; }
+.break-text { font-size: 13px; color: var(--stone-sand); line-height: 1.6; flex: 1; }
+.break-text strong { color: var(--white); }
+.break-verdict {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 2px;
+  min-width: 60px;
+  text-align: center;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+.verdict-hold { background: var(--go-dim); color: #80C880; border: 1px solid var(--go); }
+.verdict-watch { background: var(--amber-dim); color: #E8C870; border: 1px solid var(--amber); }
+.verdict-fix { background: var(--danger-dim); color: #E08080; border: 1px solid var(--danger); }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="eyebrow">The Stone Mill, Inc. — S&T Tree #2 — Board Priority #1</div>
+  <h1><em>Customer Concentration</em><br>The Exit Killer</h1>
+  <p class="masthead-sub">One reseller. No contract. 70% of revenue. This tree maps the strategy for reducing that number to 25% without losing the relationship — and what has to be true for that to work.</p>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="show('reality')">The Reality</button>
+    <button class="nav-btn" onclick="show('tree')">The Tree</button>
+    <button class="nav-btn" onclick="show('anchor')">Anchor Strategy</button>
+    <button class="nav-btn" onclick="show('diversify')">Diversification</button>
+    <button class="nav-btn" onclick="show('breaks')">Where It Breaks</button>
+    <button class="nav-btn" onclick="show('actions')">Actions</button>
+  </div>
+</nav>
+
+<!-- PAGE: REALITY -->
+<div id="reality" class="page active">
+<div class="wrap">
+  <div class="section-head">
+    <h2>The Reality — No Filter</h2>
+    <span class="tag">Board Priority #1</span>
+  </div>
+
+  <div class="alert">
+    <div class="alert-head">⚠ What a Buyer Sees When They Open Your Books</div>
+    <p><strong>One entity. 70% of $1.7M. No contract. Handshake only. Reseller model.</strong></p>
+    <p>A PE firm or strategic buyer doing due diligence sees this and one of two things happens: they walk, or they reprice. A 2–3 turn multiple discount is standard for concentration above 25%. At $7M EBITDA and 8x that's a $56M exit. At 5x due to concentration risk that's $35M. <strong>This one problem costs you $21M at exit if it's not fixed.</strong></p>
+    <p>The relationship being strong doesn't matter on paper. The customer's goodwill is not a contractual obligation. Any buyer's counsel will flag it immediately.</p>
+  </div>
+
+  <div class="risk-meter">
+    <div class="risk-label">Concentration Risk Level — Current State</div>
+    <div class="risk-bar-wrap">
+      <div class="risk-bar-fill" style="width:70%;"></div>
+    </div>
+    <div class="risk-markers">
+      <span>0%</span>
+      <span style="color:var(--go)">25% — Platform Floor</span>
+      <span style="color:var(--amber)">40%</span>
+      <span style="color:var(--danger)">70% — You Are Here</span>
+      <span>100%</span>
+    </div>
+  </div>
+
+  <div class="math-box">
+    <div class="math-head">The Math — What This Costs You</div>
+    <div class="math-row"><span class="math-desc">Current revenue from anchor customer</span><span class="math-num danger">~$1.19M (70%)</span></div>
+    <div class="math-row"><span class="math-desc">Revenue if they reduce orders by 30%</span><span class="math-num danger">Stone Mill drops to ~$1.34M total</span></div>
+    <div class="math-row"><span class="math-desc">Revenue if they exit entirely</span><span class="math-num danger">Stone Mill drops to ~$510K</span></div>
+    <div class="math-row"><span class="math-desc">Exit multiple at 70% concentration</span><span class="math-num danger">5–6x EBITDA (concentration discount)</span></div>
+    <div class="math-row"><span class="math-desc">Exit multiple at &lt;25% concentration</span><span class="math-num go">8–10x EBITDA (platform multiple)</span></div>
+    <div class="math-row"><span class="math-desc">Value difference at $7M EBITDA</span><span class="math-num go">$14M–$35M more at exit</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">The Two-Track Problem</div>
+    <p>This tree has to solve two things simultaneously — and they pull in opposite directions if handled wrong:</p>
+    <p><strong>Track 1 — Protect the anchor.</strong> The reseller relationship is strong and represents real revenue. The goal is NOT to lose them while you diversify. Handled wrong, a push for a contract or a price change signals distrust and damages the relationship.</p>
+    <p><strong>Track 2 — Diversify fast enough to matter.</strong> Getting from 70% to 25% while the anchor stays flat means you need to grow total revenue from $1.7M to roughly $4.8M with zero growth from the anchor — or grow the anchor slowly while adding new revenue much faster.</p>
+    <div class="pullquote">"The goal is not to fire the big customer. The goal is to grow around them until they're no longer the whole story."</div>
+  </div>
+</div>
+</div>
+
+<!-- PAGE: TREE -->
+<div id="tree" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>The Strategy & Tactics Tree</h2>
+    <span class="tag">Customer Concentration</span>
+  </div>
+
+  <div class="goal-node">
+    <div class="goal-label">The Goal</div>
+    <div class="goal-text">Reduce anchor customer from 70% to below 25% of revenue by end of Year 2 — without losing the relationship — making Stone Mill exit-ready on concentration metrics.</div>
+  </div>
+
+  <div style="margin-top:24px;">
+    <div class="level-label label-strategy">Strategy Layer — Two Parallel Tracks</div>
+    <div class="node-grid node-grid-2">
+      <div class="node node-strategy">
+        <div class="node-id">S-1 — Anchor Track</div>
+        <div class="node-text">Formalize and protect the anchor relationship without disrupting it</div>
+        <div class="node-sub">Get some form of written agreement — even a simple preferred supplier letter — that gives a future buyer confidence the relationship is real and durable. Do this with care. The relationship comes first.</div>
+      </div>
+      <div class="node node-strategy">
+        <div class="node-id">S-2 — Diversification Track</div>
+        <div class="node-text">Add new B2B accounts fast enough that the anchor's share of total revenue falls to 25% even if anchor revenue stays flat</div>
+        <div class="node-sub">Math: anchor at $1.19M = 25% of total means total revenue must reach $4.76M. That's $3.07M in new revenue needed by end of Year 2.</div>
+      </div>
+    </div>
+
+    <div class="connector">↓</div>
+
+    <div class="level-label label-necessary">Necessary Conditions</div>
+    <div class="node-grid node-grid-3">
+      <div class="node node-necessary">
+        <div class="node-id">NC-1</div>
+        <div class="node-text">The anchor relationship must remain intact and ideally grow during diversification</div>
+        <div class="node-sub">Any move toward a contract must feel like protection for them, not a constraint. Frame it as: "We want to make sure we can always prioritize your orders."</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-2</div>
+        <div class="node-text">Stone Mill must add minimum 20 new B2B accounts generating $3M+ in new revenue by end of Year 2</div>
+        <div class="node-sub">That's roughly 10 accounts averaging $150K/year each, or a mix of larger and smaller. Requires the sales machine running at full capacity starting now.</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-3</div>
+        <div class="node-text">No single new customer can exceed 15% of revenue as they're added</div>
+        <div class="node-sub">Diversifying from one 70% customer into one 40% customer is not diversification. It's a lateral move. Cap new accounts at 15% maximum from day one.</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-4</div>
+        <div class="node-text">Quarry capacity must be able to serve both the anchor AND new accounts simultaneously</div>
+        <div class="node-sub">If capacity is constrained, new sales come at the cost of anchor supply. That damages the most important relationship in the business. Capacity clarity is urgent.</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-5</div>
+        <div class="node-text">Steve must understand the anchor's own business trajectory</div>
+        <div class="node-sub">Are they growing, stable, or at risk? If their own business is declining, the 70% problem gets worse even without any action on Stone Mill's part. This conversation needs to happen.</div>
+      </div>
+      <div class="node node-necessary">
+        <div class="node-id">NC-6</div>
+        <div class="node-text">Concentration must be tracked monthly — not annually</div>
+        <div class="node-sub">You cannot manage what you don't measure in real time. HubSpot must show customer revenue share as a live dashboard metric, not a year-end surprise.</div>
+      </div>
+    </div>
+
+    <div class="connector">↓</div>
+
+    <div class="level-label label-tactic">Tactics</div>
+    <div class="node-grid node-grid-2">
+      <div class="node node-tactic">
+        <div class="node-id">T-1 → NC-1 + NC-5</div>
+        <div class="node-text">Have a relationship conversation with the anchor — not about contracts, about their future</div>
+        <div class="node-sub">"Where are you taking the business over the next 3 years? We want to make sure we're positioned to grow with you." This surfaces their trajectory and opens the door to formalizing the relationship naturally.</div>
+      </div>
+      <div class="node node-tactic">
+        <div class="node-id">T-2 → NC-1</div>
+        <div class="node-text">Propose a Preferred Supplier Agreement — not a contract, a partnership letter</div>
+        <div class="node-sub">Frame it as: pricing protection for them, supply priority guarantee from Stone Mill. One page. No lawyers required. This gives a buyer something to point to without threatening the relationship.</div>
+      </div>
+      <div class="node node-tactic">
+        <div class="node-id">T-3 → NC-2</div>
+        <div class="node-text">Run 20+ prospecting touches per week targeting the same reseller segment in adjacent markets</div>
+        <div class="node-sub">The anchor proves the reseller model works. Find more like them — stone retailers, masonry supply businesses, building material resellers — in Michigan, Ohio, Indiana, Illinois.</div>
+      </div>
+      <div class="node node-tactic">
+        <div class="node-id">T-4 → NC-2 + NC-3</div>
+        <div class="node-text">Add contractor and builder direct accounts in parallel — different segment, different concentration risk</div>
+        <div class="node-sub">Resellers and direct B2B contractors are different customer types. Mixing both reduces the risk that a single segment shift wipes out multiple accounts at once.</div>
+      </div>
+      <div class="node node-tactic">
+        <div class="node-id">T-5 → NC-4</div>
+        <div class="node-text">Get production ceiling number this quarter — allocate capacity to anchor first, then grow new accounts within remaining capacity</div>
+        <div class="node-sub">Anchor supply is sacrosanct. New accounts get served from surplus capacity. If capacity is the ceiling, the capital investment decision accelerates.</div>
+      </div>
+      <div class="node node-amber">
+        <div class="node-id">T-6 → NC-6</div>
+        <div class="node-text">Build a concentration dashboard in HubSpot — customer revenue share tracked monthly, alert if any customer exceeds 20%</div>
+        <div class="node-sub">Set a rule: if a new deal would push any customer above 20%, flag it before closing. Diversification must be a system constraint, not a good intention.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PAGE: ANCHOR STRATEGY -->
+<div id="anchor" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>The Anchor Strategy</h2>
+    <span class="tag">Protect First</span>
+  </div>
+
+  <div class="card">
+    <div class="card-head">What the Anchor Customer Actually Is</div>
+    <p>A reseller who buys from Stone Mill at wholesale and marks up to their own customers. Long relationship. No contract. Strong personally. This is a common structure in building materials — and it's also the structure most vulnerable to a single personnel change, a business sale, or a supplier switch on their end.</p>
+    <p><strong>The risk isn't that they're unhappy with you. The risk is that something changes in THEIR business that has nothing to do with you.</strong> They get acquired. Their key buyer leaves. They pivot to a different stone type. None of those events require them to be dissatisfied with Stone Mill.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">The Preferred Supplier Agreement — How to Approach It</div>
+    <p>This is the single most valuable thing you can do for the exit without disrupting the relationship. A one-page document that says three things:</p>
+    <ul style="list-style:none; padding:0; margin-top:12px;">
+      <li style="padding:10px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Stone Mill commits to priority supply allocation</strong> for the anchor — their orders are filled before new accounts in a capacity-constrained situation.</li>
+      <li style="padding:10px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Pricing stability</strong> — a defined rate or a defined notice period before any price change. Gives them certainty. Costs Stone Mill almost nothing.</li>
+      <li style="padding:10px 0; font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Annual review commitment</strong> — both parties agree to meet once a year to review the relationship, volume, and pricing. Formalizes the partnership without creating legal rigidity.</li>
+    </ul>
+    <div class="pullquote">How to raise it: "We're doing some planning for the next few years and want to make sure we have the right structure to serve you well as you grow. Would you be open to putting a simple preferred supplier arrangement on paper — nothing complicated, just something that protects both of us?"</div>
+    <p>Most long-term B2B partners welcome this. It signals professionalism and commitment. If they resist, that itself is important information about the relationship's actual durability.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">What to Learn From the Anchor Conversation</div>
+    <p>Before any agreement discussion, have the relationship conversation first. You need to know:</p>
+    <ul style="list-style:none; padding:0; margin-top:12px;">
+      <li style="padding:8px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ Are they growing, stable, or at risk in their own market?</li>
+      <li style="padding:8px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ Is there a succession plan in their business — or is it also owner-dependent?</li>
+      <li style="padding:8px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ Are they happy with current pricing, volume, and product range?</li>
+      <li style="padding:8px 0; font-size:14px; color:var(--stone-sand);">→ Do they have any concerns about Stone Mill's ability to serve them as they grow?</li>
+    </ul>
+    <p style="margin-top:12px;">Their answers tell you whether this relationship deserves a preferred supplier agreement or whether the risk is higher than the surface suggests.</p>
+  </div>
+</div>
+</div>
+
+<!-- PAGE: DIVERSIFICATION -->
+<div id="diversify" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>The Diversification Strategy</h2>
+    <span class="tag">The Math & The Method</span>
+  </div>
+
+  <div class="math-box">
+    <div class="math-head">The Concentration Math — What Has to Happen</div>
+    <div class="math-row"><span class="math-desc">Anchor revenue (current)</span><span class="math-num">~$1.19M</span></div>
+    <div class="math-row"><span class="math-desc">Total revenue needed for anchor = 40% (Year 1 target)</span><span class="math-num amber">$2.98M total → $1.29M new revenue needed</span></div>
+    <div class="math-row"><span class="math-desc">Total revenue needed for anchor = 25% (Year 2 target)</span><span class="math-num go">$4.76M total → $3.07M new revenue needed</span></div>
+    <div class="math-row"><span class="math-desc">New accounts needed at avg $150K/year (Year 2)</span><span class="math-num go">~20 accounts</span></div>
+    <div class="math-row"><span class="math-desc">New accounts needed at avg $75K/year (smaller accounts)</span><span class="math-num amber">~41 accounts — harder, but more diversified</span></div>
+    <div class="math-row"><span class="math-desc">Calls needed at 5% close rate to get 20 accounts</span><span class="math-num">400 qualified conversations over 24 months → ~17/month</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">Target Customer Segments for Diversification</div>
+    <p>The anchor is a reseller. That model works — find more like them. But also diversify the customer TYPE so no single segment can replicate the concentration problem.</p>
+  </div>
+
+  <div class="two-track">
+    <div class="track track-anchor">
+      <div class="track-head">Segment A — More Resellers</div>
+      <div class="track-title">Stone retailers and masonry supply businesses in adjacent markets</div>
+      <ul class="track-items">
+        <li>Proven model — anchor demonstrates it works</li>
+        <li>Target: Ohio, Indiana, western Michigan, Illinois</li>
+        <li>Volume buyers — fewer accounts, higher revenue each</li>
+        <li>Risk: same segment concentration if multiple resellers</li>
+        <li>Cap any single reseller at 15% from day one</li>
+      </ul>
+    </div>
+    <div class="track track-diversify">
+      <div class="track-head">Segment B — Direct Contractors</div>
+      <div class="track-title">Masons, custom builders, and contractors buying for projects</div>
+      <ul class="track-items">
+        <li>Different customer type — reduces segment risk</li>
+        <li>Higher price point possible ($11–13 vs $8.50)</li>
+        <li>Smaller average order — more accounts needed</li>
+        <li>Relationship-driven — takes longer to close</li>
+        <li>Architects specifying = recurring pipeline once in</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="card" style="padding:0; overflow:hidden; margin-bottom:0;">
+      <div class="tl-row">
+        <div class="tl-period">
+          <div class="tl-period-label">Q1–Q2 Y1</div>
+          <div class="tl-period-target" style="color:var(--danger);">70% → 55%</div>
+        </div>
+        <div class="tl-content">
+          <p><strong>Activate the playbook at full throttle.</strong> 20 touches/week. Focus on resellers in adjacent markets first — fastest path to volume. Target: 5 new accounts, $300K new revenue. Anchor conversation and preferred supplier letter this quarter.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-period">
+          <div class="tl-period-label">Q3–Q4 Y1</div>
+          <div class="tl-period-target" style="color:var(--amber);">55% → 40%</div>
+        </div>
+        <div class="tl-content">
+          <p><strong>Sales Coordinator hired and running outbound.</strong> Steve moves to qualified conversations only. Add 5–8 more accounts. Begin contractor segment alongside reseller track. Target: $3.5M total revenue, anchor below 40%.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-period">
+          <div class="tl-period-label">Q1–Q2 Y2</div>
+          <div class="tl-period-target" style="color:var(--amber);">40% → 30%</div>
+        </div>
+        <div class="tl-content">
+          <p><strong>Geographic expansion into second market.</strong> First outside sales rep if needed. Architect and designer track producing specifications. Target: 15 active accounts total, $5M run rate approaching.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-period">
+          <div class="tl-period-label">Q3–Q4 Y2</div>
+          <div class="tl-period-target" style="color:var(--go);">30% → &lt;25%</div>
+        </div>
+        <div class="tl-content">
+          <p><strong>Platform floor crossed.</strong> 20+ active accounts. No single customer above 20%. $7M revenue target in sight. Concentration metric no longer a deal-killer at exit. Begin exit prep conversations with M&A advisor.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PAGE: WHERE IT BREAKS -->
+<div id="breaks" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>Where This Strategy Breaks</h2>
+    <span class="tag">Assumption Audit</span>
+  </div>
+
+  <div class="card" style="padding:20px 24px;">
+    <div class="break-row">
+      <div class="break-icon">🔴</div>
+      <div class="break-text"><strong>The anchor exits or significantly reduces orders during Years 1–2.</strong> If the 70% customer cuts volume by half while you're mid-diversification, total revenue could drop to $1.35M and the growth narrative collapses. This is the scenario with no good answer except having diversified faster. Every week you don't prospect is a week closer to this being unrecoverable.</div>
+      <div class="break-verdict verdict-fix">URGENT</div>
+    </div>
+    <div class="break-row">
+      <div class="break-icon">🔴</div>
+      <div class="break-text"><strong>The anchor resists any formalization.</strong> If they decline even a simple preferred supplier letter, you have a relationship that a buyer cannot rely on. That doesn't mean the relationship is bad — but it means the exit story has a structural hole that no amount of revenue growth repairs. You need to know their answer before Year 1 Q2.</div>
+      <div class="break-verdict verdict-fix">URGENT</div>
+    </div>
+    <div class="break-row">
+      <div class="break-icon">⚠️</div>
+      <div class="break-text"><strong>New accounts don't reach $150K average — they stay small.</strong> If new accounts average $50–75K instead of $150K, you need 40+ accounts to hit the concentration target, not 20. That's a different sales machine — more accounts, more coordination, more complexity. The coordinator hire becomes essential even faster.</div>
+      <div class="break-verdict verdict-watch">WATCH</div>
+    </div>
+    <div class="break-row">
+      <div class="break-icon">⚠️</div>
+      <div class="break-text"><strong>Prospecting volume doesn't hit 20 touches/week consistently.</strong> The math on getting to 20 accounts in 24 months requires sustained outreach. If the playbook runs at 50% capacity — 10 touches/week — the timeline doubles and Year 2 concentration targets slip to Year 3. This is a Steve execution risk, not a market risk.</div>
+      <div class="break-verdict verdict-watch">WATCH</div>
+    </div>
+    <div class="break-row">
+      <div class="break-icon">⚠️</div>
+      <div class="break-text"><strong>New reseller accounts create a new concentration cluster.</strong> If three resellers each at 15% replace the one reseller at 70%, the risk isn't fully solved — a segment shock (economic downturn hits stone retail) could hit all three simultaneously. True diversification requires mixing resellers with direct contractors and architects.</div>
+      <div class="break-verdict verdict-watch">WATCH</div>
+    </div>
+    <div class="break-row">
+      <div class="break-icon">✅</div>
+      <div class="break-text"><strong>The anchor stays stable during diversification.</strong> Steve rates the relationship as very strong with no signs of change. Given the reseller depends on Stone Mill's product for their own business, they have as much incentive to maintain the relationship as Stone Mill does. This assumption is reasonable — not guaranteed, but reasonable.</div>
+      <div class="break-verdict verdict-hold">HOLDS</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PAGE: ACTIONS -->
+<div id="actions" class="page">
+<div class="wrap">
+  <div class="section-head">
+    <h2>Actions — Sequenced by Urgency</h2>
+    <span class="tag">This Week → This Year</span>
+  </div>
+
+  <div class="card">
+    <div class="card-head">This Week</div>
+    <ul style="list-style:none; padding:0;">
+      <li style="padding:12px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Schedule the anchor conversation.</strong> Not the contract conversation — the relationship conversation. "Where are you taking the business over the next few years?" That's the opening. Do it this week.</li>
+      <li style="padding:12px 0; font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Make 5 prospecting calls to resellers in adjacent markets.</strong> The anchor proved the reseller model works. Find the next one. Today.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-head">This Month</div>
+    <ul style="list-style:none; padding:0;">
+      <li style="padding:12px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Draft the one-page Preferred Supplier Agreement.</strong> I can build this with you. One page, plain language, no lawyers needed for the first draft. Bring it to the anchor as a sign of commitment, not a legal constraint.</li>
+      <li style="padding:12px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Set up the concentration dashboard in HubSpot.</strong> Revenue by customer, updated monthly, with a visual alert if any account crosses 20%. You need to see this number every month, not once a year at tax time.</li>
+      <li style="padding:12px 0; font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Set the 15% cap rule in writing.</strong> No new deal structure that would put a single customer above 15% of trailing revenue. Write it down. Make it a policy. Break it consciously if you ever choose to — but make it a conscious choice, not drift.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-head">This Quarter</div>
+    <ul style="list-style:none; padding:0;">
+      <li style="padding:12px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Close 3–5 new accounts.</strong> Not prospects. Closed. Revenue flowing. This is the only metric that matters for concentration this quarter.</li>
+      <li style="padding:12px 0; border-bottom:1px solid var(--stone-warm); font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Map the reseller segment in Ohio, Indiana, and Illinois.</strong> Use the luxury builder prospector skill and the same research methodology used for Michigan. The anchor proved this model works — find their equivalents in adjacent states.</li>
+      <li style="padding:12px 0; font-size:14px; color:var(--stone-sand);">→ <strong style="color:var(--white)">Build Tree #3 — The Mafia Offer.</strong> The diversification strategy needs a compelling reason for new accounts to switch to Stone Mill. That reason needs to be built and tested before the outreach volume scales. That's the next tree.</li>
+    </ul>
+  </div>
+
+</div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
