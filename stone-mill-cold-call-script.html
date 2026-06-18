@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stone Mill — Cold Call Script</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #1a1a18; color: #e8e4dc; min-height: 100vh; }
+
+  .header {
+    background: #1a1a18;
+    border-bottom: 1px solid #2e2e2a;
+    padding: 16px 20px 12px;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .logo { font-family: 'DM Serif Display', serif; font-size: 18px; color: #c9a96e; }
+  .badge { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #777; background: #252522; padding: 3px 8px; border-radius: 20px; border: 1px solid #333; }
+  .header-sub { font-size: 11px; color: #555; letter-spacing: 0.07em; text-transform: uppercase; }
+
+  .main { padding: 20px 16px 50px; max-width: 480px; margin: 0 auto; }
+
+  .section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #555; margin-bottom: 10px; padding-left: 2px; }
+
+  /* OPENER */
+  .opener-card { background: #c9a96e; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+  .opener-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #1a1a18; opacity: 0.55; margin-bottom: 10px; }
+  .opener-text { font-family: 'DM Serif Display', serif; font-size: 16px; line-height: 1.6; color: #1a1a18; }
+  .opener-note { margin-top: 12px; font-size: 11px; color: #1a1a18; opacity: 0.5; font-style: italic; }
+
+  /* INTENT BOX */
+  .intent-box { background: #1e1e2a; border: 1px solid #2a2a3a; border-radius: 10px; padding: 14px 16px; margin-bottom: 22px; display: flex; gap: 10px; }
+  .intent-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .intent-text { font-size: 12px; color: #888; line-height: 1.55; }
+  .intent-text strong { color: #a96ec9; font-weight: 600; }
+
+  /* BRANCHES */
+  .branch { background: #222220; border: 1px solid #2e2e2a; border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
+  .branch-btn { width: 100%; background: none; border: none; padding: 14px 14px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+  .branch-btn:hover { background: #2a2a26; }
+  .b-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+  .green  { background: #1e3a2a; color: #4caf7d; }
+  .red    { background: #3a1e1e; color: #cf6679; }
+  .gold   { background: #2e2a1a; color: #c9a96e; }
+  .blue   { background: #1e2a3a; color: #6a9fd8; }
+  .purple { background: #2a1e3a; color: #a96ec9; }
+  .b-q { font-size: 13px; color: #999; font-style: italic; line-height: 1.4; flex: 1; }
+  .b-arrow { color: #444; font-size: 11px; flex-shrink: 0; transition: transform 0.2s; }
+  .b-arrow.open { transform: rotate(180deg); }
+
+  .branch-body { display: none; padding: 4px 16px 16px; border-top: 1px solid #2a2a26; }
+  .branch-body.open { display: block; }
+  .rl { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #555; margin: 14px 0 7px; }
+  .rt { font-size: 14px; line-height: 1.65; color: #ddd; }
+  .rt em { color: #c9a96e; font-style: normal; font-weight: 500; }
+  .tt { font-size: 12px; color: #777; line-height: 1.5; font-style: italic; }
+
+  /* SEQUENCE */
+  .seq-card { background: #1e2a1e; border: 1px solid #2a3a2a; border-radius: 10px; padding: 16px; margin-bottom: 10px; }
+  .seq-step { display: flex; gap: 12px; margin-bottom: 13px; }
+  .seq-step:last-child { margin-bottom: 0; }
+  .sn { width: 22px; height: 22px; border-radius: 50%; background: #4caf7d18; border: 1px solid #4caf7d44; color: #4caf7d; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .st { font-size: 13px; color: #999; line-height: 1.5; }
+  .st strong { color: #e8e4dc; font-weight: 500; }
+
+  .divider { height: 1px; background: #252522; margin: 22px 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <span class="logo">The Stone Mill</span>
+    <span class="badge">Cold Call Script</span>
+  </div>
+  <div class="header-sub">Introductory · Awareness · Seed Planting</div>
+</div>
+
+<div class="main">
+
+  <div class="section-label">Your Opener</div>
+  <div class="opener-card">
+    <div class="opener-eyebrow">Deliver this — then stop and listen</div>
+    <div class="opener-text">"Good morning, this is Steve with The Stone Mill. I'm reaching out to spread the word that your stone doesn't have to come from six hundred miles away — we produce it right here in Michigan. I could really use your help — would you be opposed to me sending a brochure over to you right now while I have you on the phone?"</div>
+    <div class="opener-note">Chris Voss: "Would you be opposed" invites a no — which makes them feel safe and opens them up.</div>
+  </div>
+
+  <div class="intent-box">
+    <div class="intent-icon">🎯</div>
+    <div class="intent-text"><strong>Goal of this call:</strong> Awareness and introduction only. Get the email. Send the brochure live. Make her the hero who found the local source. Do not sell stone.</div>
+  </div>
+
+  <div class="section-label">When They Respond</div>
+
+  <div class="branch">
+    <button class="branch-btn" onclick="tog(this)">
+      <div class="b-icon green">✓</div>
+      <div class="b-q">"Sure, go ahead."</div>
+      <div class="b-arrow">▼</div>
+    </button>
+    <div class="branch-body">
+      <div class="rl">You say</div>
+      <div class="rt">"Perfect — what's the best email to send it to?"<br><br><em>[Get the email. Send it immediately.]</em><br><br>"I just sent it — do you mind pulling it up real quick? Just want to make sure it came through."</div>
+      <div class="rl">Then</div>
+      <div class="tt">Walk her through it briefly while she has it open. Ask who else on the team would want to see it. She's now the person who found the local Michigan stone source.</div>
+    </div>
+  </div>
+
+  <div class="branch">
+    <button class="branch-btn" onclick="tog(this)">
+      <div class="b-icon red">✗</div>
+      <div class="b-q">"We already have a stone supplier."</div>
+      <div class="b-arrow">▼</div>
+    </button>
+    <div class="branch-body">
+      <div class="rl">You say</div>
+      <div class="rt"><em>"A local source?"</em><br><br>[Pause. Let it land.]<br><br>"I'm not asking you to change anything — just want to make sure you know we're here. Would you be opposed to keeping our brochure on file, just in case?"</div>
+      <div class="rl">Then</div>
+      <div class="tt">If she softens, get the email and send it. If she holds firm, thank her by name, log the contact, move on. The seed is planted.</div>
+    </div>
+  </div>
+
+  <div class="branch">
+    <button class="branch-btn" onclick="tog(this)">
+      <div class="b-icon gold">?</div>
+      <div class="b-q">"Oh interesting — what kind of stone?"</div>
+      <div class="b-arrow">▼</div>
+    </button>
+    <div class="branch-body">
+      <div class="rl">You say</div>
+      <div class="rt">"Natural quarried stone — we own the quarries right here in Michigan. Everything from fieldstone to ledge to boulders. It's all in the brochure — would you be opposed to me sending it over right now?"</div>
+      <div class="rl">Then</div>
+      <div class="tt">Curiosity is an open door. This is your best outcome. Get the email and send it live.</div>
+    </div>
+  </div>
+
+  <div class="branch">
+    <button class="branch-btn" onclick="tog(this)">
+      <div class="b-icon blue">→</div>
+      <div class="b-q">"Let me transfer you to our designer."</div>
+      <div class="b-arrow">▼</div>
+    </button>
+    <div class="branch-body">
+      <div class="rl">You say</div>
+      <div class="rt">"I appreciate that — before you do, would you be opposed to grabbing a copy of our brochure for yourself? I'd love for you to have it too."</div>
+      <div class="rl">Then</div>
+      <div class="tt">Get her email before the transfer. If you reach the designer, deliver the opener fresh. Two seeds planted on one call.</div>
+    </div>
+  </div>
+
+  <div class="branch">
+    <button class="branch-btn" onclick="tog(this)">
+      <div class="b-icon purple">~</div>
+      <div class="b-q">"I'll let the builder know you called."</div>
+      <div class="b-arrow">▼</div>
+    </button>
+    <div class="branch-body">
+      <div class="rl">You say</div>
+      <div class="rt">"That's really helpful, I appreciate it. Would you be opposed to me sending a brochure directly to you so you have something to pass along? Makes it easy."</div>
+      <div class="rl">Then</div>
+      <div class="tt">You're making her job easier. She's likely to say yes. Get the email and send it — now she's your internal advocate.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">When She Gives You The Email</div>
+  <div class="seq-card">
+    <div class="seq-step">
+      <div class="sn">1</div>
+      <div class="st"><strong>Send the brochure immediately</strong> — while she's still on the phone. Not later.</div>
+    </div>
+    <div class="seq-step">
+      <div class="sn">2</div>
+      <div class="st"><strong>"I just sent it"</strong> — ask her to pull it up to confirm it came through.</div>
+    </div>
+    <div class="seq-step">
+      <div class="sn">3</div>
+      <div class="st"><strong>Walk her through it briefly</strong> — one or two things to notice. Keep it short.</div>
+    </div>
+    <div class="seq-step">
+      <div class="sn">4</div>
+      <div class="st"><strong>Log in HubSpot immediately</strong> after the call — name, email, outcome, next step.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function tog(btn) {
+  const body = btn.nextElementSibling;
+  const arrow = btn.querySelector('.b-arrow');
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.branch-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.b-arrow').forEach(a => a.classList.remove('open'));
+  if (!isOpen) { body.classList.add('open'); arrow.classList.add('open'); }
+}
+</script>
+</body>
+</html>
