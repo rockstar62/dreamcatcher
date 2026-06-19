@@ -109,6 +109,7 @@
     <div class="tab active" onclick="switchTab('primary')">Primary Script</div>
     <div class="tab" onclick="switchTab('original')">Original Opener</div>
     <div class="tab" onclick="switchTab('voicemail')">Voicemail</div>
+    <div class="tab" onclick="switchTab('dm')">Decision Maker</div>
   </div>
 
   <!-- PRIMARY SCRIPT -->
@@ -262,6 +263,32 @@
 
 </div>
 
+
+  <!-- DECISION MAKER -->
+  <div class="tab-content" id="tab-dm">
+    <div class="section-label">Decision Maker Script</div>
+    <div class="script-card">
+      <div class="script-eyebrow">When the builder picks up — peer to peer</div>
+      <div class="script-text">
+        "Good morning Jim, this is Steve — I'm the owner of The Stone Mill. There's a Pure Michigan option for your stone needs that you probably aren't aware of. Today's goal is to share our story and get on your radar. Would you be opposed to me sending you our digital brochure?"
+      </div>
+      <div class="script-note">Owner to owner. No gatekeeper, no warm up needed. Hook, honest intent, single Voss ask. Stop and let him respond.</div>
+    </div>
+
+    <div class="pause-block" style="background:#2a2a26; border-radius:8px; padding:12px 14px; margin-bottom:20px;">
+      <div class="pause-text">⏸ He says "No" — meaning Yes</div>
+      <div class="pause-sub">Get the email. Send the brochure live while you have him.</div>
+    </div>
+
+    <div class="script-card secondary">
+      <div class="script-eyebrow">If he wants to talk stone</div>
+      <div class="script-text">
+        "We quarry and process natural stone right here in Michigan — own the quarries ourselves. Fourth generation. Everything from fieldstone to ledge to boulders. It's all in the brochure — I'd love for you to take a look and we can set up a time to talk if it makes sense."
+      </div>
+      <div class="script-note">Don't pitch product. Keep it brief. The goal is still the brochure and a future conversation — not a sale today.</div>
+    </div>
+  </div>
+
 <script>
 function tog(btn) {
   const body = btn.nextElementSibling;
@@ -281,3 +308,4 @@ function switchTab(name) {
 </script>
 </body>
 </html>
+
