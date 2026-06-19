@@ -24,11 +24,21 @@
 
   .section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #555; margin-bottom: 10px; padding-left: 2px; }
 
-  /* OPENER */
-  .opener-card { background: #c9a96e; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-  .opener-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #1a1a18; opacity: 0.55; margin-bottom: 10px; }
-  .opener-text { font-family: 'DM Serif Display', serif; font-size: 16px; line-height: 1.6; color: #1a1a18; }
-  .opener-note { margin-top: 12px; font-size: 11px; color: #1a1a18; opacity: 0.5; font-style: italic; }
+  /* SCRIPT CARDS */
+  .script-card { background: #c9a96e; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+  .script-card.secondary { background: #232320; border: 1px solid #2e2e2a; }
+  .script-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #1a1a18; opacity: 0.55; margin-bottom: 10px; }
+  .script-card.secondary .script-eyebrow { color: #555; opacity: 1; }
+  .script-text { font-family: 'DM Serif Display', serif; font-size: 16px; line-height: 1.6; color: #1a1a18; }
+  .script-card.secondary .script-text { color: #ddd; font-size: 15px; }
+  .script-note { margin-top: 12px; font-size: 11px; color: #1a1a18; opacity: 0.5; font-style: italic; }
+  .script-card.secondary .script-note { color: #666; opacity: 1; }
+
+  .pause-block { background: #1a1a18; border-radius: 6px; padding: 10px 14px; margin: 14px 0; }
+  .pause-text { font-size: 11px; color: #c9a96e; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  .pause-sub { font-size: 11px; color: #666; margin-top: 2px; font-style: italic; }
+
+  .script-card.secondary .pause-block { background: #1a1a18; }
 
   /* INTENT BOX */
   .intent-box { background: #1e1e2a; border: 1px solid #2a2a3a; border-radius: 10px; padding: 14px 16px; margin-bottom: 22px; display: flex; gap: 10px; }
@@ -49,13 +59,18 @@
   .b-q { font-size: 13px; color: #999; font-style: italic; line-height: 1.4; flex: 1; }
   .b-arrow { color: #444; font-size: 11px; flex-shrink: 0; transition: transform 0.2s; }
   .b-arrow.open { transform: rotate(180deg); }
-
   .branch-body { display: none; padding: 4px 16px 16px; border-top: 1px solid #2a2a26; }
   .branch-body.open { display: block; }
   .rl { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #555; margin: 14px 0 7px; }
   .rt { font-size: 14px; line-height: 1.65; color: #ddd; }
   .rt em { color: #c9a96e; font-style: normal; font-weight: 500; }
   .tt { font-size: 12px; color: #777; line-height: 1.5; font-style: italic; }
+
+  /* VOICEMAIL */
+  .voicemail-card { background: #1e2a1e; border: 1px solid #2a3a2a; border-radius: 10px; padding: 18px; margin-bottom: 20px; }
+  .vm-label { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #4caf7d; margin-bottom: 10px; }
+  .vm-text { font-family: 'DM Serif Display', serif; font-size: 15px; line-height: 1.6; color: #ddd; }
+  .vm-note { margin-top: 10px; font-size: 11px; color: #666; font-style: italic; }
 
   /* SEQUENCE */
   .seq-card { background: #1e2a1e; border: 1px solid #2a3a2a; border-radius: 10px; padding: 16px; margin-bottom: 10px; }
@@ -66,6 +81,11 @@
   .st strong { color: #e8e4dc; font-weight: 500; }
 
   .divider { height: 1px; background: #252522; margin: 22px 0; }
+  .tab-row { display: flex; gap: 8px; margin-bottom: 16px; }
+  .tab { padding: 7px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border: 1px solid #2e2e2a; background: #222220; color: #666; transition: all 0.15s; }
+  .tab.active { background: #c9a96e; color: #1a1a18; border-color: #c9a96e; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
 </style>
 </head>
 <body>
@@ -80,109 +100,163 @@
 
 <div class="main">
 
-  <div class="section-label">Your Opener</div>
-  <div class="opener-card">
-    <div class="opener-eyebrow">Deliver this — then stop and listen</div>
-    <div class="opener-text">"Good morning, this is Steve with The Stone Mill. I'm reaching out to spread the word that your stone doesn't have to come from six hundred miles away — we produce it right here in Michigan. I could really use your help — would you be opposed to me sending a brochure over to you right now while I have you on the phone?"</div>
-    <div class="opener-note">Chris Voss: "Would you be opposed" invites a no — which makes them feel safe and opens them up.</div>
-  </div>
-
   <div class="intent-box">
     <div class="intent-icon">🎯</div>
     <div class="intent-text"><strong>Goal of this call:</strong> Awareness and introduction only. Get the email. Send the brochure live. Make her the hero who found the local source. Do not sell stone.</div>
   </div>
 
-  <div class="section-label">When They Respond</div>
+  <div class="tab-row">
+    <div class="tab active" onclick="switchTab('primary')">Primary Script</div>
+    <div class="tab" onclick="switchTab('original')">Original Opener</div>
+    <div class="tab" onclick="switchTab('voicemail')">Voicemail</div>
+  </div>
 
-  <div class="branch">
-    <button class="branch-btn" onclick="tog(this)">
-      <div class="b-icon green">✓</div>
-      <div class="b-q">"Sure, go ahead."</div>
-      <div class="b-arrow">▼</div>
-    </button>
-    <div class="branch-body">
-      <div class="rl">You say</div>
-      <div class="rt">"Perfect — what's the best email to send it to?"<br><br><em>[Get the email. Send it immediately.]</em><br><br>"I just sent it — do you mind pulling it up real quick? Just want to make sure it came through."</div>
-      <div class="rl">Then</div>
-      <div class="tt">Walk her through it briefly while she has it open. Ask who else on the team would want to see it. She's now the person who found the local Michigan stone source.</div>
+  <!-- PRIMARY SCRIPT -->
+  <div class="tab-content active" id="tab-primary">
+
+    <div class="section-label">Your Opener</div>
+    <div class="script-card">
+      <div class="script-eyebrow">Deliver this — then stop and listen</div>
+      <div class="script-text">
+        "Good morning Jennifer, this is Steve with The Stone Mill. There's a Pure Michigan option for your stone needs and most builders don't know it exists — it's right in your backyard.<br><br>
+        I'm playing the long game here — I'm looking for a collaborator on the inside who can help me spread the word.<br><br>
+        Would you be opposed to me sending you a digital brochure to review?"
+      </div>
+      <div class="script-note">Hook first. Pure Michigan does the emotional work. Long game sets you apart from every other salesperson she's heard today.</div>
+    </div>
+
+    <div class="pause-block" style="background:#2a2a26; border-radius:8px; padding:12px 14px; margin-bottom:20px;">
+      <div class="pause-text">⏸ She says "No" — meaning Yes</div>
+      <div class="pause-sub">Let it land. Then go to the second ask.</div>
+    </div>
+
+    <div class="script-card secondary">
+      <div class="script-eyebrow">Second Ask</div>
+      <div class="script-text">
+        "The emails that get forwarded from someone trusted actually get opened — would you be opposed to passing it along to whoever handles stone selections while we're on the phone?"
+      </div>
+      <div class="script-note">Two asks. Two natural pauses. She's in the driver's seat both times. Chris Voss: "Would you be opposed" invites a no that means yes.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-label">When They Respond</div>
+
+    <div class="branch">
+      <button class="branch-btn" onclick="tog(this)">
+        <div class="b-icon green">✓</div>
+        <div class="b-q">"Sure, go ahead."</div>
+        <div class="b-arrow">▼</div>
+      </button>
+      <div class="branch-body">
+        <div class="rl">You say</div>
+        <div class="rt">"Perfect — what's the best email to send it to?"<br><br><em>[Get the email. Send it immediately.]</em><br><br>"I just sent it — do you mind pulling it up real quick? Just want to make sure it came through."</div>
+        <div class="rl">Then</div>
+        <div class="tt">Walk her through it briefly while she has it open. Ask who else on the team would want to see it. She's now the person who found the local Michigan stone source.</div>
+      </div>
+    </div>
+
+    <div class="branch">
+      <button class="branch-btn" onclick="tog(this)">
+        <div class="b-icon red">✗</div>
+        <div class="b-q">"We already have a stone supplier."</div>
+        <div class="b-arrow">▼</div>
+      </button>
+      <div class="branch-body">
+        <div class="rl">You say</div>
+        <div class="rt"><em>"A local source?"</em><br><br>[Pause. Let it land.]<br><br>"I'm not asking you to change anything — would you be opposed to keeping our brochure on file, just in case?"</div>
+        <div class="rl">Then</div>
+        <div class="tt">If she softens, get the email and send it. If she holds firm, thank her by name, log the contact, move on. The seed is planted.</div>
+      </div>
+    </div>
+
+    <div class="branch">
+      <button class="branch-btn" onclick="tog(this)">
+        <div class="b-icon gold">?</div>
+        <div class="b-q">"What kind of stone?"</div>
+        <div class="b-arrow">▼</div>
+      </button>
+      <div class="branch-body">
+        <div class="rl">You say</div>
+        <div class="rt">"Natural quarried stone — we own the quarries right here in Michigan. Everything from fieldstone to ledge to boulders. It's all in the brochure — would you be opposed to me sending it over right now?"</div>
+        <div class="rl">Then</div>
+        <div class="tt">Curiosity is an open door. This is your best outcome. Get the email and send it live.</div>
+      </div>
+    </div>
+
+    <div class="branch">
+      <button class="branch-btn" onclick="tog(this)">
+        <div class="b-icon blue">→</div>
+        <div class="b-q">"Let me transfer you to our designer."</div>
+        <div class="b-arrow">▼</div>
+      </button>
+      <div class="branch-body">
+        <div class="rl">You say</div>
+        <div class="rt">"I appreciate that — before you do, would you be opposed to grabbing a copy of the brochure for yourself? I'd love for you to have it too."</div>
+        <div class="rl">Then</div>
+        <div class="tt">Get her email before the transfer. If you reach the designer, deliver the opener fresh. Two seeds planted on one call.</div>
+      </div>
+    </div>
+
+    <div class="branch">
+      <button class="branch-btn" onclick="tog(this)">
+        <div class="b-icon purple">~</div>
+        <div class="b-q">"I'll let the builder know you called."</div>
+        <div class="b-arrow">▼</div>
+      </button>
+      <div class="branch-body">
+        <div class="rl">You say</div>
+        <div class="rt">"That's really helpful, I appreciate it. Would you be opposed to me sending a brochure directly to you so you have something to pass along? Makes it easy."</div>
+        <div class="rl">Then</div>
+        <div class="tt">You're making her job easier. She's likely to say yes. Get the email — now she's your internal advocate.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-label">When She Gives You The Email</div>
+    <div class="seq-card">
+      <div class="seq-step">
+        <div class="sn">1</div>
+        <div class="st"><strong>Send the brochure immediately</strong> — while she's still on the phone. Not later.</div>
+      </div>
+      <div class="seq-step">
+        <div class="sn">2</div>
+        <div class="st"><strong>"I just sent it"</strong> — ask her to pull it up to confirm it came through.</div>
+      </div>
+      <div class="seq-step">
+        <div class="sn">3</div>
+        <div class="st"><strong>Walk her through it briefly</strong> — one or two things to notice. Keep it short.</div>
+      </div>
+      <div class="seq-step">
+        <div class="sn">4</div>
+        <div class="st"><strong>Log in HubSpot immediately</strong> after the call — name, email, outcome, next step.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ORIGINAL OPENER -->
+  <div class="tab-content" id="tab-original">
+    <div class="section-label">Original Opener</div>
+    <div class="script-card secondary">
+      <div class="script-eyebrow">Version 1 — Clean and Direct</div>
+      <div class="script-text">
+        "Good morning, this is Steve with The Stone Mill. I'm reaching out to spread the word that your stone doesn't have to come from six hundred miles away — we produce it right here in Michigan. I could really use your help — would you be opposed to me sending a brochure over to you right now while I have you on the phone?"
+      </div>
+      <div class="script-note">Shorter and faster. Good for high volume days when you need to move quick. Chris Voss "would you be opposed" framing intact.</div>
     </div>
   </div>
 
-  <div class="branch">
-    <button class="branch-btn" onclick="tog(this)">
-      <div class="b-icon red">✗</div>
-      <div class="b-q">"We already have a stone supplier."</div>
-      <div class="b-arrow">▼</div>
-    </button>
-    <div class="branch-body">
-      <div class="rl">You say</div>
-      <div class="rt"><em>"A local source?"</em><br><br>[Pause. Let it land.]<br><br>"I'm not asking you to change anything — just want to make sure you know we're here. Would you be opposed to keeping our brochure on file, just in case?"</div>
-      <div class="rl">Then</div>
-      <div class="tt">If she softens, get the email and send it. If she holds firm, thank her by name, log the contact, move on. The seed is planted.</div>
-    </div>
-  </div>
-
-  <div class="branch">
-    <button class="branch-btn" onclick="tog(this)">
-      <div class="b-icon gold">?</div>
-      <div class="b-q">"Oh interesting — what kind of stone?"</div>
-      <div class="b-arrow">▼</div>
-    </button>
-    <div class="branch-body">
-      <div class="rl">You say</div>
-      <div class="rt">"Natural quarried stone — we own the quarries right here in Michigan. Everything from fieldstone to ledge to boulders. It's all in the brochure — would you be opposed to me sending it over right now?"</div>
-      <div class="rl">Then</div>
-      <div class="tt">Curiosity is an open door. This is your best outcome. Get the email and send it live.</div>
-    </div>
-  </div>
-
-  <div class="branch">
-    <button class="branch-btn" onclick="tog(this)">
-      <div class="b-icon blue">→</div>
-      <div class="b-q">"Let me transfer you to our designer."</div>
-      <div class="b-arrow">▼</div>
-    </button>
-    <div class="branch-body">
-      <div class="rl">You say</div>
-      <div class="rt">"I appreciate that — before you do, would you be opposed to grabbing a copy of our brochure for yourself? I'd love for you to have it too."</div>
-      <div class="rl">Then</div>
-      <div class="tt">Get her email before the transfer. If you reach the designer, deliver the opener fresh. Two seeds planted on one call.</div>
-    </div>
-  </div>
-
-  <div class="branch">
-    <button class="branch-btn" onclick="tog(this)">
-      <div class="b-icon purple">~</div>
-      <div class="b-q">"I'll let the builder know you called."</div>
-      <div class="b-arrow">▼</div>
-    </button>
-    <div class="branch-body">
-      <div class="rl">You say</div>
-      <div class="rt">"That's really helpful, I appreciate it. Would you be opposed to me sending a brochure directly to you so you have something to pass along? Makes it easy."</div>
-      <div class="rl">Then</div>
-      <div class="tt">You're making her job easier. She's likely to say yes. Get the email and send it — now she's your internal advocate.</div>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="section-label">When She Gives You The Email</div>
-  <div class="seq-card">
-    <div class="seq-step">
-      <div class="sn">1</div>
-      <div class="st"><strong>Send the brochure immediately</strong> — while she's still on the phone. Not later.</div>
-    </div>
-    <div class="seq-step">
-      <div class="sn">2</div>
-      <div class="st"><strong>"I just sent it"</strong> — ask her to pull it up to confirm it came through.</div>
-    </div>
-    <div class="seq-step">
-      <div class="sn">3</div>
-      <div class="st"><strong>Walk her through it briefly</strong> — one or two things to notice. Keep it short.</div>
-    </div>
-    <div class="seq-step">
-      <div class="sn">4</div>
-      <div class="st"><strong>Log in HubSpot immediately</strong> after the call — name, email, outcome, next step.</div>
+  <!-- VOICEMAIL -->
+  <div class="tab-content" id="tab-voicemail">
+    <div class="section-label">Voicemail Script</div>
+    <div class="voicemail-card">
+      <div class="vm-label">🎙 Leave This — Then Send The Email</div>
+      <div class="vm-text">
+        "Good morning Jennifer, this is Steve with The Stone Mill. I know you're busy so I'll be brief. There's a Pure Michigan option for your stone needs and most builders don't know it exists — it's right in your backyard. I'm going to follow up with a short email with a digital brochure — I'd love for you to take a look and see if it passes the test. Again, Steve Miller, The Stone Mill, [number]. Have a great day."
+      </div>
+      <div class="vm-note">Blount sequence: voicemail plants the name, email reinforces it. By the time you call again you're not a stranger. Send the brochure email immediately after hanging up.</div>
     </div>
   </div>
 
@@ -196,6 +270,13 @@ function tog(btn) {
   document.querySelectorAll('.branch-body').forEach(b => b.classList.remove('open'));
   document.querySelectorAll('.b-arrow').forEach(a => a.classList.remove('open'));
   if (!isOpen) { body.classList.add('open'); arrow.classList.add('open'); }
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
 }
 </script>
 </body>
