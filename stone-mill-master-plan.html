@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stone Mill Master Plan — Steve Miller</title>
+<style>
+  :root {
+    --stone: #4a3f35;
+    --granite: #7c6f63;
+    --chalk: #f5f1ec;
+    --cream: #ede8e1;
+    --iron: #1e1a17;
+    --ember: #c0392b;
+    --moss: #4a7c59;
+    --sand: #b8a99a;
+    --gold: #c9a84c;
+    --white: #ffffff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--iron);
+    color: var(--chalk);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--stone) 0%, var(--iron) 100%);
+    border-bottom: 3px solid var(--gold);
+    padding: 32px 24px 24px;
+    text-align: center;
+  }
+  .header .eyebrow {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: clamp(24px, 5vw, 42px);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    color: var(--sand);
+    font-size: 14px;
+    font-style: italic;
+  }
+
+  /* NAV TABS */
+  .tab-bar {
+    display: flex;
+    overflow-x: auto;
+    background: var(--stone);
+    border-bottom: 2px solid var(--granite);
+    gap: 2px;
+    padding: 0 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab-bar::-webkit-scrollbar { height: 4px; }
+  .tab-bar::-webkit-scrollbar-thumb { background: var(--granite); border-radius: 2px; }
+  .tab-btn {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: var(--sand);
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px 16px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--chalk); }
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  /* PANELS */
+  .panel { display: none; padding: 24px 16px 48px; max-width: 900px; margin: 0 auto; }
+  .panel.active { display: block; }
+
+  /* SECTION HEADERS */
+  .section-head {
+    margin: 32px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-head .icon { font-size: 20px; }
+  .section-head h2 {
+    font-size: 18px;
+    color: var(--gold);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .divider {
+    flex: 1;
+    height: 1px;
+    background: var(--granite);
+    opacity: 0.4;
+  }
+
+  /* CARDS */
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--granite);
+    border-left: 4px solid var(--gold);
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card.red { border-left-color: var(--ember); }
+  .card.green { border-left-color: var(--moss); }
+  .card.sand { border-left-color: var(--sand); }
+  .card h3 {
+    font-size: 15px;
+    color: var(--white);
+    margin-bottom: 8px;
+    font-family: 'Courier New', monospace;
+  }
+  .card p, .card li {
+    font-size: 14px;
+    color: var(--sand);
+    line-height: 1.7;
+  }
+  .card ul { padding-left: 18px; margin-top: 8px; }
+  .card .tag {
+    display: inline-block;
+    background: var(--stone);
+    color: var(--gold);
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .card .tag.red { color: var(--ember); }
+  .card .tag.green { color: var(--moss); }
+
+  /* YEAR BLOCKS */
+  .year-block {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--granite);
+    border-radius: 6px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .year-header {
+    background: var(--stone);
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+  .year-header h3 {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .year-header .revenue {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .year-header .arrow { color: var(--sand); transition: transform 0.2s; }
+  .year-header.open .arrow { transform: rotate(180deg); }
+  .year-body {
+    padding: 20px;
+    display: none;
+  }
+  .year-body.open { display: block; }
+  .milestone {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .milestone .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+  .milestone .dot.red { background: var(--ember); }
+  .milestone .dot.green { background: var(--moss); }
+  .milestone p {
+    font-size: 14px;
+    color: var(--sand);
+    line-height: 1.6;
+  }
+  .milestone strong { color: var(--chalk); }
+
+  /* BRUTAL COACH BOX */
+  .coach-box {
+    background: rgba(192,57,43,0.1);
+    border: 1px solid var(--ember);
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .coach-box .coach-label {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--ember);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .coach-box p {
+    font-size: 14px;
+    color: var(--chalk);
+    line-height: 1.7;
+  }
+
+  /* WEEK SCHEDULE */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin: 16px 0;
+  }
+  .day-col { background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; }
+  .day-name {
+    background: var(--stone);
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    padding: 8px 4px;
+    text-transform: uppercase;
+  }
+  .day-block {
+    padding: 8px 6px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    font-size: 11px;
+    color: var(--sand);
+    line-height: 1.4;
+  }
+  .day-block .time { color: var(--granite); font-size: 10px; margin-bottom: 2px; }
+  .day-block.highlight { background: rgba(201,168,76,0.1); }
+  .day-block.call { background: rgba(74,124,89,0.1); }
+  .day-block.admin { background: rgba(74,63,53,0.3); }
+
+  /* PHASE CARDS */
+  .phase-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+    align-items: stretch;
+  }
+  .phase-num {
+    background: var(--gold);
+    color: var(--iron);
+    font-family: 'Courier New', monospace;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .phase-content { flex: 1; }
+  .phase-title {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .phase-dates { font-size: 12px; color: var(--granite); margin-bottom: 8px; font-style: italic; }
+
+  /* DAILY QUOTE SECTION */
+  .quote-card {
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 6px;
+    padding: 24px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .quote-card::before {
+    content: '"';
+    font-size: 80px;
+    color: var(--gold);
+    opacity: 0.15;
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+  .quote-text {
+    font-size: 16px;
+    color: var(--chalk);
+    line-height: 1.7;
+    font-style: italic;
+    padding-left: 20px;
+  }
+  .quote-author {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-top: 12px;
+    padding-left: 20px;
+  }
+  .quote-context {
+    font-size: 12px;
+    color: var(--granite);
+    margin-top: 6px;
+    padding-left: 20px;
+    font-style: normal;
+  }
+
+  /* METRICS STRIP */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    margin: 20px 0;
+  }
+  .metric {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--granite);
+    border-radius: 4px;
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .metric .num {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+  .metric .label {
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--granite);
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* KILL LIST */
+  .kill-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px;
+    background: rgba(192,57,43,0.06);
+    border: 1px solid rgba(192,57,43,0.2);
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  .kill-x { color: var(--ember); font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .kill-item p { font-size: 14px; color: var(--sand); line-height: 1.6; }
+  .kill-item strong { color: var(--chalk); }
+
+  .keep-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px;
+    background: rgba(74,124,89,0.06);
+    border: 1px solid rgba(74,124,89,0.2);
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  .keep-check { color: var(--moss); font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .keep-item p { font-size: 14px; color: var(--sand); line-height: 1.6; }
+  .keep-item strong { color: var(--chalk); }
+
+  /* FLORIDA MODE */
+  .florida-banner {
+    background: linear-gradient(135deg, rgba(0,100,150,0.2), rgba(0,150,100,0.2));
+    border: 1px solid rgba(0,200,200,0.3);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 13px;
+    color: var(--chalk);
+    line-height: 1.6;
+  }
+  .florida-banner .fl-label {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #4dd;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .week-grid { grid-template-columns: 1fr 1fr; }
+    .phase-row { grid-template-columns: 50px 1fr; }
+    .phase-num { font-size: 18px; }
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="eyebrow">The Stone Mill, Inc. — Internal Command Document</div>
+  <h1>Master Action Plan</h1>
+  <div class="subtitle">One source of truth. No more scattered plans.</div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('coach', this)">🔥 Brutal Coach</button>
+  <button class="tab-btn" onclick="showTab('fiveyear', this)">📈 5-Year Breakdown</button>
+  <button class="tab-btn" onclick="showTab('2026', this)">⚡ 2026 Now</button>
+  <button class="tab-btn" onclick="showTab('weekly', this)">📅 Weekly Flow</button>
+  <button class="tab-btn" onclick="showTab('cleanup', this)">🗑️ Kill List</button>
+  <button class="tab-btn" onclick="showTab('florida', this)">🌴 Florida Mode</button>
+  <button class="tab-btn" onclick="showTab('quotes', this)">💬 Daily Fuel</button>
+</div>
+
+<!-- ============================= COACH TAB ============================= -->
+<div class="panel active" id="tab-coach">
+
+  <div class="coach-box" style="margin-top:24px">
+    <div class="coach-label">🔥 Brutal Coach — Read This First</div>
+    <p>
+      You have a business doing $1.7M with strong margins, 4th-generation expertise, real stone quarries, and a clear exit vision. You also have a customer concentration problem that could kill you tomorrow, a pile of tools you've built instead of calling people, and a prospecting volume that is — right now — near zero.<br><br>
+      None of the frameworks, tools, Dreamcatcher cards, or strategy documents matter if the phone isn't ringing outbound. Everything below is ordered around that one constraint: <strong>you need to be talking to custom home builders every business day.</strong> The exit gets built on call volume, not planning volume.
+    </p>
+  </div>
+
+  <div class="section-head">
+    <span class="icon">🎯</span><h2>The One Constraint</h2><div class="divider"></div>
+  </div>
+  <div class="card red">
+    <div class="tag red">Critical — Right Now</div>
+    <h3>Customer Concentration = Your #1 Existential Risk</h3>
+    <p>One reseller. ~70% of revenue. No contract. A handshake. If that relationship ends tomorrow, you go from $1.7M to roughly $500K overnight. Every other goal in this document is secondary to reducing this single point of failure. The 5-year exit only works if the business is sellable — and no PE firm buys a business with this exposure. This gets tracked visibly, weekly, no exceptions.</p>
+  </div>
+
+  <div class="card">
+    <div class="tag">The Real Math</div>
+    <h3>What "Exit" Actually Requires</h3>
+    <ul>
+      <li>PE platform floor: $5M EBITDA (opens institutional buyers)</li>
+      <li>Full buyer universe: $10M EBITDA</li>
+      <li>$35M revenue × ~26% margin = $9.1M EBITDA → 7–10× = <strong>$63–91M exit</strong></li>
+      <li>Current: $1.7M revenue. Gap to close: $33.3M over ~4 years of real growth</li>
+      <li>Year 1 priority: Validate premium B2B pricing with 3–5 direct builder accounts</li>
+    </ul>
+  </div>
+
+  <div class="section-head">
+    <span class="icon">⚠️</span><h2>What Got You Here Won't Get You There</h2><div class="divider"></div>
+  </div>
+  <div class="card red">
+    <div class="tag red">Honest Assessment</div>
+    <h3>You've Been Building Tools. That's Not Prospecting.</h3>
+    <p>Dreamcatcher is excellent infrastructure. The cold call scripts, the TOC trees, the Dalio loop — all good. But building a tool that helps you prospect is not the same as prospecting. The phone is the only thing that moves the needle in Year 1. You know this. Jeb Blount said it plainly: <em>activity, activity, activity.</em> Your HubSpot meeting, your calendar build, your strategy docs — all of it is zero value until someone picks up the phone on the other end.</p>
+  </div>
+
+  <div class="section-head">
+    <span class="icon">✅</span><h2>Your Actual Unfair Advantages</h2><div class="divider"></div>
+  </div>
+  <div class="card green">
+    <h3>What You Have That Others Don't</h3>
+    <ul>
+      <li><strong>You own the quarry.</strong> No competitor sourcing from the same place at your margin.</li>
+      <li><strong>4th generation.</strong> You speak the language of a craftsman to builders who respect craft.</li>
+      <li><strong>Michigan source.</strong> Authenticity story that regional competitors can't match.</li>
+      <li><strong>Builder-to-builder pitch.</strong> You're not a salesman. You're a peer. That's rare and valuable.</li>
+      <li><strong>Premium B2B pricing hypothesis.</strong> $13–15/sqft direct vs. $8.50 wholesale = massive upside if validated.</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ============================= 5-YEAR TAB ============================= -->
+<div class="panel" id="tab-fiveyear">
+
+  <div class="metrics">
+    <div class="metric"><span class="num">$1.7M</span><span class="label">Current Revenue</span></div>
+    <div class="metric"><span class="num">$35M</span><span class="label">Year 5 Target</span></div>
+    <div class="metric"><span class="num">$9M+</span><span class="label">Target EBITDA</span></div>
+    <div class="metric"><span class="num">7–10×</span><span class="label">Exit Multiple</span></div>
+    <div class="metric"><span class="num">$63–91M</span><span class="label">Exit Value Range</span></div>
+  </div>
+
+  <div class="coach-box">
+    <div class="coach-label">Coach Note — On the Revenue Targets</div>
+    <p>These are stretch targets, not guarantees. Year 1 is the validation year — if you can't close 3–5 premium B2B builder accounts at $13–15/sqft, the rest of the model needs to be reworked. Do not skip to Year 3 thinking. Execute Year 1 first.</p>
+  </div>
+
+  <div class="year-block">
+    <div class="year-header open" onclick="toggleYear(this)">
+      <h3>Year 1 — 2026</h3>
+      <div class="revenue">$1.7M → $2.5M</div>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="year-body open">
+      <div class="milestone"><div class="dot red"></div><p><strong>Constraint #1 — Customer Concentration:</strong> Reduce single-reseller dependency from ~70% to below 50% of revenue. Non-negotiable. Get a formal contract with existing reseller as a floor.</p></div>
+      <div class="milestone"><div class="dot"></div><p><strong>Validate the Mafia Offer:</strong> Call warm contacts (builders/architects you know) first. Confirm that $13–15/sqft direct B2B pricing holds against their current sourcing. 3–5 confirmed accounts = hypothesis validated.</p></div>
+      <div class="milestone"><div class="dot"></div><p><strong>Build prospecting velocity:</strong> Ramp from near-zero to 20+ outbound touches/week by November. Cold call playbook + HubSpot pipeline fully operational.</p></div>
+      <div class="milestone"><div class="dot green"></div><p><strong>Hire Sales Process Coordinator:</strong> First role offload. Target: SPC operational by October so you can transition before Florida.</p></div>
+      <div class="milestone"><div class="dot"></div><p><strong>Revenue target:</strong> $800K in new non-reseller revenue to hit $2.5M total. That's roughly 53,000 sqft of stone at $15/sqft — or fewer jobs at premium pricing.</p></div>
+    </div>
+  </div>
+
+  <div class="year-block">
+    <div class="year-header" onclick="toggleYear(this)">
+      <h3>Year 2 — 2027</h3>
+      <div class="revenue">$2.5M → $5M</div>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="year-body">
+      <div class="milestone"><div class="dot"></div><p><strong>SPC fully operational:</strong> You focus on sales. SPC owns pipeline coordination, follow-up sequencing, HubSpot hygiene.</p></div>
+      <div class="milestone"><div class="dot"></div><p><strong>Geographic expansion:</strong> Begin outreach into adjacent premium markets — Grand Rapids, Traverse City, Detroit suburbs. Builders out-of-state sourcing Michigan stone.</p></div>
+      <div class="milestone"><div class="dot"></div><p><strong>Architect/designer channel:</strong> Stone spec relationships. Partner with 3–5 regional firms who specify stone on $1M+ projects.</p></div>
+      <div class="milestone"><div class="dot red"></div><p><strong>Anchor customer below 30%:</strong> No single account above 30% of revenue. Diversification is now measurable and visible on your dashboard.</p></div>
+      <div class="milestone"><div class="dot green"></div><p><strong>Quarry land prospecting:</strong> Identify and optionally acquire 1 additional quarry site. Expands raw material control = PE story gets stronger.</p></div>
+    </div>
+  </div>
+
+  <div class="year-block">
+    <div class="year-header" onclick="toggleYear(this)">
+      <h3>Year 3 — 2028</h3>
+      <div class="revenue">$5M → $12M</div>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="year-body">
+      <div class="milestone"><div class="dot"></div><p><strong>Operations hire:</strong> Production/ops manager so quarry runs without you. This is required for exit readiness — a business that needs the owner in the quarry every day is not sellable.</p></div>
+      <div class="milestone"><div class="dot"></div><p><strong>Brand presence:</strong> Trade show presence at 1–2 regional builder/design shows. Digital presence upgraded. Case study library of 10+ completed premium projects.</p></div>
+      <div class="milestone"><div class="dot green"></div><p><strong>EBITDA floor reached:</strong> $5M EBITDA at this revenue level opens the institutional PE buyer market. You're now in the conversation.</p></div>
+      <div class="milestone"><div class="dot"></div><p><strong>First informal exit conversations:</strong> Talk to a business broker or M&A advisor. Understand what your business looks like on paper to a buyer. Adjust accordingly.</p></div>
+    </div>
+  </div>
+
+  <div class="year-block">
+    <div class="year-header" onclick="toggleYear(this)">
+      <h3>Year 4 — 2029</h3>
+      <div class="revenue">$12M → $22M</div>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="year-body">
+      <div class="milestone"><div class="dot"></div><p><strong>Platform-ready infrastructure:</strong> Management team in place. SOPs documented. Business runs in your absence — proven because you spend 5+ months in Florida each year.</p></div>
+      <div class="milestone"><div class="dot"></div><p><strong>Possible partnership or acquisition:</strong> Smaller regional stone businesses become acquirable targets at this scale. PE platform thesis requires a clear acquisition story.</p></div>
+      <div class="milestone"><div class="dot red"></div><p><strong>No single customer above 15% of revenue.</strong> This is the clean sheet a buyer needs to see.</p></div>
+    </div>
+  </div>
+
+  <div class="year-block">
+    <div class="year-header" onclick="toggleYear(this)">
+      <h3>Year 5 — 2030</h3>
+      <div class="revenue">$22M → $35M</div>
+      <span class="arrow">▼</span>
+    </div>
+    <div class="year-body">
+      <div class="milestone"><div class="dot green"></div><p><strong>Formal exit process:</strong> Engage M&A advisor. Run a proper competitive sale process. Target strategic buyer or PE platform. $63–91M at 7–10× EBITDA on $9M+ EBITDA.</p></div>
+      <div class="milestone"><div class="dot green"></div><p><strong>Or: stay and grow.</strong> At $35M with maintained margins, you have a highly profitable, owner-light business. The exit is available, not required.</p></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================= 2026 NOW TAB ============================= -->
+<div class="panel" id="tab-2026">
+
+  <div class="coach-box" style="margin-top:24px">
+    <div class="coach-label">The Clock — June 21 → November 1, 2026</div>
+    <p>You have <strong>19 weeks</strong> of Michigan working time before Florida. That's 95 business days. Every week that passes without prospecting activity is gone forever. Florida doesn't stop the business — you're still working — but Michigan is where the quarry runs and the in-person builder relationships get built. Use these weeks.</p>
+  </div>
+
+  <div class="section-head">
+    <span class="icon">🔥</span><h2>Phase 1 — Validation</h2><div class="divider"></div>
+  </div>
+  <div class="phase-row">
+    <div class="phase-num">1</div>
+    <div class="phase-content">
+      <div class="phase-title">Warm Contact Validation</div>
+      <div class="phase-dates">Weeks 1–3: Now through July 11</div>
+      <div class="card sand" style="margin-top:0">
+        <p>Call the builders and architects you <em>already know</em>. Not cold. Warm. Tell them you're taking Stone Mill direct-to-builder and you want their honest reaction to your pricing. This is Step 2 of the Dalio Loop — diagnose whether the premium B2B hypothesis is real before scaling the machine to 20 touches/week. Three positive conversations = green light to accelerate. One hard no = free intel on why not. Do not skip this phase to go cold calling first.</p>
+        <ul style="margin-top:12px">
+          <li>Identify 5–8 warm contacts in builder/architect segment</li>
+          <li>Call them using your builder-to-builder language (not the script — your words)</li>
+          <li>Ask: "Would you rather buy stone directly from a Michigan quarry at my price, or keep going through a distributor?" — that's the Voss framing</li>
+          <li>Log every response in HubSpot</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <span class="icon">📞</span><h2>Phase 2 — Cold Ramp</h2><div class="divider"></div>
+  </div>
+  <div class="phase-row">
+    <div class="phase-num">2</div>
+    <div class="phase-content">
+      <div class="phase-title">Prospecting Engine Ignition</div>
+      <div class="phase-dates">Weeks 4–10: July 13 – August 28</div>
+      <div class="card" style="margin-top:0">
+        <p>Warm contacts validated the model. Now you scale. Use the Cold Call Playbook. Use the HubSpot pipeline. Use the brochure-send-on-call sequence. Weekly touch targets:</p>
+        <ul style="margin-top:12px">
+          <li>Week 4: 5 touches</li>
+          <li>Week 5–6: 10 touches/week</li>
+          <li>Week 7–8: 15 touches/week</li>
+          <li>Week 9–10: 20 touches/week — <strong>hold this rate</strong></li>
+        </ul>
+        <p style="margin-top:10px;">One call block each morning, 9–11am, Mon–Thu. Friday for follow-ups and admin. No exceptions for first 4 weeks to build the habit.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <span class="icon">👤</span><h2>Phase 3 — Hire & Hand Off</h2><div class="divider"></div>
+  </div>
+  <div class="phase-row">
+    <div class="phase-num">3</div>
+    <div class="phase-content">
+      <div class="phase-title">Sales Process Coordinator</div>
+      <div class="phase-dates">Weeks 8–16: August – October 1</div>
+      <div class="card green" style="margin-top:0">
+        <p>As volume grows you hit a wall — one person can't do 20+ outbound touches AND manage follow-up sequences AND keep HubSpot clean AND do quarry ops. The SPC role offloads everything except the conversation. Write the job description in Week 8. Post it. Interview in September. Target onboarding by October 1 so you have 4 weeks to train before Florida. This is the most important hire you'll make this year.</p>
+        <ul style="margin-top:12px">
+          <li>Write SPC job description (Week 8)</li>
+          <li>Post on Indeed and LinkedIn (Week 9)</li>
+          <li>Interview top 3 candidates (Week 11–12)</li>
+          <li>Hire and onboard (Week 13–14)</li>
+          <li>Transfer HubSpot, sequences, follow-up ownership (Week 15–16)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <span class="icon">🌴</span><h2>Phase 4 — Florida Handoff</h2><div class="divider"></div>
+  </div>
+  <div class="phase-row">
+    <div class="phase-num">4</div>
+    <div class="phase-content">
+      <div class="phase-title">Pre-Departure Systems Lock</div>
+      <div class="phase-dates">Weeks 17–19: October 1 – November 1</div>
+      <div class="card" style="margin-top:0">
+        <p>You leave for Florida with a running machine, not a paused one. SPC owns day-to-day pipeline. You own high-value conversations and deal closes remotely. Quarry ops runs without your daily presence. By November 1 you should have:</p>
+        <ul style="margin-top:12px">
+          <li>Active HubSpot pipeline with 15+ prospects in various stages</li>
+          <li>SPC handling follow-up sequences independently</li>
+          <li>Reseller contract formalized (or actively negotiating)</li>
+          <li>3–5 direct builder accounts generating first orders</li>
+          <li>Weekly check-in call with SPC locked in schedule</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================= WEEKLY FLOW TAB ============================= -->
+<div class="panel" id="tab-weekly">
+
+  <div class="coach-box" style="margin-top:24px">
+    <div class="coach-label">How Your Week Is Structured</div>
+    <p>Your non-negotiables: gym 7–9am Mon–Fri, Sunday protected. That's already right. What's missing is the prospecting block being as locked as the gym. Treat the 9–11am call block with the same commitment. It doesn't move.</p>
+  </div>
+
+  <div class="week-grid">
+    <div class="day-col">
+      <div class="day-name">Mon</div>
+      <div class="day-block admin"><div class="time">4:30–6:30</div>AI morning practice / strategy</div>
+      <div class="day-block highlight"><div class="time">7–9am</div>💪 Gym</div>
+      <div class="day-block call"><div class="time">9–11am</div>📞 Cold Call Block</div>
+      <div class="day-block admin"><div class="time">11–12</div>HubSpot CRM update</div>
+      <div class="day-block admin"><div class="time">Afternoon</div>Quarry ops / admin</div>
+    </div>
+    <div class="day-col">
+      <div class="day-name">Tue</div>
+      <div class="day-block admin"><div class="time">4:30–6:30</div>AI morning practice</div>
+      <div class="day-block highlight"><div class="time">7–9am</div>💪 Gym</div>
+      <div class="day-block call"><div class="time">9–11am</div>📞 Cold Call Block</div>
+      <div class="day-block admin"><div class="time">11–12</div>Email follow-ups (HubSpot)</div>
+      <div class="day-block admin"><div class="time">Afternoon</div>Quarry / builder site visits</div>
+    </div>
+    <div class="day-col">
+      <div class="day-name">Wed</div>
+      <div class="day-block admin"><div class="time">4:30–6:30</div>AI morning practice</div>
+      <div class="day-block highlight"><div class="time">7–9am</div>💪 Gym</div>
+      <div class="day-block call"><div class="time">9–11am</div>📞 Cold Call Block</div>
+      <div class="day-block admin"><div class="time">11–12</div>Pipeline review + sequence check</div>
+      <div class="day-block admin"><div class="time">Afternoon</div>Quarry ops / admin</div>
+    </div>
+    <div class="day-col">
+      <div class="day-name">Thu</div>
+      <div class="day-block admin"><div class="time">4:30–6:30</div>AI morning practice</div>
+      <div class="day-block highlight"><div class="time">7–9am</div>💪 Gym</div>
+      <div class="day-block call"><div class="time">9–11am</div>📞 Cold Call Block</div>
+      <div class="day-block admin"><div class="time">11–12</div>Prospect research (builder list)</div>
+      <div class="day-block admin"><div class="time">Afternoon</div>Quarry / land prospecting</div>
+    </div>
+    <div class="day-col">
+      <div class="day-name">Fri</div>
+      <div class="day-block admin"><div class="time">4:30–6:30</div>AI morning practice</div>
+      <div class="day-block highlight"><div class="time">7–9am</div>💪 Gym</div>
+      <div class="day-block admin"><div class="time">9–10am</div>Weekly scorecard review</div>
+      <div class="day-block call"><div class="time">10–11am</div>📞 Callback / warm follow-ups</div>
+      <div class="day-block admin"><div class="time">Afternoon</div>Planning next week / admin</div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <span class="icon">📊</span><h2>Weekly Scorecard</h2><div class="divider"></div>
+  </div>
+  <div class="card">
+    <h3>Track These Every Friday — No Exceptions</h3>
+    <ul>
+      <li>Total outbound touches (calls + emails) for the week</li>
+      <li>New contacts added to HubSpot pipeline</li>
+      <li>Conversations held (decision-maker picked up)</li>
+      <li>Brochures sent</li>
+      <li>Meetings/callbacks scheduled</li>
+      <li>Active anchor customer % of revenue (track monthly)</li>
+      <li>New direct B2B accounts active (track monthly)</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ============================= KILL LIST TAB ============================= -->
+<div class="panel" id="tab-cleanup">
+
+  <div class="section-head" style="margin-top:24px">
+    <span class="icon">🗑️</span><h2>Kill — Retire These</h2><div class="divider"></div>
+  </div>
+
+  <div class="kill-item">
+    <span class="kill-x">✕</span>
+    <p><strong>5-Month Command Center (Netlify).</strong> It was built before the 5-year strategy existed, predates your TOC trees, and lacks the customer concentration anchor metric. The Google Calendar integration (when built) plus this master plan replaces it entirely. Archive it. Don't maintain two truth sources.</p>
+  </div>
+
+  <div class="kill-item">
+    <span class="kill-x">✕</span>
+    <p><strong>Any CRM configuration work that isn't directly enabling calls you're making this week.</strong> HubSpot is already configured well enough to make calls, log contacts, and send emails. Stop tuning the machine and start running it. Configure more only when a specific use case demands it.</p>
+  </div>
+
+  <div class="kill-item">
+    <span class="kill-x">✕</span>
+    <p><strong>Building new Dreamcatcher tools until your call volume is at 10+ touches/week.</strong> The call sequence cadence tool, the Google Calendar auto-build — all valuable, but secondary to dialing. Build it when you have a SPC who needs it. Don't build infrastructure for a machine that isn't running yet.</p>
+  </div>
+
+  <div class="kill-item">
+    <span class="kill-x">✕</span>
+    <p><strong>Multiple scattered action plan documents.</strong> This file is now the master. The 5-year strategy HTML is the reference document. The Dalio Loop is the living goal tracker. Everything else — any checklist, note, or suggested action plan from any app or AI session — should be absorbed here or deleted.</p>
+  </div>
+
+  <div class="section-head">
+    <span class="icon">✅</span><h2>Keep — These Stay</h2><div class="divider"></div>
+  </div>
+
+  <div class="keep-item">
+    <span class="keep-check">✓</span>
+    <p><strong>Dreamcatcher Cold Call Playbook.</strong> Use it. It works. The script tab, gatekeeper framing, decision-maker opener — all ready to go. Open it before every call block.</p>
+  </div>
+
+  <div class="keep-item">
+    <span class="keep-check">✓</span>
+    <p><strong>HubSpot CRM + manual one-off sends.</strong> Don't switch to automated sequences yet. Validate the message with individual sends first. Scale automation after 20+ touches/week is consistent.</p>
+  </div>
+
+  <div class="keep-item">
+    <span class="keep-check">✓</span>
+    <p><strong>5-Year Growth Strategy HTML (Dreamcatcher).</strong> The authoritative strategic document. Reference for the yearly targets above. Don't modify it unless strategy changes.</p>
+  </div>
+
+  <div class="keep-item">
+    <span class="keep-check">✓</span>
+    <p><strong>Dalio 5-Step Loop as a living document.</strong> Update it as the November goal crystallizes. The loop is most powerful when the goal is specific and measurable, not aspirational.</p>
+  </div>
+
+  <div class="keep-item">
+    <span class="keep-check">✓</span>
+    <p><strong>TOC Strategy & Tactics Trees (all 3).</strong> The Direct B2B Model, Customer Concentration, and Mafia Offer trees are your strategic logic. They should be referenced monthly, not daily — but they're solid and should stay in Dreamcatcher.</p>
+  </div>
+
+  <div class="keep-item">
+    <span class="keep-check">✓</span>
+    <p><strong>Quarry land prospecting trips.</strong> Don't sacrifice these for call volume. They're long-term asset building and part of the PE story (raw material control). Keep 1–2/month. Schedule them on Thursdays/Fridays when possible.</p>
+  </div>
+
+</div>
+
+<!-- ============================= FLORIDA MODE TAB ============================= -->
+<div class="panel" id="tab-florida">
+
+  <div class="florida-banner" style="margin-top:24px">
+    <div class="fl-label">🌴 Florida Season — November to April</div>
+    You can and should work from Florida. The machine you're building now is designed to run whether you're in Big Rapids or on the Gulf Coast. Here's how Florida mode looks different from Michigan mode — and what stays the same.
+  </div>
+
+  <div class="section-head">
+    <span class="icon">✅</span><h2>Stays the Same in Florida</h2><div class="divider"></div>
+  </div>
+
+  <div class="card green">
+    <h3>These Don't Stop</h3>
+    <ul>
+      <li>High-value builder conversations (you close deals on the phone)</li>
+      <li>Weekly check-in call with SPC (pipeline review, 30 min)</li>
+      <li>HubSpot pipeline oversight — review weekly, comment on flagged deals</li>
+      <li>Strategy planning and tool development (this is actually <em>better</em> in Florida — fewer interruptions)</li>
+      <li>Quarry land research (remote research, phone calls with sellers)</li>
+      <li>Monthly scorecard review with SPC</li>
+    </ul>
+  </div>
+
+  <div class="section-head">
+    <span class="icon">🔄</span><h2>What Changes in Florida</h2><div class="divider"></div>
+  </div>
+
+  <div class="card sand">
+    <h3>SPC Picks Up the Operational Load</h3>
+    <ul>
+      <li>SPC owns all outbound prospecting — cold calls, sequence management, HubSpot entry</li>
+      <li>You shift from doing outbound to reviewing and closing inbound (deals SPC surfaced)</li>
+      <li>Quarry operations run via your existing crew — daily ops are not your job in Florida</li>
+      <li>Your schedule: 3–4 hours of business per day max. Protected family/personal time.</li>
+    </ul>
+  </div>
+
+  <div class="section-head">
+    <span class="icon">📋</span><h2>Pre-Florida Checklist — Due by Oct 31</h2><div class="divider"></div>
+  </div>
+  <div class="card">
+    <ul>
+      <li>SPC hired and 3+ weeks into the job</li>
+      <li>SPC has full HubSpot access and owns pipeline hygiene</li>
+      <li>Call sequence/cadence documented and running</li>
+      <li>Reseller contract status resolved (signed or in negotiation with timeline)</li>
+      <li>3+ direct B2B accounts with active orders or in proposal stage</li>
+      <li>Weekly SPC call time locked in your Florida calendar</li>
+      <li>Quarry ops manager briefed and autonomous</li>
+      <li>November–April revenue projection built (what does the pipeline suggest will close?)</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ============================= DAILY QUOTES TAB ============================= -->
+<div class="panel" id="tab-quotes">
+
+  <div class="section-head" style="margin-top:24px">
+    <span class="icon">💬</span><h2>Daily Fuel — Morning Reads</h2><div class="divider"></div>
+  </div>
+  <p style="color:var(--sand); font-size:14px; margin-bottom:24px;">Pick one on your way to the call block. These aren't decoration — they're calibration.</p>
+
+  <div class="quote-card">
+    <div class="quote-text">Every prospecting call you make is a deposit in the bank account of your future. The interest compounds invisibly until one day you're rich — or you wake up broke wondering where all the time went.</div>
+    <div class="quote-author">— Jeb Blount, Fanatical Prospecting</div>
+    <div class="quote-context">Use this on days when the call block feels pointless. It never is.</div>
+  </div>
+
+  <div class="quote-card">
+    <div class="quote-text">The most successful people in the world are those who do what others refuse to do. They act at levels that others consider unreasonable, excessive, or crazy.</div>
+    <div class="quote-author">— Grant Cardone, The 10X Rule</div>
+    <div class="quote-context">Use this when 20 calls/week feels like a lot. It's nothing. It's the floor, not the ceiling.</div>
+  </div>
+
+  <div class="quote-card">
+    <div class="quote-text">Pain + Reflection = Progress. The biggest mistake most people make is not understanding that their pain is a signal pointing them to a problem they need to solve.</div>
+    <div class="quote-author">— Ray Dalio, Principles</div>
+    <div class="quote-context">Use this after a bad call day. Diagnose it, don't just absorb it.</div>
+  </div>
+
+  <div class="quote-card">
+    <div class="quote-text">In every negotiation, in every meeting, the person who sets the frame controls the outcome. Never react. Redirect.</div>
+    <div class="quote-author">— Chris Voss, Never Split the Difference</div>
+    <div class="quote-context">Use this before a tough callback or a pricing conversation with a skeptical builder.</div>
+  </div>
+
+  <div class="quote-card">
+    <div class="quote-text">Don't mistake activity for achievement. A salesperson who builds a perfect CRM but makes zero calls has achieved nothing. The measure is conversations, not configurations.</div>
+    <div class="quote-author">— Justin Roff-Marsh, The Machine</div>
+    <div class="quote-context">Use this whenever you feel the pull toward tool-building instead of dialing.</div>
+  </div>
+
+  <div class="quote-card">
+    <div class="quote-text">The goal is not to be interesting. The goal is to be interested. Ask a builder how he sources stone, listen like a craftsman, and he'll tell you everything you need to close him.</div>
+    <div class="quote-author">— Steve Miller's Own Selling Philosophy</div>
+    <div class="quote-context">This is your natural voice. It's better than any script. Trust it.</div>
+  </div>
+
+  <div class="quote-card">
+    <div class="quote-text">A man who carries a cat by the tail learns something he can learn in no other way. You learn by doing.</div>
+    <div class="quote-author">— Mark Twain</div>
+    <div class="quote-context">Use this on the days you want to read another book instead of picking up the phone.</div>
+  </div>
+
+  <div class="quote-card">
+    <div class="quote-text">The secret to getting ahead is getting started. The secret of getting started is breaking complex overwhelming tasks into small manageable tasks, and then starting on the first one.</div>
+    <div class="quote-author">— Mark Twain</div>
+    <div class="quote-context">Use this when the gap between $1.7M and $35M feels paralyzing. Today's task: make 5 calls.</div>
+  </div>
+
+  <div class="quote-card">
+    <div class="quote-text">We are what we repeatedly do. Excellence, then, is not an act but a habit.</div>
+    <div class="quote-author">— Aristotle</div>
+    <div class="quote-context">Use this on Monday mornings when the call block is new and uncomfortable. It gets easier. Then it gets automatic. Then it makes you rich.</div>
+  </div>
+
+  <div class="quote-card">
+    <div class="quote-text">Four generations of stone. The quarry doesn't lie, the stone doesn't lie, and the work doesn't lie. Neither should the price.</div>
+    <div class="quote-author">— The Stone Mill Brand Identity</div>
+    <div class="quote-context">Use this before any pricing conversation. You are not overcharging. You are charging what real stone from a real quarry is worth.</div>
+  </div>
+
+</div>
+
+<script>
+  function showTab(name, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function toggleYear(header) {
+    const body = header.nextElementSibling;
+    const isOpen = body.classList.contains('open');
+    document.querySelectorAll('.year-body').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.year-header').forEach(h => h.classList.remove('open'));
+    if (!isOpen) {
+      body.classList.add('open');
+      header.classList.add('open');
+    }
+  }
+</script>
+</body>
+</html>
