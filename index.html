@@ -17,6 +17,7 @@
   --gold: #C4973A;
   --gold-lt: #E8C870;
   --rule: rgba(124,110,96,0.18);
+  --ember: #9B4820;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -122,6 +123,11 @@ body {
   border-radius: 2px;
 }
 
+.section-tag.fire {
+  color: var(--ember);
+  background: rgba(155,72,32,0.1);
+}
+
 /* TOOL CARDS */
 .tool-card {
   display: flex;
@@ -146,6 +152,21 @@ body {
   box-shadow: 0 4px 16px rgba(28,23,20,0.1);
 }
 
+.tool-card.command-card {
+  background: var(--stone-dk);
+  border: 2px solid var(--gold);
+  box-shadow: 0 4px 20px rgba(196,151,58,0.2);
+}
+
+.tool-card.command-card:hover {
+  background: #4a3a30;
+  border-color: var(--gold-lt);
+}
+
+.tool-card.command-card .tool-name { color: #FDFAF5; }
+.tool-card.command-card .tool-desc { color: var(--stone-lt); }
+.tool-card.command-card .tool-arrow { color: var(--gold); }
+
 .tool-icon {
   width: 44px;
   height: 44px;
@@ -162,6 +183,7 @@ body {
 .icon-rust { background: rgba(155,72,32,0.1); }
 .icon-pine { background: rgba(58,107,74,0.1); }
 .icon-slate { background: rgba(58,90,122,0.1); }
+.icon-fire { background: rgba(155,72,32,0.2); }
 
 .tool-text { flex: 1; }
 
@@ -217,6 +239,27 @@ body {
 
 <div class="main">
 
+  <!-- COMMAND SECTION — TOP PRIORITY -->
+  <div class="section">
+    <div class="section-label">
+      <h2>Command</h2>
+      <div class="line"></div>
+      <span class="section-tag fire">&#x1F525; Start Here</span>
+    </div>
+
+    <a class="tool-card command-card" href="https://rockstar62.github.io/dreamcatcher/stone-mill-master-plan.html" target="_blank">
+      <div class="tool-icon icon-fire">&#x1F3AF;</div>
+      <div class="tool-text">
+        <div class="tool-name">Master Plan</div>
+        <div class="tool-desc">One source of truth. 5-year breakdown, 2026 phases, weekly flow, kill list, Florida mode, daily fuel.</div>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+  </div>
+
+  <div class="divider"></div>
+
   <!-- SALES SECTION -->
   <div class="section">
     <div class="section-label">
@@ -226,7 +269,7 @@ body {
     </div>
 
     <a class="tool-card" href="https://rockstar62.github.io/cold-calls-/" target="_blank">
-      <div class="tool-icon icon-gold">📞</div>
+      <div class="tool-icon icon-gold">&#x1F4DE;</div>
       <div class="tool-text">
         <div class="tool-name">Cold Call Playbook</div>
         <div class="tool-desc">Cardone + Blount system. Script, gatekeeper strategy, objections, call log.</div>
@@ -235,19 +278,10 @@ body {
     </a>
 
     <a class="tool-card" href="https://rockstar62.github.io/dreamcatcher/stone-mill-cold-call-script.html" target="_blank">
-      <div class="tool-icon icon-gold">🌱</div>
+      <div class="tool-icon icon-gold">&#x1F331;</div>
       <div class="tool-text">
         <div class="tool-name">Cold Call Script — Introductory</div>
         <div class="tool-desc">Seed planting opener. Voss framing, brochure send live, 5 response branches.</div>
-      </div>
-      <div class="tool-arrow">›</div>
-    </a>
-
-    <a class="tool-card" href="https://thesalesmachine.netlify.app/" target="_blank">
-      <div class="tool-icon icon-stone">⚙️</div>
-      <div class="tool-text">
-        <div class="tool-name">Sales Machine</div>
-        <div class="tool-desc">Roff-Marsh pipeline. 5 stages, HubSpot setup, content engine, road to November.</div>
       </div>
       <div class="tool-arrow">›</div>
     </a>
@@ -265,7 +299,7 @@ body {
     </div>
 
     <a class="tool-card" href="https://stonemillcomandcenter.netlify.app/" target="_blank">
-      <div class="tool-icon icon-rust">🏛️</div>
+      <div class="tool-icon icon-rust">&#x1F3DB;</div>
       <div class="tool-text">
         <div class="tool-name">Command Center</div>
         <div class="tool-desc">Stone Mill operations hub. Business overview, contacts, and key resources.</div>
@@ -273,35 +307,47 @@ body {
       <div class="tool-arrow">›</div>
     </a>
 
-    <a class="tool-card" href="https://stonemillcomandcenterfivemonth.netlify.app/" target="_blank">
-      <div class="tool-icon icon-rust">📅</div>
-      <div class="tool-text">
-        <div class="tool-name">5-Month Command Center</div>
-        <div class="tool-desc">June → November roadmap. Monthly milestones and build targets.</div>
-      </div>
-      <div class="tool-arrow">›</div>
-    </a>
-
     <a class="tool-card" href="https://goalsfivesteploop.netlify.app/" target="_blank">
-      <div class="tool-icon icon-pine">🔄</div>
+      <div class="tool-icon icon-pine">&#x1F504;</div>
       <div class="tool-text">
         <div class="tool-name">Dalio's 5-Step Loop</div>
-        <div class="tool-desc">Goals → Problems → Diagnosis → Design → Tasks. The decision framework.</div>
+        <div class="tool-desc">Goals → Problems → Diagnosis → Design → Tasks. Living document — update as goals shift.</div>
       </div>
       <div class="tool-arrow">›</div>
     </a>
 
+    <a class="tool-card" href="https://thesalesmachine.netlify.app/" target="_blank">
+      <div class="tool-icon icon-stone">&#x2699;&#xFE0F;</div>
+      <div class="tool-text">
+        <div class="tool-name">Sales Machine</div>
+        <div class="tool-desc">Roff-Marsh pipeline. 5 stages, HubSpot setup, content engine. Reference for SPC onboarding.</div>
+      </div>
+      <div class="tool-arrow">›</div>
+    </a>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- STRATEGY REFERENCE -->
+  <div class="section">
+    <div class="section-label">
+      <h2>Strategy Reference</h2>
+      <div class="line"></div>
+      <span class="section-tag">Review Monthly</span>
+    </div>
+
     <a class="tool-card" href="https://rockstar62.github.io/dreamcatcher/stone-mill-5year-strategy.html" target="_blank">
-      <div class="tool-icon icon-slate">🗺️</div>
+      <div class="tool-icon icon-slate">&#x1F5FA;</div>
       <div class="tool-text">
         <div class="tool-name">5-Year Growth Strategy</div>
-        <div class="tool-desc">.7M → 5M platform exit. TOC framework, OKRs, team build, honest board talk.</div>
+        <div class="tool-desc">$1.7M → $35M platform exit. TOC framework, OKRs, team build, honest board talk.</div>
       </div>
       <div class="tool-arrow">›</div>
     </a>
 
     <a class="tool-card" href="https://rockstar62.github.io/dreamcatcher/stone-mill-st-tree-direct-b2b.html" target="_blank">
-      <div class="tool-icon icon-slate">🌲</div>
+      <div class="tool-icon icon-slate">&#x1F332;</div>
       <div class="tool-text">
         <div class="tool-name">S&amp;T Tree #1 — Direct B2B Model</div>
         <div class="tool-desc">TOC Strategy &amp; Tactics Tree. Why contractors buy direct — logic test, assumptions, where it breaks.</div>
@@ -310,7 +356,7 @@ body {
     </a>
 
     <a class="tool-card" href="https://rockstar62.github.io/dreamcatcher/stone-mill-st-tree-concentration.html" target="_blank">
-      <div class="tool-icon icon-rust">⚠️</div>
+      <div class="tool-icon icon-rust">&#x26A0;&#xFE0F;</div>
       <div class="tool-text">
         <div class="tool-name">S&amp;T Tree #2 — Customer Concentration</div>
         <div class="tool-desc">The exit killer. Anchor strategy, diversification math, preferred supplier approach.</div>
@@ -319,7 +365,7 @@ body {
     </a>
 
     <a class="tool-card" href="https://rockstar62.github.io/dreamcatcher/stone-mill-st-tree-mafia-offer.html" target="_blank">
-      <div class="tool-icon icon-gold">🎯</div>
+      <div class="tool-icon icon-gold">&#x1F3AF;</div>
       <div class="tool-text">
         <div class="tool-name">S&amp;T Tree #3 — The Mafia Offer</div>
         <div class="tool-desc">The offer builders and architects can't refuse. Validation protocol, resistance map, version tracker.</div>
@@ -332,7 +378,7 @@ body {
 </div>
 
 <div class="footer">
-  The Stone Mill, Inc. — Michigan Natural Stone · Dream Catcher v1.0
+  The Stone Mill, Inc. — Michigan Natural Stone · Dream Catcher v2.0
 </div>
 
 </body>
