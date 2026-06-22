@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Call Sequence Cadence — Stone Mill</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #111; color: #eee; min-height: 100vh; }
+  .header { background: #1a1a1a; border-bottom: 2px solid #c8a96e; padding: 16px 20px; }
+  .header h1 { font-size: 15px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #c8a96e; }
+  .header p { font-size: 12px; color: #888; margin-top: 4px; }
+  .tabs { display: flex; background: #1a1a1a; border-bottom: 1px solid #333; }
+  .tab { flex: 1; padding: 12px 6px; text-align: center; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: #666; cursor: pointer; border-bottom: 3px solid transparent; }
+  .tab.active { color: #c8a96e; border-bottom-color: #c8a96e; }
+  .tab-content { display: none; padding: 16px; }
+  .tab-content.active { display: block; }
+  .day-card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+  .day-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; }
+  .day-badge { background: #c8a96e; color: #111; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+  .day-title { font-size: 14px; font-weight: 600; flex: 1; }
+  .day-type { font-size: 11px; color: #888; }
+  .chevron { color: #555; font-size: 12px; transition: transform 0.2s; }
+  .day-card.open .chevron { transform: rotate(180deg); }
+  .day-body { display: none; padding: 0 16px 16px; border-top: 1px solid #2a2a2a; }
+  .day-card.open .day-body { display: block; }
+  .action-row { display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; }
+  .action-icon { font-size: 18px; width: 28px; flex-shrink: 0; margin-top: 1px; }
+  .action-text { font-size: 13px; line-height: 1.5; color: #ccc; }
+  .action-text strong { color: #c8a96e; display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .script-box { background: #252525; border-left: 3px solid #c8a96e; padding: 10px 12px; border-radius: 0 6px 6px 0; margin-top: 8px; font-size: 13px; color: #ddd; line-height: 1.6; font-style: italic; }
+  .stage-label { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-top: 10px; }
+  .stage-new { background: #1a3a1a; color: #5cb85c; }
+  .stage-contacted { background: #1a2a3a; color: #5b9bd5; }
+  .stage-pause { background: #3a1a1a; color: #e55; }
+  .outcome-card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+  .outcome-title { font-size: 13px; font-weight: 700; color: #c8a96e; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .outcome-item { font-size: 13px; color: #bbb; margin-bottom: 6px; padding-left: 16px; position: relative; line-height: 1.5; }
+  .outcome-item::before { content: '->'; position: absolute; left: 0; color: #c8a96e; }
+  .rule { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
+  .rule-num { font-size: 24px; font-weight: 900; color: #333; float: right; }
+  .rule-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .rule-body { font-size: 13px; color: #999; line-height: 1.5; }
+  .rule-body em { color: #c8a96e; font-style: normal; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Call Sequence Cadence</h1>
+  <p>Stone Mill B2B Outreach — 7 Touches · 21 Days</p>
+</div>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('sequence',this)">Sequence</div>
+  <div class="tab" onclick="showTab('outcomes',this)">Outcomes</div>
+  <div class="tab" onclick="showTab('rules',this)">Rules</div>
+</div>
+
+<div id="sequence" class="tab-content active">
+
+  <div class="day-card" onclick="toggle(this)">
+    <div class="day-header">
+      <span class="day-badge">DAY 1</span>
+      <span class="day-title">First Call + Voicemail #1</span>
+      <span class="day-type">📞 + 📧</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="day-body">
+      <div class="action-row">
+        <span class="action-icon">📞</span>
+        <div class="action-text">
+          <strong>Call — try to reach decision maker</strong>
+          Use gatekeeper script. If no answer, leave voicemail.
+          <div class="script-box">"Hey [Name], this is Steve Miller at The Stone Mill in Michigan — we quarry and process natural stone right here in Michigan. Calling because most builders in your market are sourcing stone from out of state and I think I've got a better option. Give me a call back at [number]. Again, Steve Miller, The Stone Mill."</div>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-icon">📧</span>
+        <div class="action-text">
+          <strong>Email — same day as voicemail</strong>
+          Subject: Pure Michigan stone for [Company Name]
+          <div class="script-box">"[Name] — left you a voicemail. We're a 4th-generation Michigan stone quarry and I think we can be your local source for natural stone veneer. Would you be opposed to a quick call this week? — Steve Miller, The Stone Mill"</div>
+        </div>
+      </div>
+      <span class="stage-label stage-new">HubSpot: Log call → Create Day 3 task</span>
+    </div>
+  </div>
+
+  <div class="day-card" onclick="toggle(this)">
+    <div class="day-header">
+      <span class="day-badge">DAY 3</span>
+      <span class="day-title">Second Call — No Voicemail</span>
+      <span class="day-type">📞</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="day-body">
+      <div class="action-row">
+        <span class="action-icon">📞</span>
+        <div class="action-text">
+          <strong>Call only — no voicemail</strong>
+          If gatekeeper answers, use the hero script. If VM again, hang up — save voicemails for days 1, 5, and 10 only.
+        </div>
+      </div>
+      <span class="stage-label stage-new">HubSpot: Log attempt → Create Day 5 task</span>
+    </div>
+  </div>
+
+  <div class="day-card" onclick="toggle(this)">
+    <div class="day-header">
+      <span class="day-badge">DAY 5</span>
+      <span class="day-title">Third Call + Voicemail #2</span>
+      <span class="day-type">📞 VM + 📧</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="day-body">
+      <div class="action-row">
+        <span class="action-icon">📞</span>
+        <div class="action-text">
+          <strong>Call — leave second voicemail</strong>
+          Different angle — what makes Stone Mill unique.
+          <div class="script-box">"[Name], Steve Miller again at The Stone Mill. We're the only quarry in Michigan producing natural thin veneer stone — everything ships from right here in the state. I'd love 10 minutes. [number]."</div>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-icon">📧</span>
+        <div class="action-text">
+          <strong>Email #2 — same day</strong>
+          <div class="script-box">"[Name] — tried you a couple times. Attaching our stone samples brochure. Natural Michigan stone, faster lead times, a source you can actually visit. Worth a quick call? — Steve"</div>
+        </div>
+      </div>
+      <span class="stage-label stage-new">HubSpot: Log → Create Day 7 task</span>
+    </div>
+  </div>
+
+  <div class="day-card" onclick="toggle(this)">
+    <div class="day-header">
+      <span class="day-badge">DAY 7</span>
+      <span class="day-title">Fourth Call — Silent</span>
+      <span class="day-type">📞</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="day-body">
+      <div class="action-row">
+        <span class="action-icon">📞</span>
+        <div class="action-text">
+          <strong>Call only — no voicemail</strong>
+          Pure attempt. If someone picks up, you're live — use the full decision maker script. If VM, hang up and move on.
+        </div>
+      </div>
+      <span class="stage-label stage-new">HubSpot: Log → Create Day 10 task</span>
+    </div>
+  </div>
+
+  <div class="day-card" onclick="toggle(this)">
+    <div class="day-header">
+      <span class="day-badge">DAY 10</span>
+      <span class="day-title">Fifth Call + Voicemail #3</span>
+      <span class="day-type">📞 VM</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="day-body">
+      <div class="action-row">
+        <span class="action-icon">📞</span>
+        <div class="action-text">
+          <strong>Call — third and final voicemail</strong>
+          Play the long game card.
+          <div class="script-box">"[Name], Steve Miller at The Stone Mill. I'm not going away — I'm playing the long game here. When you're ready to look at a Michigan stone source, I want to be on your radar. [number]. No pressure."</div>
+        </div>
+      </div>
+      <span class="stage-label stage-contacted">HubSpot: Log → Create Day 14 task</span>
+    </div>
+  </div>
+
+  <div class="day-card" onclick="toggle(this)">
+    <div class="day-header">
+      <span class="day-badge">DAY 14</span>
+      <span class="day-title">Sixth Call — Silent</span>
+      <span class="day-type">📞</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="day-body">
+      <div class="action-row">
+        <span class="action-icon">📞</span>
+        <div class="action-text">
+          <strong>Call only — no voicemail</strong>
+          Silent attempt. If they pick up: "I know I've reached out a few times — just want 2 minutes."
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-icon">📧</span>
+        <div class="action-text">
+          <strong>Email #3 — Break-up email</strong>
+          <div class="script-box">"[Name] — I've reached out a few times and I don't want to be a pest. I'll leave the door open. If you ever need a Michigan stone source — fast lead times, real quarried stone, owner you can actually talk to — I'm here. Steve Miller · The Stone Mill · [number]"</div>
+        </div>
+      </div>
+      <span class="stage-label stage-contacted">HubSpot: Log → Create Day 21 task</span>
+    </div>
+  </div>
+
+  <div class="day-card" onclick="toggle(this)">
+    <div class="day-header">
+      <span class="day-badge">DAY 21</span>
+      <span class="day-title">Final Attempt — Decision Point</span>
+      <span class="day-type">📞</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="day-body">
+      <div class="action-row">
+        <span class="action-icon">📞</span>
+        <div class="action-text">
+          <strong>7th and final call — no voicemail</strong>
+          One last shot. If no answer — move to 60-day dormant and revisit.
+        </div>
+      </div>
+      <span class="stage-label stage-pause">HubSpot: 7 attempts complete → Mark "Dormant 60 days" → Set revisit task</span>
+    </div>
+  </div>
+</div>
+
+<div id="outcomes" class="tab-content">
+  <div class="outcome-card">
+    <div class="outcome-title">They Pick Up — First Conversation</div>
+    <div class="outcome-item">Use the decision maker script — Introduce, Position, Disrupt, Confirm, Ask</div>
+    <div class="outcome-item">Goal: get 10 minutes on calendar OR get email to send brochure now</div>
+    <div class="outcome-item">If they say "send me something" — send while on the call, ask them to open it</div>
+    <div class="outcome-item">HubSpot: Move to Stage 02 Contacted, log notes, create follow-up task</div>
+  </div>
+  <div class="outcome-card">
+    <div class="outcome-title">They Ask for Samples</div>
+    <div class="outcome-item">Get shipping address on the call — confirm spelling</div>
+    <div class="outcome-item">Ship within 24 hours — include handwritten note</div>
+    <div class="outcome-item">Set task: follow-up call 5 days after expected delivery</div>
+    <div class="outcome-item">HubSpot: Move to Stage 03 Samples Sent</div>
+  </div>
+  <div class="outcome-card">
+    <div class="outcome-title">They Want a Meeting</div>
+    <div class="outcome-item">Nail down specific day and time before hanging up</div>
+    <div class="outcome-item">Send calendar invite + confirmation email within the hour</div>
+    <div class="outcome-item">Prep: visit their website, know 2-3 projects, know their style</div>
+    <div class="outcome-item">HubSpot: Move to Stage 04 Meeting Scheduled</div>
+  </div>
+  <div class="outcome-card">
+    <div class="outcome-title">They Say "Not Right Now"</div>
+    <div class="outcome-item">"Would you be opposed to me checking back in a few months?"</div>
+    <div class="outcome-item">Get a specific timeframe — "Q4?" "After this project?"</div>
+    <div class="outcome-item">HubSpot: Mark "Future Follow-up" → Set task for that date</div>
+  </div>
+  <div class="outcome-card">
+    <div class="outcome-title">7 Attempts, No Answer</div>
+    <div class="outcome-item">Mark contact "Dormant" in HubSpot</div>
+    <div class="outcome-item">Set 60-day revisit task — market conditions change</div>
+    <div class="outcome-item">Keep on monthly email nurture — passive touch</div>
+    <div class="outcome-item">Not a loss — a pause. Projects come online. Revisit every 60 days</div>
+  </div>
+</div>
+
+<div id="rules" class="tab-content">
+  <div class="rule">
+    <span class="rule-num">1</span>
+    <div class="rule-title">Always log before you move on</div>
+    <div class="rule-body">Every call gets logged in HubSpot — even hang-ups. <em>If it's not logged, it didn't happen.</em></div>
+  </div>
+  <div class="rule">
+    <span class="rule-num">2</span>
+    <div class="rule-title">Max 3 voicemails per sequence</div>
+    <div class="rule-body">Days 1, 5, and 10. All other attempts are silent. <em>Too many voicemails = annoying. Three is the Blount sweet spot.</em></div>
+  </div>
+  <div class="rule">
+    <span class="rule-num">3</span>
+    <div class="rule-title">Email always follows a voicemail</div>
+    <div class="rule-body">Same day as every voicemail. <em>The combo is the system — one without the other is half the punch.</em></div>
+  </div>
+  <div class="rule">
+    <span class="rule-num">4</span>
+    <div class="rule-title">Never read from the script</div>
+    <div class="rule-body">Know the beats. Talk like a builder talking to a builder. <em>"Expensive, maybe. But shouldn't forever be worth more?"</em></div>
+  </div>
+  <div class="rule">
+    <span class="rule-num">5</span>
+    <div class="rule-title">Dormant is not dead</div>
+    <div class="rule-body">7 attempts with no answer = 60-day pause, not a delete. <em>Market conditions change. Projects come online.</em></div>
+  </div>
+  <div class="rule">
+    <span class="rule-num">6</span>
+    <div class="rule-title">Research before you dial</div>
+    <div class="rule-body">5 minutes on their website before call #1. Know one project. Know their style. <em>Builder-to-builder means you've done your homework.</em></div>
+  </div>
+</div>
+
+<script>
+function showTab(id, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+function toggle(card) { card.classList.toggle('open'); }
+</script>
+</body>
+</html>
