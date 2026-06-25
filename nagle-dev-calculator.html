@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stone Mill — Development Pricing Calculator</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;color:#1a1a18;padding:24px;font-size:15px;}
+  h1{font-size:20px;font-weight:500;margin-bottom:4px;}
+  .sub{font-size:13px;color:#888;margin-bottom:24px;}
+  .tab-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px;}
+  .tab-btn{background:#fff;border:1px solid #ddd;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;color:#666;transition:all 0.15s;}
+  .tab-btn.active{background:#1a1a18;color:#fff;border-color:#1a1a18;}
+  .section{display:none;}
+  .section.active{display:block;}
+  .card{background:#fff;border:1px solid #e8e6e0;border-radius:12px;padding:16px 20px;margin-bottom:14px;}
+  .card-title{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px;}
+  .row{display:flex;gap:8px;align-items:baseline;margin-bottom:7px;}
+  .lbl{font-size:13px;color:#666;min-width:190px;flex-shrink:0;}
+  .val{font-size:13px;font-weight:500;}
+  .green{color:#1a7a45;}
+  .amber{color:#b45309;}
+  .red{color:#b91c1c;}
+  .metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+  .metric{background:#f5f4f0;border-radius:8px;padding:12px 14px;}
+  .m-label{font-size:12px;color:#888;margin-bottom:4px;}
+  .m-val{font-size:20px;font-weight:500;}
+  .m-sub{font-size:11px;color:#aaa;margin-top:2px;}
+  .warn{border-left:3px solid #d97706;padding-left:14px;margin:10px 0;}
+  .warn-title{font-size:13px;font-weight:600;color:#b45309;margin-bottom:3px;}
+  .warn-body{font-size:13px;color:#666;line-height:1.55;}
+  .info{border-left:3px solid #2563eb;padding-left:14px;margin:10px 0;}
+  .info-body{font-size:13px;color:#444;line-height:1.55;}
+  .tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px;}
+  .tier{background:#fff;border:1px solid #e8e6e0;border-radius:12px;padding:14px;}
+  .tier.featured{border:2px solid #2563eb;}
+  .badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:6px;margin-bottom:8px;}
+  .b-info{background:#eff6ff;color:#1e40af;}
+  .b-warn{background:#fffbeb;color:#92400e;}
+  .b-success{background:#f0fdf4;color:#14532d;}
+  .tier-name{font-size:14px;font-weight:500;margin-bottom:4px;}
+  .tier-price{font-size:24px;font-weight:500;color:#1a1a18;}
+  .tier-sub{font-size:12px;color:#888;margin-bottom:10px;}
+  .tier-body{font-size:12px;color:#666;line-height:1.6;}
+  hr{border:none;border-top:1px solid #eee;margin:10px 0;}
+  .note{font-size:12px;color:#888;margin-top:8px;line-height:1.55;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+  .mini-card{background:#f5f4f0;border-radius:8px;padding:12px 14px;}
+  .mini-title{font-size:13px;font-weight:500;margin-bottom:5px;}
+  .mini-body{font-size:13px;color:#666;line-height:1.55;}
+  .slider-wrap{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .slider-wrap label{font-size:13px;color:#555;min-width:180px;}
+  .slider-wrap input[type=range]{flex:1;accent-color:#1a1a18;}
+  .slider-val{font-size:14px;font-weight:500;min-width:70px;text-align:right;}
+  .calc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+  .calc-card{background:#f5f4f0;border-radius:8px;padding:12px 14px;}
+  .calc-label{font-size:12px;color:#888;margin-bottom:3px;}
+  .calc-val{font-size:18px;font-weight:500;}
+  .verdict-box{background:#fff;border:1px solid #e8e6e0;border-radius:12px;padding:16px 20px;font-size:14px;line-height:1.65;color:#1a1a18;}
+  .script{background:#fff;border:1px solid #e8e6e0;border-radius:12px;padding:16px 20px;margin-bottom:10px;}
+  .script-title{font-size:13px;font-weight:600;color:#666;margin-bottom:8px;}
+  .script-body{font-size:14px;color:#1a1a18;line-height:1.65;font-style:italic;}
+  p{margin-bottom:10px;font-size:14px;line-height:1.65;color:#333;}
+</style>
+</head>
+<body>
+
+<h1>Stone Mill — Development Pricing Framework</h1>
+<p class="sub">Nagle-correct volume discount structure for custom and tract developments</p>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="show('nagle')">Nagle's warning</button>
+  <button class="tab-btn" onclick="show('small')">Small dev (12 homes)</button>
+  <button class="tab-btn" onclick="show('large')">Large dev (40+ homes)</button>
+  <button class="tab-btn" onclick="show('structure')">Deal structure</button>
+  <button class="tab-btn active-target" onclick="show('calc')">Calculator</button>
+  <button class="tab-btn" onclick="show('scripts')">Scripts</button>
+</div>
+
+<div id="nagle" class="section active">
+  <div class="card">
+    <div class="card-title">Nagle's core warning on volume discounts</div>
+    <p>Nagle's research across hundreds of industrial pricing cases found one consistent pattern: volume discounts are the single most margin-destructive tool in B2B sales. Not because the math is wrong — but because of three structural traps that almost always follow.</p>
+    <div class="warn">
+      <div class="warn-title">Trap 1 — You discount the promise, not the performance</div>
+      <div class="warn-body">A builder commits to 40 homes at a discounted price. You hold the discount. They build 18 homes and the development stalls. You gave away margin on every house they did build, and you never got the volume that justified it.</div>
+    </div>
+    <div class="warn">
+      <div class="warn-title">Trap 2 — The discount becomes the new floor</div>
+      <div class="warn-body">Once a builder buys at $14, $17 feels like a price increase on the next project. Nagle calls this "price memory." The discount you gave for volume becomes the reference price for everything that follows — even when volume doesn't.</div>
+    </div>
+    <div class="warn">
+      <div class="warn-title">Trap 3 — Volume discounts signal price elasticity</div>
+      <div class="warn-body">When you offer a volume discount unprompted, you are telling the buyer that your price has room. They didn't know that before. Now they'll test it on every transaction, not just volume situations.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">What Nagle recommends instead</div>
+    <p>Nagle doesn't say never discount for volume. He says the discount must only pay out when the volume is real, delivered, and verifiable — not promised. The mechanism is a <strong>retroactive rebate</strong> tied to verified purchase milestones, not a price reduction on invoice.</p>
+    <div class="info">
+      <div class="info-body"><strong>The structural difference: earn-back vs. give-away.</strong> An upfront price reduction is a give-away. A retroactive rebate is an earn-back. Earn-back protects your margin floor and keeps the builder motivated to hit the number — because the money comes after delivery, not before.</div>
+    </div>
+  </div>
+</div>
+
+<div id="small" class="section">
+  <div class="badge b-info" style="margin-bottom:12px;">Scenario A — small custom development (8–15 homes)</div>
+  <div class="metric-grid">
+    <div class="metric"><div class="m-label">Homes in dev</div><div class="m-val">12</div><div class="m-sub">typical custom subdivision</div></div>
+    <div class="metric"><div class="m-label">Stone per home</div><div class="m-val">800 sqft</div><div class="m-sub">partial to full wrap</div></div>
+    <div class="metric"><div class="m-label">Total project sqft</div><div class="m-val">9,600</div><div class="m-sub">if all homes use your stone</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Revenue math at full price vs. discounted</div>
+    <div class="row"><span class="lbl">At $17/sqft (limestone)</span><span class="val green">$163,200 gross</span></div>
+    <div class="row"><span class="lbl">At $20/sqft (fieldstone)</span><span class="val green">$192,000 gross</span></div>
+    <div class="row"><span class="lbl">At $14/sqft ($3 markup floor)</span><span class="val amber">$134,400 gross</span></div>
+    <div class="row"><span class="lbl">Margin given away at floor</span><span class="val red">$28,800–$57,600 lost</span></div>
+    <p class="note">On 12 homes at 800 sqft each, the spread between your full price and your discount floor is $28K–$58K. That's a large number to give away for volume that might not materialize on schedule.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">What this builder actually values</div>
+    <p>A custom home builder running a 12-home development is not primarily motivated by unit price. They are motivated by supply certainty, schedule reliability, and then price — in that order.</p>
+    <div class="row"><span class="lbl">What they fear most</span><span class="val red">Stone runs out or changes lot mid-development</span></div>
+    <div class="row"><span class="lbl">Second fear</span><span class="val amber">Color variation across homes</span></div>
+    <div class="row"><span class="lbl">Third consideration</span><span class="val">Price — they've already sold the homes at margin</span></div>
+  </div>
+  <div class="tier-grid">
+    <div class="tier">
+      <div class="badge b-warn">Good</div>
+      <div class="tier-name">Limestone select</div>
+      <div class="tier-price">$16</div>
+      <div class="tier-sub">per sqft, dev rate</div>
+      <hr>
+      <div class="tier-body">$1 below standard<br>Full supply reserved<br>Consistent lot guaranteed<br>Standard lead times</div>
+    </div>
+    <div class="tier featured">
+      <div class="badge b-info">Better</div>
+      <div class="tier-name">Fieldstone reserve</div>
+      <div class="tier-price">$18</div>
+      <div class="tier-sub">per sqft, dev rate</div>
+      <hr>
+      <div class="tier-body">$2 below standard<br>Priority supply allocation<br>Lot-matched consistency<br>Dedicated account mgmt</div>
+    </div>
+    <div class="tier">
+      <div class="badge b-success">Best</div>
+      <div class="tier-name">Granite cobble</div>
+      <div class="tier-price">$21</div>
+      <div class="tier-sub">per sqft, dev rate</div>
+      <hr>
+      <div class="tier-body">$2–3 below standard<br>Quarry-reserved stock<br>Same deposit guarantee<br>Project signature stone</div>
+    </div>
+  </div>
+  <p class="note">The discount here is $1–$3/sqft — not $5–$7. Nagle says the discount should be the smallest number that creates a genuine reason to commit. On a custom development, supply certainty is worth more than price reduction. Lead with that.</p>
+</div>
+
+<div id="large" class="section">
+  <div class="badge b-warn" style="margin-bottom:12px;">Scenario B — large tract development (30–50+ homes)</div>
+  <div class="metric-grid">
+    <div class="metric"><div class="m-label">Homes in dev</div><div class="m-val">40</div><div class="m-sub">typical larger development</div></div>
+    <div class="metric"><div class="m-label">Stone per home</div><div class="m-val">300 sqft</div><div class="m-sub">accent / feature stone</div></div>
+    <div class="metric"><div class="m-label">Total project sqft</div><div class="m-val">12,000</div><div class="m-sub">if all homes use your stone</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">The large development risk profile — where Nagle is most urgent</div>
+    <p>Large developments are built in phases over 2–5 years. Phase 1 might be 10 homes. Phase 2 gets delayed. A builder who committed to 40 homes might only pull stone for 12 in year one. If you priced on 40-home volume from day one, you gave away margin for volume that arrives slowly, irregularly, and possibly never in full.</p>
+    <div class="warn">
+      <div class="warn-title">The phase problem</div>
+      <div class="warn-body">A 40-home development delivers stone orders 8–12 homes at a time, 12–18 months apart. Each phase is effectively a standalone purchase. If you priced on 40-home volume from day one, you gave away $3–$5/sqft on phase 1 orders that have zero guarantee phase 2 ever happens.</div>
+    </div>
+    <div class="warn">
+      <div class="warn-title">The material switch risk</div>
+      <div class="warn-body">At homes 15–20, a large developer may value-engineer stone out entirely, switch to cheaper manufactured stone, or renegotiate your price down further. You absorbed the risk; they kept the option.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">The right structure for a large development</div>
+    <div class="row"><span class="lbl">Phase 1 pricing</span><span class="val">Full direct price — no commitment discount yet</span></div>
+    <div class="row"><span class="lbl">After phase 1 complete</span><span class="val green">Retroactive rebate issued on sqft delivered</span></div>
+    <div class="row"><span class="lbl">Phase 2 pricing</span><span class="val green">Confirmed volume tier — earn-back continues</span></div>
+    <div class="row"><span class="lbl">Floor price</span><span class="val amber">$3 markup over wholesale — hard floor, never breached</span></div>
+    <div class="row"><span class="lbl">Discount trigger</span><span class="val">Verified delivery, not signed commitment</span></div>
+  </div>
+  <div class="tier-grid">
+    <div class="tier">
+      <div class="badge b-warn">Good</div>
+      <div class="tier-name">Limestone select</div>
+      <div class="tier-price">$15</div>
+      <div class="tier-sub">confirmed phase price</div>
+      <hr>
+      <div class="tier-body">After 1,500+ sqft delivered<br>Phase rebate: $1/sqft check<br>Next phase locked at $15<br>Must requalify each phase</div>
+    </div>
+    <div class="tier featured">
+      <div class="badge b-info">Better</div>
+      <div class="tier-name">Fieldstone reserve</div>
+      <div class="tier-price">$17</div>
+      <div class="tier-sub">confirmed phase price</div>
+      <hr>
+      <div class="tier-body">After 1,500+ sqft delivered<br>Phase rebate: $1.50/sqft<br>Next phase locked at $17<br>Named account status</div>
+    </div>
+    <div class="tier">
+      <div class="badge b-success">Best</div>
+      <div class="tier-name">Granite cobble</div>
+      <div class="tier-price">$20</div>
+      <div class="tier-sub">confirmed phase price</div>
+      <hr>
+      <div class="tier-body">After 1,500+ sqft delivered<br>Phase rebate: $2/sqft<br>Same-deposit guarantee<br>Quarry-priority allocation</div>
+    </div>
+  </div>
+</div>
+
+<div id="structure" class="section">
+  <div class="card">
+    <div class="card-title">The Nagle-correct deal structure — both scenarios</div>
+    <div class="two-col">
+      <div class="mini-card"><div class="mini-title">What you charge</div><div class="mini-body">Full direct price on every invoice. No discount on invoice. The builder sees full rate. This protects price memory — they never see a lower price as their reference point.</div></div>
+      <div class="mini-card"><div class="mini-title">What you give back</div><div class="mini-body">A rebate check after verified sqft milestones are hit. Quarterly or per-phase. The check is the reward for delivered volume — not a promise on future volume.</div></div>
+      <div class="mini-card"><div class="mini-title">The milestone trigger</div><div class="mini-body">Small dev: 2,500 sqft in a rolling 12 months. Large dev: each phase delivery verified by invoice total. No milestone = no rebate. No negotiation.</div></div>
+      <div class="mini-card"><div class="mini-title">The floor — non-negotiable</div><div class="mini-body">$3/sqft markup over wholesale is your hard floor. Below this you're doing dealer margin with direct-channel overhead. It does not make business sense at any volume.</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">The good/better/best upgrade logic inside a development</div>
+    <p>Nagle's good/better/best framework applied to developments lets the builder differentiate homes within the same development — and multiplies your revenue per development without reducing your price.</p>
+    <div class="row"><span class="lbl">Model home</span><span class="val green">Best — granite cobble at full or near-full price</span></div>
+    <div class="row"><span class="lbl">Premium/corner lots</span><span class="val green">Better — fieldstone reserve</span></div>
+    <div class="row"><span class="lbl">Standard lots</span><span class="val amber">Good — limestone at development rate</span></div>
+    <div class="row"><span class="lbl">Your average realized price</span><span class="val green">Blends higher than the good tier alone</span></div>
+    <p class="note">Every buyer who tours the model home and sees granite cobble will ask for it on their lot. The model home sells the upgrade for you. You never had to push it.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">What to never do</div>
+    <div class="row"><span class="lbl">Never quote a dev price upfront</span><span class="val red">Opens negotiation before relationship is proven</span></div>
+    <div class="row"><span class="lbl">Never discount phase 1</span><span class="val red">Phase 1 is unproven volume — full price only</span></div>
+    <div class="row"><span class="lbl">Never put discount on invoice</span><span class="val red">Creates price memory at the lower number</span></div>
+    <div class="row"><span class="lbl">Never go below $3 markup</span><span class="val red">Dealer margin with direct-channel overhead</span></div>
+    <div class="row"><span class="lbl">Never commit without written LOI</span><span class="val red">Handshake volume promises have no enforcement</span></div>
+  </div>
+</div>
+
+<div id="calc" class="section">
+  <div class="card">
+    <div class="card-title">Adjust sliders to model your development</div>
+
+    <div class="slider-wrap">
+      <label>Homes in development</label>
+      <input type="range" min="5" max="60" value="12" step="1" id="homes" oninput="calc()">
+      <span class="slider-val" id="homes-out">12 homes</span>
+    </div>
+    <div class="slider-wrap">
+      <label>Stone per home (sqft)</label>
+      <input type="range" min="100" max="1200" value="800" step="50" id="sqft" oninput="calc()">
+      <span class="slider-val" id="sqft-out">800 sqft</span>
+    </div>
+    <div class="slider-wrap">
+      <label>Your direct price ($/sqft)</label>
+      <input type="range" min="13" max="28" value="17" step="1" id="price" oninput="calc()">
+      <span class="slider-val" id="price-out">$17/sqft</span>
+    </div>
+    <div class="slider-wrap">
+      <label>Dev discount ($/sqft)</label>
+      <input type="range" min="0" max="5" value="1" step="0.5" id="disc" oninput="calc()">
+      <span class="slider-val" id="disc-out">$1.00 off</span>
+    </div>
+    <div class="slider-wrap">
+      <label>Wholesale cost ($/sqft)</label>
+      <input type="range" min="7" max="18" value="12" step="1" id="cost" oninput="calc()">
+      <span class="slider-val" id="cost-out">$12/sqft</span>
+    </div>
+  </div>
+
+  <div class="calc-grid">
+    <div class="calc-card"><div class="calc-label">Total development sqft</div><div class="calc-val" id="total-sqft">9,600 sqft</div></div>
+    <div class="calc-card"><div class="calc-label">Full-price revenue</div><div class="calc-val green" id="full-rev">$163,200</div></div>
+    <div class="calc-card"><div class="calc-label">Revenue at dev rate</div><div class="calc-val" id="dev-rev">$153,600</div></div>
+    <div class="calc-card"><div class="calc-label">Margin given away (total)</div><div class="calc-val red" id="margin-away">$9,600</div></div>
+    <div class="calc-card"><div class="calc-label">Your gross margin at dev rate</div><div class="calc-val green" id="gross-margin">$38,400</div></div>
+    <div class="calc-card"><div class="calc-label">Gross margin %</div><div class="calc-val" id="margin-pct">25%</div></div>
+    <div class="calc-card"><div class="calc-label">Floor revenue ($3 markup)</div><div class="calc-val amber" id="floor-rev">$144,000</div></div>
+    <div class="calc-card"><div class="calc-label">Revenue left on table vs. floor</div><div class="calc-val red" id="table-rev">$19,200</div></div>
+  </div>
+
+  <div class="verdict-box" id="verdict"></div>
+</div>
+
+<div id="scripts" class="section">
+  <div class="script">
+    <div class="script-title">Script 1 — Opening a development conversation (don't lead with price)</div>
+    <div class="script-body">"Before we talk numbers, let me ask you something. What's your biggest headache on the stone side when you're running a development? Because in my experience, most builders aren't sweating the price per foot nearly as much as they're sweating whether the stone shows up on schedule and whether it matches across houses. If I can solve those two things, price is usually the easy part of this conversation."</div>
+  </div>
+  <div class="script">
+    <div class="script-title">Script 2 — When a builder asks for a volume price upfront</div>
+    <div class="script-body">"Here's how I work on developments. I don't quote a development price before the volume is real, because I've been burned by builders who committed to 40 homes and built 12. What I do is this: you buy at standard rate on phase one. I track every foot you take. When you hit the milestone, I cut you a check back. That check is your volume discount — earned, not promised. Works better for both of us."</div>
+  </div>
+  <div class="script">
+    <div class="script-title">Script 3 — Presenting good/better/best for a development</div>
+    <div class="script-body">"What I'd suggest for a development your size is thinking about it in three tiers. Your standard lots get limestone — strong material, great price point. Your premium and corner lots step up to fieldstone — that's what differentiates your tier-one lots. Your model home gets granite cobble — that's what sells the whole development because every buyer who walks the model wants it. You set the mix, I supply all three. Your average stone cost blends somewhere in the middle, and you've got three price points in the market."</div>
+  </div>
+  <div class="script">
+    <div class="script-title">Script 4 — Protecting your floor when a builder pushes hard</div>
+    <div class="script-body">"My floor is three dollars a foot over my wholesale cost. Below that I'm doing dealer margin with direct overhead and it doesn't make sense for me. Above that, there's room to talk depending on how the volume actually lands. But I'm not going to give you a number today based on 40 homes that might take five years to build. Give me phase one. I'll take care of you on phase two based on what actually happened."</div>
+  </div>
+  <div class="script">
+    <div class="script-title">Script 5 — Selling supply guarantee as the real value</div>
+    <div class="script-body">"Here's what most builders don't think about until it's a problem. You're 18 homes into a 40-home development and the stone you spec'd doesn't match anymore — the quarry changed the lot, the color shifted. Now homes 19 through 40 don't match homes 1 through 18. That's a real problem in a prestige development. What I can do for a committed development relationship is reserve your material from the same deposit from day one. That's worth more than a dollar a foot discount. That's the thing that protects your reputation."</div>
+  </div>
+</div>
+
+<script>
+  function show(id){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function fmt(n){return '$'+Math.round(n).toLocaleString();}
+
+  function calc(){
+    const homes=parseInt(document.getElementById('homes').value);
+    const sqft=parseInt(document.getElementById('sqft').value);
+    const price=parseFloat(document.getElementById('price').value);
+    const disc=parseFloat(document.getElementById('disc').value);
+    const cost=parseFloat(document.getElementById('cost').value);
+
+    document.getElementById('homes-out').textContent=homes+' homes';
+    document.getElementById('sqft-out').textContent=sqft+' sqft';
+    document.getElementById('price-out').textContent='$'+price.toFixed(0)+'/sqft';
+    document.getElementById('disc-out').textContent='$'+disc.toFixed(2)+' off';
+    document.getElementById('cost-out').textContent='$'+cost.toFixed(0)+'/sqft';
+
+    const totalSqft=homes*sqft;
+    const fullRev=totalSqft*price;
+    const devPrice=price-disc;
+    const devRev=totalSqft*devPrice;
+    const marginAway=fullRev-devRev;
+    const grossMargin=devRev-(totalSqft*cost);
+    const marginPct=Math.round((grossMargin/devRev)*100);
+    const floorPrice=cost+3;
+    const floorRev=totalSqft*floorPrice;
+    const tableRev=fullRev-floorRev;
+    const markup=devPrice-cost;
+
+    document.getElementById('total-sqft').textContent=totalSqft.toLocaleString()+' sqft';
+    document.getElementById('full-rev').textContent=fmt(fullRev);
+    document.getElementById('dev-rev').textContent=fmt(devRev);
+    document.getElementById('margin-away').textContent=fmt(marginAway);
+    document.getElementById('gross-margin').textContent=fmt(grossMargin);
+    document.getElementById('margin-pct').textContent=marginPct+'%';
+    document.getElementById('floor-rev').textContent=fmt(floorRev);
+    document.getElementById('table-rev').textContent=fmt(tableRev);
+
+    let verdict='';
+    if(disc===0){
+      verdict='At full price with no discount, you keep '+fmt(grossMargin)+' gross margin across the development ('+marginPct+'%). The earn-back structure still applies — charge full price on phase 1, issue a rebate check after verified delivery if you choose. Nagle says this is the cleanest approach: build the relationship first, talk volume after phase 1 is delivered.';
+    } else if(markup<3){
+      verdict='Warning: at $'+disc.toFixed(2)+'/sqft discount your markup over wholesale drops to $'+markup.toFixed(2)+'/sqft — below your $3 floor. You are doing near-dealer margin with direct-channel overhead. Nagle is unambiguous: this trade is not worth it at any volume. Reduce the discount to $'+Math.max(0,disc-1).toFixed(2)+' and add a supply reservation as the compensating value instead.';
+    } else if(disc<=1.5){
+      verdict='At $'+disc.toFixed(2)+'/sqft discount you give away '+fmt(marginAway)+' total but keep '+marginPct+'% gross margin — a defensible trade if volume materializes. Nagle says use the earn-back model: invoice at $'+price.toFixed(0)+', cut a rebate check of $'+disc.toFixed(2)+'/sqft after each phase is confirmed delivered. The builder sees full price; the rebate is their earned reward.';
+    } else if(disc<=3){
+      verdict='At $'+disc.toFixed(2)+'/sqft you are giving away '+fmt(marginAway)+' — significant. Nagle would flag this as aggressive for a development deal. Only justified if volume is contractually committed with phase milestones in writing. Consider reducing to $'+Math.max(0.5,disc-0.5).toFixed(2)+'/sqft and adding a supply-guarantee as the compensating offer.';
+    } else {
+      verdict='At $'+disc.toFixed(2)+'/sqft discount you are giving away '+fmt(marginAway)+'. Nagle calls this a price waterfall problem — the cumulative give-back is destroying margin that no volume level can justify if phases slip. Cut the discount to $2.00 maximum and lead with supply certainty as the primary value offer.';
+    }
+    document.getElementById('verdict').textContent=verdict;
+  }
+  calc();
+</script>
+</body>
+</html>
