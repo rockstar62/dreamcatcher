@@ -110,6 +110,7 @@
     <div class="tab" onclick="switchTab('original')">Original Opener</div>
     <div class="tab" onclick="switchTab('voicemail')">Voicemail</div>
     <div class="tab" onclick="switchTab('dm')">Decision Maker</div>
+    <div class="tab" onclick="switchTab('warmfu')">Warm Follow Up</div>
   </div>
 
   <!-- PRIMARY SCRIPT -->
@@ -305,6 +306,68 @@
     </div>
   </div>
 
+
+  <!-- WARM FOLLOW UP -->
+  <div class="tab-content" id="tab-warmfu">
+    <div class="section-label">Warm Follow Up Call</div>
+    <div class="script-card">
+      <div class="script-eyebrow">They received your email but didn't open the brochure</div>
+      <div class="script-text">
+        "Good morning Jim, Steve Miller with The Stone Mill. I probably should have called first before sending an email with an attachment. If you're anything like me, you didn't open it — after all, you don't know who I am."<br><br>
+        <span style="color:#1a1a18; opacity:0.5; font-size:14px; font-style:italic;">[Pause. Let it land. Let him respond.]</span><br><br>
+        "Would this be a bad time to take a look at it together while I have you on the phone?"
+      </div>
+      <div class="script-note">The pause after "you don't know who I am" is doing the heavy lifting. Nobody says that. Let him fill the silence — the wall is already down before the ask.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-label">When He Responds</div>
+
+    <div class="branch">
+      <button class="branch-btn" onclick="tog(this)">
+        <div class="b-icon green">✓</div>
+        <div class="b-q">"No it's not a bad time, go ahead."</div>
+        <div class="b-arrow">▼</div>
+      </button>
+      <div class="branch-body">
+        <div class="rl">You say</div>
+        <div class="rt">"Perfect — I'll resend it right now. What's the best email to send it to?"<br><br><em>[Send it immediately. Ask him to pull it up while you have him.]</em></div>
+        <div class="rl">Then</div>
+        <div class="tt">Walk him through it briefly. One or two things to notice. Keep it short. This is your best outcome.</div>
+      </div>
+    </div>
+
+    <div class="branch">
+      <button class="branch-btn" onclick="tog(this)">
+        <div class="b-icon red">✗</div>
+        <div class="b-q">"Actually I did open it."</div>
+        <div class="b-arrow">▼</div>
+      </button>
+      <div class="branch-body">
+        <div class="rl">You say</div>
+        <div class="rt">"I appreciate that — would this be a bad time to take a quick look at it together while I have you on the phone?"</div>
+        <div class="rl">Then</div>
+        <div class="tt">He's already seen it. He's on the phone. This is a warm lead — walk him through it now.</div>
+      </div>
+    </div>
+
+    <div class="branch">
+      <button class="branch-btn" onclick="tog(this)">
+        <div class="b-icon gold">?</div>
+        <div class="b-q">"Remind me — what is The Stone Mill?"</div>
+        <div class="b-arrow">▼</div>
+      </button>
+      <div class="branch-body">
+        <div class="rl">You say</div>
+        <div class="rt">"We produce natural quarried stone right here in Michigan — own our own quarries. There's a Pure Michigan option for your stone needs that most builders on your side of the state don't know exists. Would this be a bad time to pull up the brochure together?"</div>
+        <div class="rl">Then</div>
+        <div class="tt">He's not cold — he's just forgotten. Remind him of the hook and go straight to the ask.</div>
+      </div>
+    </div>
+
+  </div>
+
 <script>
 function tog(btn) {
   const body = btn.nextElementSibling;
@@ -324,5 +387,6 @@ function switchTab(name) {
 </script>
 </body>
 </html>
+
 
 
